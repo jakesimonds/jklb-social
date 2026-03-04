@@ -1,0 +1,632 @@
+@import "tailwindcss";
+
+/* Memphis Design System Colors */
+:root {
+  /* Core Memphis accent colors (same for both themes) */
+  --memphis-navy: #1a1a2e;
+  --memphis-pink: #e91e63;
+  --memphis-cyan: #00bcd4;
+  --memphis-yellow: #ffeb3b;
+
+  /* Theme-aware colors (defaults to dark mode) */
+  --memphis-bg: #1a1a2e;
+  --memphis-bg-secondary: #16213e;
+  --memphis-text: rgba(255, 255, 255, 0.87);
+  --memphis-text-muted: rgba(255, 255, 255, 0.5);
+  --memphis-border: rgba(255, 255, 255, 0.1);
+
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--memphis-bg);
+  color: var(--memphis-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Toast animation */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.3s ease-out forwards;
+}
+
+/* ============================================================================
+ * Phase 10 Perimeter Layout
+ * ============================================================================
+ * Design: Perimeter chrome (top + right) frames a centered PostCard
+ *
+ * Full layout (>= 1024px):
+ * ┌─────────────────────────────────────────────────────────────────────┐
+ * │ [top-bar: UserWidget + action buttons + chorus avatars]             │
+ * ├─────────────────────────────────────────────────────────────────────┤
+ * │                                                              [right]│
+ * │                ┌─────────────────────────────────┐           [right]│
+ * │                │  PostCard (centered, max-600px) │           [right]│
+ * │                └─────────────────────────────────┘           [right]│
+ * │                                                              [right]│
+ * └─────────────────────────────────────────────────────────────────────┘
+ *
+ * Medium layout (640px - 1023px): right column only + PostCard
+ * Narrow layout (< 640px): just PostCard, no perimeter
+ * ============================================================================
+ */
+
+/* Base layout - perimeter grid */
+.app-layout {
+  display: grid;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+
+  /* Full layout: top row (96px for 2x bigger cells) + content area */
+  grid-template-rows: 96px 1fr;
+  grid-template-columns: 1fr 96px;
+  grid-template-areas:
+    "top-bar top-bar"
+    "content right-bar";
+}
+
+/* (Removed notification-fullscreen mode - now uses overlay with chorus hiding) */
+
+/* Award Progress Bar - sits below the top bar, spans full width */
+.award-progress-track {
+  position: absolute;
+  top: 96px; /* Below the top bar */
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: transparent;
+  z-index: 15; /* Above content, below modals */
+  pointer-events: none;
+}
+
+.award-progress-bar {
+  height: 100%;
+  background: var(--memphis-cyan);
+  transition: width 0.3s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+/* Grid area assignments */
+.area-top-bar {
+  grid-area: top-bar;
+  z-index: 10;
+}
+
+.area-right-bar {
+  grid-area: right-bar;
+  z-index: 10;
+}
+
+.area-content {
+  grid-area: content;
+  z-index: 1;
+}
+
+/* Perimeter styling - subtle shadow for depth */
+.perimeter-bar {
+  background-color: var(--memphis-bg);
+  border-color: var(--memphis-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Top bar - horizontal flex */
+.top-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  overflow: hidden; /* Prevent top bar from overflowing and pushing content off-screen */
+}
+
+/* Right bar - vertical flex */
+.right-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+  overflow-y: auto;
+}
+
+/* Content area - pins PostCard to top, horizontally centered */
+.content-area {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* PostCard container - max width for readability, natural height for proper centering */
+.postcard-container {
+  width: 100%;
+  max-width: 600px;
+  max-height: calc(100vh - 96px - 32px); /* viewport - top bar (96px) - padding */
+  /* No explicit height: allows natural sizing and true vertical centering */
+  overflow-y: auto; /* Allow scroll when content exceeds viewport (graceful degradation) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--memphis-pink) transparent;
+}
+
+/* Webkit scrollbar styling for PostCard container */
+.postcard-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.postcard-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.postcard-container::-webkit-scrollbar-thumb {
+  background: var(--memphis-pink);
+  border-radius: 3px;
+}
+
+.postcard-container::-webkit-scrollbar-thumb:hover {
+  background: var(--memphis-cyan);
+}
+
+/* Wide viewport (≥900px): expand PostCard width for better use of space */
+@media (min-width: 900px) {
+  .postcard-container {
+    max-width: 900px;
+  }
+}
+
+/* Wide content container - used by AtmosphereReport and other full-width stage views */
+.notification-grid-container {
+  width: 100%;
+  max-width: 1000px;
+  height: 100%;
+  max-height: calc(100vh - 96px - 32px); /* viewport - top bar - padding */
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--memphis-pink) transparent;
+}
+
+/* Webkit scrollbar styling */
+.notification-grid-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-grid-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notification-grid-container::-webkit-scrollbar-thumb {
+  background: var(--memphis-pink);
+  border-radius: 3px;
+}
+
+.notification-grid-container::-webkit-scrollbar-thumb:hover {
+  background: var(--memphis-cyan);
+}
+
+/* Wide viewport: wider content container */
+@media (min-width: 1200px) {
+  .notification-grid-container {
+    max-width: 1200px;
+  }
+}
+
+/* Medium breakpoints - SIMPLIFIED
+ * Keep full 96px top bar, just hide chorus and right bar at narrower widths */
+@media (max-width: 1023px) and (min-width: 640px) {
+  /* Hide chorus avatars in top bar */
+  .chorus-left,
+  .chorus-right {
+    display: none;
+  }
+
+  /* Hide right bar */
+  .area-right-bar {
+    display: none;
+  }
+
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "top-bar"
+      "content";
+  }
+}
+
+/* Mobile jklb strip - hidden, we use top bar at all widths now */
+.area-mobile-jklb {
+  display: none;
+}
+
+/* Narrow breakpoint (< 640px): keep top bar, just tighten padding */
+@media (max-width: 639px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "top-bar"
+      "content";
+  }
+
+  .area-right-bar {
+    display: none;
+  }
+
+  /* Hide chorus avatars */
+  .chorus-left,
+  .chorus-right {
+    display: none;
+  }
+
+  /* Hide BeginningMiddleEnd indicator on narrow viewports to prevent top bar overflow */
+  .bme-indicator {
+    display: none;
+  }
+
+  /* Shrink the "Begin" label on narrow viewports so login form fits */
+  .topbar-login-begin {
+    font-size: 24px !important;
+  }
+
+  .content-area {
+    padding: 8px;
+  }
+
+  .postcard-container {
+    max-height: calc(100vh - 96px - 16px); /* viewport - top bar (96px) - padding */
+  }
+
+  .notification-grid-container {
+    max-height: calc(100vh - 96px - 16px);
+  }
+}
+
+/* Narrow viewport: constrain media images so PostCard chrome stays visible */
+@media (max-width: 639px) {
+  .postcard-container img[class*="max-h-"] {
+    max-height: 25vh;
+  }
+}
+
+/* Very short viewport failsafe (< 480px height): ensure content can scroll */
+@media (max-height: 480px) {
+  .content-area {
+    overflow-y: auto;
+  }
+
+  /* Ensure content containers still work */
+  .postcard-container,
+  .notification-grid-container {
+    max-height: none; /* Remove max-height constraint on very short viewports */
+    min-height: 300px; /* Ensure minimum usable height */
+  }
+}
+
+.mobile-jklb-strip {
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start; /* Changed from center to accommodate UserWidget on right */
+  gap: 8px;
+  padding: 4px 12px;
+  background-color: var(--memphis-bg);
+  border-bottom: 1px solid var(--memphis-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile user widget - compact version for narrow screens */
+.mobile-user-widget {
+  height: 36px !important;
+  padding: 0 8px !important;
+  flex-shrink: 0;
+}
+
+.mobile-user-widget img {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Mobile jklb button - 40x40 compact size */
+.mobile-jklb-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: var(--memphis-bg-secondary);
+  border: 2px solid var(--memphis-border);
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+.mobile-jklb-button:hover {
+  border-color: var(--memphis-cyan);
+}
+
+.mobile-jklb-button:active {
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+ * Post Text Size Scaling
+ * ============================================================================
+ * Overrides Tailwind font sizes within PostCard for medium/large settings.
+ * Unlayered CSS takes precedence over Tailwind's @layer utilities.
+ *
+ * Current sizes (small): 8px, 10px, text-xs(12px), text-sm(14px), text-base(16px)
+ * Medium (~1.3x):        11px, 13px,         16px,         18px,          20px
+ * Large  (~1.6x):        13px, 16px,         19px,         22px,          26px
+ * ============================================================================
+ */
+
+/* Medium text size */
+.post-text-medium .text-\[8px\] { font-size: 11px; }
+.post-text-medium .text-\[10px\] { font-size: 13px; }
+.post-text-medium .text-xs { font-size: 1rem; }
+.post-text-medium .text-sm { font-size: 1.125rem; }
+@media (min-width: 640px) {
+  .post-text-medium .sm\:text-sm { font-size: 1.125rem; }
+  .post-text-medium .sm\:text-base { font-size: 1.25rem; }
+}
+
+/* Large text size */
+.post-text-large .text-\[8px\] { font-size: 13px; }
+.post-text-large .text-\[10px\] { font-size: 1rem; }
+.post-text-large .text-xs { font-size: 1.2rem; }
+.post-text-large .text-sm { font-size: 1.375rem; }
+@media (min-width: 640px) {
+  .post-text-large .sm\:text-sm { font-size: 1.375rem; }
+  .post-text-large .sm\:text-base { font-size: 1.625rem; }
+}
+
+/* Utility class for text truncation with line clamping */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================================================
+ * jklb Button Styling
+ * ============================================================================
+ * jklb buttons are embedded in the chorus flow but need distinct styling
+ * Same 72x72 size as PerimeterCell, but with letter styling instead of avatar
+ * ============================================================================
+ */
+.jklb-button {
+  flex-shrink: 0;
+  background-color: var(--memphis-bg-secondary) !important;
+  border: 2px solid var(--memphis-border) !important;
+}
+
+.jklb-button:hover {
+  border-color: var(--memphis-cyan) !important;
+}
+
+/* Responsive PerimeterCell sizing - REMOVED
+ * Plenty of room at narrow widths, no shrinking needed */
+
+/* ============================================================================
+ * Chorus Grid - Discrete grid layout for notification avatars
+ * ============================================================================
+ * The border is a discrete grid where each cell holds one profile pic.
+ * We calculate exactly how many cells fit and render only that many.
+ * No scrolling, no overflow - just clean grid cells filling the space.
+ * ============================================================================
+ */
+
+/* Top bar chorus - horizontal row of cells */
+.chorus-grid-top {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden; /* Never overflow, never scroll */
+}
+
+/* Right bar chorus - vertical column of cells */
+.chorus-grid-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  overflow: hidden; /* Never overflow, never scroll */
+}
+
+/* Chorus avatar entry animation — avatars scale+fade in when first appearing */
+@keyframes chorus-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.chorus-entering {
+  animation: chorus-enter 300ms ease-out forwards;
+}
+
+/* ============================================================================
+ * Hotkey Footer Hint
+ * ============================================================================
+ * Subtle footer bar showing "press space for hotkeys"
+ * Desktop only (>1024px), hidden on tablet/mobile
+ * ============================================================================
+ */
+.hotkey-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(26, 26, 46, 0.8);
+  color: var(--memphis-text-muted);
+  font-size: 12px;
+  opacity: 0.4;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  z-index: 5;
+}
+
+.hotkey-footer:hover {
+  opacity: 0.7;
+}
+
+/* Hide footer on tablet and mobile */
+@media (max-width: 1023px) {
+  .hotkey-footer {
+    display: none;
+  }
+}
+
+/* ===== Scroll Thread Styles ===== */
+
+.scroll-thread-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.scroll-thread-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--memphis-bg);
+  z-index: 0;
+}
+
+.scroll-thread-list {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  /* Hide scrollbar for clean look */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scroll-thread-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Spacer to allow first/last posts to be centered */
+.scroll-thread-spacer {
+  height: 40vh;
+  flex-shrink: 0;
+}
+
+.scroll-thread-item {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 4px 16px;
+  max-width: 100%;
+}
+
+.scroll-thread-item-focused {
+  opacity: 1;
+}
+
+/* Subtle indicator for the post that opened the thread */
+.scroll-thread-item-original {
+  position: relative;
+}
+
+.scroll-thread-item-original::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--memphis-cyan);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+.scroll-thread-indicator {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.scroll-thread-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  padding: 6px 16px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  border-radius: 12px;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+/* ===== Mobile Swipe App ===== */
+
+/* Mobile app shell — locks viewport, prevents scroll */
+.mobile-app {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--memphis-navy);
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
+}
+
+/* Swipe card area — full gesture ownership */
+.mobile-swipe-area {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Safe area insets for notched phones */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .mobile-app {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "client_id": "https://jklb.social/oauth-client-metadata-native.json",
+  "client_name": "jklb",
+  "client_uri": "https://jklb.social",
+  "redirect_uris": ["social.jklb:/auth/callback"],
+  "grant_types": ["authorization_code", "refresh_token"],
+  "response_types": ["code"],
+  "scope": "atproto transition:generic",
+  "token_endpoint_auth_method": "none",
+  "application_type": "native",
+  "dpop_bound_access_tokens": true
+}

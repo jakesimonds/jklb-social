@@ -1,0 +1,19 @@
+# Cloudflare Pages configuration for jklb.social
+# Deployed via: wrangler pages deploy dist --project-name=jklb --commit-dirty=true
+# Pages Functions live in /functions/ and are auto-routed to /api/*
+
+name = "jklb"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-01-01"
+
+# KV Namespace for award nominations index
+[[kv_namespaces]]
+binding = "NOMINATIONS"
+id = "fc1a57395beb48949585d9c9b8607056"
+preview_id = "490875dac52a425eb90e75d617153f25"
+
+# KV Namespace for community photo posts (48h auto-delete)
+[[kv_namespaces]]
+binding = "COMMUNITY_POSTS"
+id = "6484d4e2b2c54df0bae97bdd80918974"
+preview_id = "a2c85f9be78c46ffac10f7eb4bfd5565"

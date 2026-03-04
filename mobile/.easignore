@@ -1,0 +1,35 @@
+# EAS ignores these when uploading to cloud build
+# (replaces .gitignore for EAS uploads, so we include everything)
+
+# dependencies — EAS installs fresh in the cloud
+node_modules/
+
+# build artifacts
+dist/
+web-build/
+.expo/
+
+# native folders (EAS generates these)
+/ios
+/android
+
+# dev/debug files
+.metro-health-check*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+*.tsbuildinfo
+
+# OS junk
+.DS_Store
+
+# keys/certs (EAS manages these in cloud)
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# docs — not needed for build
+*.md

@@ -1,0 +1,74 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Old MVP reference (hidden from Ralph)
+.old-mvp/
+
+# Personal todo
+todo.md
+
+# Test credentials (NEVER commit)
+.env
+.env.test
+test-credentials.json
+
+# Playwright
+playwright-report/
+test-results/
+screenshots/
+e2e/auth-state.json
+
+# Cloudflare Wrangler local state
+.wrangler/
+
+# Claude Code memory/config
+.claude/
+
+# Test fixture data (real user DIDs, handles, avatar URLs)
+src/lib/test-fixtures.ts
+
+# OG image (large, host on CDN instead)
+public/og-image.png
+
+# Ralph loop infrastructure (internal build tooling)
+loop.sh
+loop-errors.md
+PROMPT_*.md
+IMPLEMENTATION_PLAN.md
+IMPLEMENTATION_HISTORY.md
+IMPLEMENTATION_FUTURE.md
+AGENTS.md
+
+# Audit reports (contain security analysis, not for public)
+AUDIT.md
+AUDIT-*.md
+specs/audit-*.md
+specs/TODO-audit.md
+specs/archive/
+
+# Internal research / planning docs
+future-protocols/
+future-research/
+specs/network-school-plan/

@@ -1,0 +1,8 @@
+/* App-level styles for russAbbot */
+/* Most styling is done via Tailwind classes */
+
+/* Responsive breakpoints reference:
+ * sm: 640px  - Left sidebar shows (icon only)
+ * md: 768px  - Right sidebar shows
+ * lg: 1024px - Full layout with all labels
+ */
