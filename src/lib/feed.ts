@@ -8,12 +8,14 @@ import { transformEmbed, extractLinkFacets } from './embed-utils';
 // Test fixture data is gitignored — import dynamically so it's optional
 let _testPostUrls: string[] = [];
 let _testPdsRecords: Array<{ record: PDSRecord; handle: string }> = [];
-try {
-  const fixtures = await import('./test-fixtures');
-  _testPostUrls = fixtures.TEST_POST_URLS;
-  _testPdsRecords = fixtures.TEST_PDS_RECORDS;
-} catch {
-  // test-fixtures.ts is gitignored — test modes just won't have data
+if (import.meta.env.DEV) {
+  try {
+    const fixtures = await import('./test-fixtures');
+    _testPostUrls = fixtures.TEST_POST_URLS;
+    _testPdsRecords = fixtures.TEST_PDS_RECORDS;
+  } catch {
+    // test-fixtures.ts is gitignored — test modes just won't have data
+  }
 }
 
 /**

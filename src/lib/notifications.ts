@@ -11,10 +11,12 @@ import { STORAGE_KEYS } from '../types';
 import { TEST_NOTIFICATIONS } from './flags';
 
 let testFixtures: typeof import('./test-fixtures') | null = null;
-try {
-  testFixtures = await import('./test-fixtures');
-} catch {
-  // test-fixtures.ts is gitignored — test notifications won't have data
+if (import.meta.env.DEV) {
+  try {
+    testFixtures = await import('./test-fixtures');
+  } catch {
+    // test-fixtures.ts is gitignored — test notifications won't have data
+  }
 }
 
 /**
