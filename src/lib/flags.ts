@@ -31,3 +31,13 @@ export const TEST_NOTIFICATIONS =
  * Try different values: 256, 384, 512, etc.
  */
 export const PROFILE_PIC_SIZE = 300;
+
+/**
+ * JKLB Premium
+ * Whitelisted handles that get the Premium feed experience.
+ */
+const JKLB_PREMIUM_HANDLES: string[] = ['jakesimonds.com'];
+
+export function isJklbPremium(handle: string | undefined): boolean {
+  return handle != null && JKLB_PREMIUM_HANDLES.includes(handle);
+}

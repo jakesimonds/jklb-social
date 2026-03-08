@@ -22,7 +22,7 @@ export function EndButton({
   title,
   description,
   onClick,
-  accentColor,
+  accentColor: _accentColor,
   isHighlighted = false,
   isEmpty = false,
   onMouseEnter,
@@ -43,14 +43,13 @@ export function EndButton({
     <button
       onClick={onClick}
       onMouseEnter={onMouseEnter}
-      className={`group relative flex items-center justify-center rounded cursor-pointer aspect-square overflow-hidden transition-all duration-200 ${
+      className={`group relative flex items-center justify-center rounded cursor-pointer aspect-square overflow-hidden transition-all duration-200 focus:outline-none ${
         isHighlighted
           ? 'border-2 border-[var(--memphis-yellow)] shadow-[0_0_8px_#ffeb3b4d]'
           : 'border border-[var(--memphis-border)] hover:border-white/30'
       }`}
       style={{
         backgroundColor: 'var(--memphis-bg)',
-        ...(accentColor && !isHighlighted ? { borderColor: accentColor + '40' } : {}),
       }}
     >
       {/* Title — visible by default, fades out on hover/highlight */}
