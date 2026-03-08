@@ -907,6 +907,16 @@ export function AppLayout({
           }}
         />
       )}
+      {/* Tutorial grid — extends behind the entire app layout */}
+      {viewState.stage.type === 'tutorial' && (
+        <div
+          className="absolute inset-0 z-0 pointer-events-none"
+          style={{
+            backgroundImage: 'linear-gradient(var(--memphis-border) 1px, transparent 1px), linear-gradient(90deg, var(--memphis-border) 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+          }}
+        />
+      )}
       {/* Top Bar - jklb buttons + chorus avatars (fills remaining space) + UserWidget */}
       <div ref={topBarRef} className={`area-top-bar top-bar perimeter-bar`}>
         {/* jklb functional buttons - branding + hotkey reminder + clickable action */}
@@ -1093,13 +1103,7 @@ export function AppLayout({
       </div>
 
       {/* Content Area */}
-      <div
-        className="area-content content-area"
-        style={viewState.stage.type === 'tutorial' ? {
-          backgroundImage: 'linear-gradient(var(--memphis-border) 1px, transparent 1px), linear-gradient(90deg, var(--memphis-border) 1px, transparent 1px)',
-          backgroundSize: '24px 24px',
-        } : undefined}
-      >
+      <div className="area-content content-area">
         {renderContent()}
       </div>
 
