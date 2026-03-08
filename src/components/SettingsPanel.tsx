@@ -6,7 +6,10 @@
  * Code currently has 6 — Award Nomination, Like Chorus, and Cover Photo are not in spec.
  */
 
+import { useState, useEffect, useRef } from 'react';
 import { useSettings } from '../lib/SettingsContext';
+import { DEFAULT_MUSIC_SETTINGS } from '../lib/settings';
+import { usePremium } from '../hooks/usePremium';
 import type { PlayerFMTrack } from '../lib/pds';
 
 /**
@@ -108,6 +111,10 @@ function PhaseTrackSelect({
 }) {
   const { settings, updateMusic } = useSettings();
 
+  // Use default track if the user hasn't explicitly chosen something
+  const currentValue = settings.music[phase];
+  const effectiveValue = currentValue === 'none' ? '' : (currentValue ?? DEFAULT_MUSIC_SETTINGS[phase] ?? '');
+
   if (isLoadingTracks) {
     return (
       <div>
@@ -130,10 +137,10 @@ function PhaseTrackSelect({
     <div>
       <span className="text-[var(--memphis-text-muted)] text-xs">{label}</span>
       <select
-        value={settings.music[phase] ?? ''}
+        value={effectiveValue}
         onChange={(e) => {
           const val = e.target.value;
-          updateMusic({ [phase]: val === '' ? null : val });
+          updateMusic({ [phase]: val === '' ? 'none' : val });
         }}
         className="w-full bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded px-3 py-1.5 text-sm text-[var(--memphis-text)] focus:border-[var(--memphis-cyan)] focus:outline-none"
       >
@@ -200,6 +207,107 @@ function TutorialSettings() {
 }
 
 /**
+ * Premium Feed Settings — only renders for JKLB Premium users.
+ * Post count stepper + freeform feed preference textarea.
+ */
+function PremiumFeedSettings() {
+  const { isPremium } = usePremium();
+  const { settings, updateAwardSettings } = useSettings();
+  const [editingCount, setEditingCount] = useState<string | null>(null);
+  const [preference, setPreference] = useState('');
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('jklb-feed-preference');
+    if (saved) setPreference(saved);
+  }, []);
+
+  if (!isPremium) return null;
+
+  const handlePreferenceChange = (value: string) => {
+    setPreference(value);
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      localStorage.setItem('jklb-feed-preference', value);
+    }, 500);
+  };
+
+  return (
+    <div className="pt-4 border-t border-[var(--memphis-border)] space-y-4">
+      <h3 className="text-sm font-bold tracking-wider uppercase text-[var(--memphis-pink)]">
+        JKLB Premium
+      </h3>
+
+      {/* Post count stepper */}
+      <div>
+        <label className="block text-[var(--memphis-text-muted)] text-xs mb-2">
+          Posts before exit prompt
+        </label>
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              const val = settings.credibleExit.postsBeforePrompt - 5;
+              if (val >= 5) updateAwardSettings({ postsBeforePrompt: val });
+            }}
+            className="w-8 h-8 flex items-center justify-center rounded bg-[var(--memphis-bg)] border border-[var(--memphis-border)] text-[var(--memphis-text)] hover:border-[var(--memphis-cyan)] transition-colors"
+          >
+            -
+          </button>
+          <input
+            type="number"
+            min={5}
+            max={100}
+            step={5}
+            value={editingCount ?? settings.credibleExit.postsBeforePrompt}
+            onFocus={(e) => setEditingCount(e.target.value)}
+            onChange={(e) => {
+              setEditingCount(e.target.value);
+              const val = parseInt(e.target.value, 10);
+              if (!isNaN(val) && val >= 5 && val <= 100) {
+                updateAwardSettings({ postsBeforePrompt: val });
+              }
+            }}
+            onBlur={() => {
+              const val = parseInt(editingCount ?? '', 10);
+              if (!isNaN(val)) {
+                updateAwardSettings({ postsBeforePrompt: Math.max(5, Math.min(100, val)) });
+              }
+              setEditingCount(null);
+            }}
+            className="text-2xl font-bold text-[var(--memphis-text)] w-16 text-center bg-transparent border-b border-[var(--memphis-border)] focus:border-[var(--memphis-cyan)] outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              const val = settings.credibleExit.postsBeforePrompt + 5;
+              if (val <= 100) updateAwardSettings({ postsBeforePrompt: val });
+            }}
+            className="w-8 h-8 flex items-center justify-center rounded bg-[var(--memphis-bg)] border border-[var(--memphis-border)] text-[var(--memphis-text)] hover:border-[var(--memphis-cyan)] transition-colors"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      {/* Feed preference textarea */}
+      <div>
+        <label className="block text-[var(--memphis-text-muted)] text-xs mb-2">
+          What do you want to see?
+        </label>
+        <textarea
+          value={preference}
+          onChange={(e) => handlePreferenceChange(e.target.value)}
+          placeholder="e.g. 'no politics, no sports spoilers, show me tech and art posts'"
+          rows={3}
+          className="w-full bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded px-3 py-2 text-sm text-[var(--memphis-text)] placeholder:text-[var(--memphis-text-muted)] focus:border-[var(--memphis-cyan)] focus:outline-none resize-none"
+        />
+      </div>
+    </div>
+  );
+}
+
+/**
  * SettingsPanel - Clean, minimal settings UI
  * Feed config (algorithm, post count) is on the Middle card.
  */
@@ -220,6 +328,9 @@ export function SettingsPanel({
 
       {/* 3. Background Music */}
       <BackgroundMusicSettings tracks={tracks} isLoadingTracks={isLoadingTracks} />
+
+      {/* 4. JKLB Premium (only renders for whitelisted users) */}
+      <PremiumFeedSettings />
     </div>
   );
 }
