@@ -780,6 +780,10 @@ function App() {
       window.open('https://tools.jakesimonds.com/glitchapp/', '_blank');
       return;
     }
+    if (id === 'plyr') {
+      window.open('https://plyr.fm', '_blank');
+      return;
+    }
     if (id === 'clipboard') {
       if (savedPosts.length === 0) {
         showInfo('No posts saved yet — press ? on a post to save it');

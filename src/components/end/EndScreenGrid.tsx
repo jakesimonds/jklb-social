@@ -1,7 +1,7 @@
 /**
  * EndScreenGrid — 3x3 button grid for the End Screen.
  *
- * 6 active buttons + 3 empty placeholder slots.
+ * 7 active buttons + 2 empty placeholder slots.
  * Keyboard navigation via highlightedIndex prop.
  * Mouse hover syncs highlight via onHoverButton callback.
  */
@@ -22,9 +22,9 @@ const END_BUTTONS: EndButtonConfig[] = [
   { id: 'clipboard',  title: "Copy '?' posts",         description: 'hotkey ? copies posts so you can ask an LLM about them' },
   { id: 'another',    title: 'Another Session',        description: 'start fresh from the beginning' },
   { id: 'logout',     title: 'Log Out',                description: 'end your session' },
-  { id: 'empty1',     title: '', description: '', isEmpty: true },
+  { id: 'glitch',     title: 'Glitch a JPEG',       description: 'edit HEX values, make art' },
+  { id: 'plyr',       title: 'Check out plyr.fm', description: 'listen to your plyr.fm likes while you scroll JKLB' },
   { id: 'empty2',     title: '', description: '', isEmpty: true },
-  { id: 'empty3',     title: '', description: '', isEmpty: true },
 ];
 
 export { END_BUTTONS };
