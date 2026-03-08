@@ -4,6 +4,7 @@ import { useAuth } from './lib/AuthContext';
 import { useSettings } from './lib/SettingsContext';
 import { useToast } from './lib/ToastContext';
 import { useFocusNavigation, useKeybindings, useFeed, useThread, usePostActions, useFullscreenMedia, useUnreadNotifications, useAtmosphereReport, useAvailableFeeds, useAuthorBanner, useBackgroundMusic, useBeginning, useEndFlow } from './hooks';
+import { usePremium } from './hooks/usePremium';
 import { applyTheme } from './lib/theme';
 import { getPhase } from './lib/tutorials';
 import type { ViewState, PanelView, StageView } from './types';
@@ -41,7 +42,8 @@ function App() {
     logout,
   } = useAuth();
 
-  const { settings } = useSettings();
+  const { settings, updateFeed } = useSettings();
+  const { isPremium } = usePremium();
 
   // ── Mobile "coming soon" modal ────────────────────────────────────────
   const [showMobileModal, setShowMobileModal] = useState(
@@ -251,6 +253,7 @@ function App() {
     handleUnfollow,
     handleFollow,
     handleSubmitComposer,
+    handleCompose,
     composerTarget,
     setComposerTarget,
     isSubmittingComposer,
@@ -338,9 +341,6 @@ function App() {
 
   // Saved posts via '?' key - session clipboard for award export
   const [savedPosts, setSavedPosts] = useState<string[]>([]);
-
-  // Cover photo z-index toggle - 'c' key swaps cover photo in front of post card
-  const [coverPhotoInFront, setCoverPhotoInFront] = useState(false);
 
   // Award nomination state - track submitting status
   const [isSubmittingAward, setIsSubmittingAward] = useState(false);
@@ -448,11 +448,27 @@ function App() {
   }, [isAuthenticated, beginningState.stage, beginningState.currentIndex]);
 
   // Transition from Beginning to Middle card when Beginning is done
+  // Premium users skip the middle card entirely
   useEffect(() => {
     if (beginningDone) {
-      setStage({ type: 'middle-card' });
+      if (isPremium) {
+        if (settings.tutorial && !showedActionsTutorial) {
+          setStage({ type: 'tutorial', id: 'actions' });
+        } else {
+          setStage({ type: 'post', index: 0 });
+        }
+      } else {
+        setStage({ type: 'middle-card' });
+      }
     }
-  }, [beginningDone, setStage]);
+  }, [beginningDone, setStage, isPremium, settings.tutorial, showedActionsTutorial]);
+
+  // Premium users always use chronological feed
+  useEffect(() => {
+    if (isPremium && isAuthenticated) {
+      updateFeed({ algoFeed: null });
+    }
+  }, [isPremium, isAuthenticated, updateFeed]);
 
   // Sync end flow state → viewState
   useEffect(() => {
@@ -526,7 +542,6 @@ function App() {
       setViewState({ stage: { type: 'post', index: 0 }, panel: null });
       exitThreadView();
       setShowSunset(false);
-      setCoverPhotoInFront(false);
       setSavedPosts([]);
       setShowLoginPrompt(false);
       setShowLoginModal(false);
@@ -632,23 +647,30 @@ function App() {
 
     // Actions tutorial shown between middleCard and feed (beginningDone = true)
     if (viewState.stage.type === 'tutorial' && viewState.stage.id === 'actions' && beginningDone) {
-      setStage({ type: 'middle-card' });
+      if (isPremium) {
+        // Premium users skip middle-card — go back to Beginning
+        beginningGoBack();
+      } else {
+        setStage({ type: 'middle-card' });
+      }
     } else if (phase === 'beginning') {
       beginningGoBack();
     } else if (viewState.stage.type === 'middle-card') {
       // Go back from middleCard to the last content stage in Beginning
       beginningGoBack();
     } else if (viewState.stage.type === 'post' && viewState.stage.index === 0) {
-      // At first feed post — go back to middleTutorial if it was shown, else middleCard
+      // At first feed post — go back to actions tutorial or middle-card (or Beginning for premium)
       if (settings.tutorial && !showedActionsTutorial) {
         setStage({ type: 'tutorial', id: 'actions' });
+      } else if (isPremium) {
+        beginningGoBack();
       } else {
         setStage({ type: 'middle-card' });
       }
     } else {
       goToPreviousPost();
     }
-  }, [viewState.stage, beginningGoBack, beginningDone, goToPreviousPost, settings.tutorial, showedActionsTutorial, setStage]);
+  }, [viewState.stage, beginningGoBack, beginningDone, goToPreviousPost, settings.tutorial, showedActionsTutorial, setStage, isPremium]);
 
   // ── Action handlers ──────────────────────────────────────────────────
 
@@ -752,6 +774,10 @@ function App() {
       setSavedPosts([]);
       setCurrentItemIndex(0);
       setStage({ type: 'post', index: 0 });
+      return;
+    }
+    if (id === 'glitch') {
+      window.open('https://tools.jakesimonds.com/glitchapp/', '_blank');
       return;
     }
     if (id === 'clipboard') {
@@ -1014,7 +1040,7 @@ function App() {
     onShowHotkeys: handleShowHotkeys,
     onSettings: handleToggleSettings,
     onSavePost: handleSavePost,
-    onToggleCoverPhoto: () => setCoverPhotoInFront(prev => !prev),
+    onCompose: handleCompose,
     onEnd: handleEnd,
   });
 
@@ -1105,7 +1131,6 @@ function App() {
       currentPost={currentPost}
       currentPDSRecord={currentPDSRecord}
       authorBanner={authorBanner}
-      coverPhotoInFront={coverPhotoInFront}
       // Thread state
       threadPosts={threadPosts}
       threadDepths={threadDepths}
