@@ -908,7 +908,7 @@ export function AppLayout({
         />
       )}
       {/* Top Bar - jklb buttons + chorus avatars (fills remaining space) + UserWidget */}
-      <div ref={topBarRef} className={`area-top-bar top-bar perimeter-bar${activeBanner ? ' perimeter-transparent' : ''}`}>
+      <div ref={topBarRef} className={`area-top-bar top-bar perimeter-bar`}>
         {/* jklb functional buttons - branding + hotkey reminder + clickable action */}
         <div
           onMouseEnter={(e) => handleHotkeyMouseEnter({ key: 'j', description: 'Next post (down)' }, e)}
@@ -1008,7 +1008,7 @@ export function AppLayout({
       </div>
 
       {/* Right Bar - Chorus avatars (fills space) + action buttons at bottom */}
-      <div ref={rightBarRef} className={`area-right-bar right-bar perimeter-bar${activeBanner ? ' perimeter-transparent' : ''}`}>
+      <div ref={rightBarRef} className={`area-right-bar right-bar perimeter-bar`}>
         {/* Chorus avatars - renders exactly what fits in available space */}
         {/* Shows overflow from top bar (members that didn't fit) */}
         <div className="chorus-grid-right">

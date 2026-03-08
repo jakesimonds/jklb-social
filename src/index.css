@@ -123,16 +123,10 @@ body {
   z-index: 1;
 }
 
-/* Perimeter styling - subtle shadow for depth */
+/* Perimeter styling - always transparent so phase background shows through */
 .perimeter-bar {
-  background-color: var(--memphis-bg);
-  border-color: var(--memphis-border);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Transparent perimeter bars when cover photo is active */
-.perimeter-bar.perimeter-transparent {
   background-color: transparent;
+  border-color: var(--memphis-border);
   box-shadow: none;
 }
 
