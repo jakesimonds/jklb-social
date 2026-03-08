@@ -1083,9 +1083,11 @@ export function AppLayout({
           <PerimeterCell
             onClick={onQuit}
             aria-label="Log out"
-            className="!rounded-lg flex-col !gap-0"
+            title="log out"
+            className="!rounded-lg jklb-button flex-col !gap-0"
           >
-            <span className="text-xs font-sans text-[var(--memphis-text-muted)]">log out</span>
+            <span className="font-mono text-lg font-bold text-[var(--memphis-pink)]">⏻</span>
+            <span className="text-[8px] text-[var(--memphis-text-muted)] leading-none">log out</span>
           </PerimeterCell>
         )}
       </div>
