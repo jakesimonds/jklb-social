@@ -13,7 +13,7 @@ import { useState, useRef, useEffect } from 'react';
 import type { Post } from '../types';
 import { formatAuthor, truncateText } from '../lib/composerUtils';
 
-export type ComposerMode = 'reply' | 'quote';
+export type ComposerMode = 'reply' | 'quote' | 'new';
 
 interface ComposerPanelProps {
   /** The mode of the composer */
@@ -112,6 +112,12 @@ export function ComposerPanel({
       submittingLabel: 'Posting...',
       accentColor: 'var(--memphis-yellow)',
     },
+    new: {
+      placeholder: "What's on your mind?",
+      submitLabel: 'Post',
+      submittingLabel: 'Posting...',
+      accentColor: 'var(--memphis-pink)',
+    },
   }[mode];
 
   return (
@@ -165,7 +171,7 @@ export function ComposerPanel({
       </div>
 
       {/* Keyboard hint */}
-      <p className="text-xs text-[var(--memphis-text-muted)] mt-2">
+      <p className="text-xs text-[var(--memphis-text-muted)] mt-2 mb-2">
         Press <kbd className="px-1 py-0.5 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded text-xs">Enter</kbd> to post, <kbd className="px-1 py-0.5 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded text-xs">Esc</kbd> to cancel
       </p>
     </div>
