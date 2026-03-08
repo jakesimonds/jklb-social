@@ -57,6 +57,7 @@ import type { ChorusState } from '../lib/chorus';
 import type { Post, FeedItem, Settings, PDSFeedItem, LikedPost, SessionMetrics } from '../types';
 import type { ResolvedFeed } from '../lib/saved-feeds';
 import type { ComposerMode } from './ComposerPanel';
+import { ComposeModal } from './compose/ComposeModal';
 import type { PlayerFMTrack } from '../lib/pds';
 
 /**
@@ -83,7 +84,6 @@ export interface AppLayoutProps {
   currentPost: Post | null;
   currentPDSRecord: PDSFeedItem | null;
   authorBanner: string | null;
-  coverPhotoInFront: boolean;
 
   // Thread state
   threadPosts: Post[];
@@ -342,7 +342,6 @@ export function AppLayout({
   currentPost,
   currentPDSRecord,
   authorBanner,
-  coverPhotoInFront,
   threadPosts,
   threadDepths,
   threadIndex,
@@ -632,6 +631,14 @@ export function AppLayout({
   // Derive phase from viewState for phase indicator and theming
   const phase = getPhase(viewState.stage);
 
+  // Active cover photo — either from the current post author or the beginning flow
+  const activeBanner = (() => {
+    const stageType = viewState.stage.type;
+    if (stageType === 'post') return authorBanner;
+    if (['unactionable', 'follower', 'reply-to-user', 'mention', 'quote-post'].includes(stageType)) return beginningBanner;
+    return null;
+  })();
+
   // Helper to render content based on viewState (flat switch replaces old ternary chain)
   function renderContent(): React.ReactNode {
     // 1. Panel takes priority (stack model — see specs/app-architecture.md)
@@ -681,6 +688,16 @@ export function AppLayout({
               </ContentPanel>
             </div>
           );
+        case 'composer-new':
+          return (
+            <div className="postcard-container">
+              <ComposeModal
+                onSubmit={(text) => handleSubmitComposer(text, 'new')}
+                onCancel={onClosePanel}
+                isSubmitting={isSubmittingComposer}
+              />
+            </div>
+          );
       }
     }
 
@@ -705,21 +722,7 @@ export function AppLayout({
       case 'mention':
       case 'quote-post':
         return agent ? (
-          <>
-            {/* Cover photo — fills the stage, same pattern as Middle */}
-            {beginningBanner && (
-              <div
-                className={`absolute inset-0 left-0 w-full ${coverPhotoInFront ? 'opacity-100 z-20 pointer-events-none' : 'opacity-40 z-0 pointer-events-none'}`}
-                style={{
-                  backgroundImage: `url(${beginningBanner})`,
-                  backgroundRepeat: 'repeat-y',
-                  backgroundSize: '100% auto',
-                  backgroundPosition: 'top left',
-                  minHeight: '100%',
-                }}
-              />
-            )}
-            <div className={`postcard-container relative ${coverPhotoInFront ? 'z-0' : 'z-10'}`}>
+            <div className="postcard-container relative z-10">
               <BeginningView
                 state={beginningState}
                 advance={onBeginningAdvance}
@@ -729,7 +732,6 @@ export function AppLayout({
                 onReplyToPost={onBeginningReply}
               />
             </div>
-          </>
         ) : null;
 
       case 'middle-card':
@@ -747,21 +749,8 @@ export function AppLayout({
 
       case 'post':
         return (
-          <>
-            {authorBanner && currentPost && (
-              <div
-                className={`absolute inset-0 left-0 w-full ${coverPhotoInFront ? 'opacity-100 z-20 pointer-events-none' : 'opacity-40 z-0 pointer-events-none'}`}
-                style={{
-                  backgroundImage: `url(${authorBanner})`,
-                  backgroundRepeat: 'repeat-y',
-                  backgroundSize: '100% auto',
-                  backgroundPosition: 'top left',
-                  minHeight: '100%',
-                }}
-              />
-            )}
             <div
-              className={`postcard-container relative ${coverPhotoInFront ? 'z-0' : 'z-10'}`}
+              className="postcard-container relative z-10"
               style={authorBanner ? { background: '#1a1a2e', borderRadius: '0.5rem' } : undefined}
             >
               {feedLoading && feedItems.length === 0 ? (
@@ -806,7 +795,6 @@ export function AppLayout({
                 </div>
               )}
             </div>
-          </>
         );
 
       case 'thread':
@@ -907,6 +895,18 @@ export function AppLayout({
 
   return (
     <div className="text-[var(--memphis-text)] transition-colors app-layout" style={{ backgroundColor: getPhaseBackground(phase) }}>
+      {/* Cover photo — extends behind the entire app layout */}
+      {activeBanner && (
+        <div
+          className="absolute inset-0 opacity-40 z-0 pointer-events-none"
+          style={{
+            backgroundImage: `url(${activeBanner})`,
+            backgroundRepeat: 'repeat-y',
+            backgroundSize: '100% auto',
+            backgroundPosition: 'top left',
+          }}
+        />
+      )}
       {/* Top Bar - jklb buttons + chorus avatars (fills remaining space) + UserWidget */}
       <div ref={topBarRef} className="area-top-bar top-bar perimeter-bar">
         {/* jklb functional buttons - branding + hotkey reminder + clickable action */}
