@@ -5,6 +5,7 @@ import { useSettings } from './lib/SettingsContext';
 import { useToast } from './lib/ToastContext';
 import { useFocusNavigation, useKeybindings, useFeed, useThread, usePostActions, useFullscreenMedia, useUnreadNotifications, useAtmosphereReport, useAvailableFeeds, useAuthorBanner, useBackgroundMusic, useBeginning, useEndFlow } from './hooks';
 import { usePremium } from './hooks/usePremium';
+import { useCurator } from './lib/CuratorContext';
 import { applyTheme } from './lib/theme';
 import { getPhase } from './lib/tutorials';
 import type { ViewState, PanelView, StageView } from './types';
@@ -42,8 +43,9 @@ function App() {
     logout,
   } = useAuth();
 
-  const { settings, updateFeed } = useSettings();
+  const { settings } = useSettings();
   const { isPremium } = usePremium();
+  const { status: curatorStatus } = useCurator();
 
   // ── ViewState: single source of truth for app stage + panel ──────────
   const [viewState, setViewState] = useState<ViewState>({
@@ -444,23 +446,12 @@ function App() {
   }, [isAuthenticated, beginningState.stage, beginningState.currentIndex]);
 
   // Transition from Beginning to Middle card when Beginning is done
-  // Premium users skip the middle card entirely
+  // All users (including Premium) pick an algorithm — Premium users browse it during Ghost Middle
   useEffect(() => {
     if (beginningDone) {
-      if (isPremium) {
-        setStage({ type: 'post', index: 0 });
-      } else {
-        setStage({ type: 'middle-card' });
-      }
+      setStage({ type: 'middle-card' });
     }
-  }, [beginningDone, setStage, isPremium]);
-
-  // Premium users always use chronological feed
-  useEffect(() => {
-    if (isPremium && isAuthenticated) {
-      updateFeed({ algoFeed: null });
-    }
-  }, [isPremium, isAuthenticated, updateFeed]);
+  }, [beginningDone, setStage]);
 
   // Sync end flow state → viewState
   useEffect(() => {
@@ -635,16 +626,12 @@ function App() {
       // Go back from middleCard to the last content stage in Beginning
       beginningGoBack();
     } else if (viewState.stage.type === 'post' && viewState.stage.index === 0) {
-      // At first feed post — go back to middle-card (or Beginning for premium)
-      if (isPremium) {
-        beginningGoBack();
-      } else {
-        setStage({ type: 'middle-card' });
-      }
+      // At first feed post — go back to middle-card (algorithm picker)
+      setStage({ type: 'middle-card' });
     } else {
       goToPreviousPost();
     }
-  }, [viewState.stage, beginningGoBack, goToPreviousPost, setStage, isPremium]);
+  }, [viewState.stage, beginningGoBack, goToPreviousPost, setStage]);
 
   // ── Action handlers ──────────────────────────────────────────────────
 
@@ -1038,13 +1025,15 @@ function App() {
   })();
 
   // Auto-transition to End flow when middle progress reaches 100%
+  // Skip during Ghost Middle (curator working/idle for premium users) — no auto-end while browsing
   useEffect(() => {
     if (middleProgress < 1) return;
+    if (isPremium && (curatorStatus === 'working' || curatorStatus === 'idle')) return; // Ghost Middle — no end
     const phase = getPhase(viewState.stage);
     if (phase !== 'middle') return; // Only trigger from Middle phase
     if (endFlowState.isActive) return; // Already in End flow
     enterEndFlow();
-  }, [middleProgress, viewState.stage, endFlowState.isActive, enterEndFlow]);
+  }, [middleProgress, viewState.stage, endFlowState.isActive, enterEndFlow, isPremium, curatorStatus]);
 
   // ── Render ───────────────────────────────────────────────────────────
 
