@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Curator — Bluesky Feed Curation</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      background: #f5f5f5;
+      color: #1a1a1a;
+    }
+    h1 { font-size: 24px; margin-bottom: 4px; }
+    .subtitle { color: #666; margin-bottom: 24px; font-size: 14px; }
+    label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 14px; }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      margin-bottom: 16px;
+    }
+    textarea { height: 80px; resize: vertical; }
+    button {
+      background: #0066ff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover { background: #0052cc; }
+    button:disabled { background: #999; cursor: not-allowed; }
+    #status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 6px;
+      display: none;
+      font-size: 14px;
+    }
+    #status.loading { display: block; background: #e8f0fe; color: #1a56db; }
+    #status.error { display: block; background: #fde8e8; color: #c81e1e; }
+    #results {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .post-card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .post-author {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .post-author a { color: #0066ff; text-decoration: none; }
+    .post-text {
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .post-meta {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #888;
+    }
+    .post-link {
+      display: inline-block;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #0066ff;
+      text-decoration: none;
+    }
+    .stats { margin-top: 16px; font-size: 13px; color: #666; }
+  </style>
+</head>
+<body>
+  <h1>Curator</h1>
+  <p class="subtitle">Feed curation agent for Bluesky</p>
+
+  <form id="form">
+    <label for="handle">Bluesky Handle</label>
+    <input type="text" id="handle" placeholder="jake.bsky.social" required>
+
+    <label for="prompt">What do you want to see?</label>
+    <textarea id="prompt" placeholder="Funny stuff, no politics, interesting science threads..." required></textarea>
+
+    <button type="submit" id="btn">Curate</button>
+  </form>
+
+  <div id="status"></div>
+  <div class="stats" id="stats"></div>
+  <div id="results"></div>
+
+  <script>
+    const form = document.getElementById("form");
+    const btn = document.getElementById("btn");
+    const status = document.getElementById("status");
+    const results = document.getElementById("results");
+    const stats = document.getElementById("stats");
+
+    /** Convert an at:// URI to a bsky.app URL */
+    function atUriToBskyUrl(uri) {
+      // at://did:plc:xxx/app.bsky.feed.post/yyy → https://bsky.app/profile/did:plc:xxx/post/yyy
+      const match = uri.match(/^at:\/\/(did:[^/]+)\/app\.bsky\.feed\.post\/(.+)$/);
+      if (!match) return null;
+      return `https://bsky.app/profile/${match[1]}/post/${match[2]}`;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const handle = document.getElementById("handle").value.trim();
+      const prompt = document.getElementById("prompt").value.trim();
+      if (!handle || !prompt) return;
+
+      btn.disabled = true;
+      results.innerHTML = "";
+      stats.textContent = "";
+      status.className = "loading";
+      status.textContent = "Fetching candidates and running agent... this can take 1-2 minutes.";
+      status.style.display = "block";
+
+      const start = Date.now();
+
+      try {
+        const res = await fetch("/curate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ handle, prompt }),
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: res.statusText }));
+          throw new Error(err.error || "Request failed");
+        }
+
+        const data = await res.json();
+        const elapsed = ((Date.now() - start) / 1000).toFixed(1);
+        status.style.display = "none";
+        stats.textContent = `${data.postUris.length} posts selected in ${elapsed}s`;
+
+        // Render each post URI as a card with an embed link
+        for (const uri of data.postUris) {
+          const card = document.createElement("div");
+          card.className = "post-card";
+
+          const bskyUrl = atUriToBskyUrl(uri);
+
+          card.innerHTML = `
+            <div class="post-text" style="color:#888; font-size:13px;">${uri}</div>
+            ${bskyUrl ? `<a class="post-link" href="${bskyUrl}" target="_blank">View on Bluesky →</a>` : ""}
+          `;
+
+          // Try to load the oEmbed for a richer preview
+          if (bskyUrl) {
+            loadEmbed(card, bskyUrl);
+          }
+
+          results.appendChild(card);
+        }
+      } catch (err) {
+        status.className = "error";
+        status.textContent = "Error: " + err.message;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    /** Try to load a Bluesky oEmbed for richer rendering */
+    async function loadEmbed(card, bskyUrl) {
+      try {
+        const res = await fetch(
+          `https://embed.bsky.app/oembed?url=${encodeURIComponent(bskyUrl)}&format=json`
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.html) {
+          card.innerHTML = data.html;
+        }
+      } catch {
+        // silently fail, the fallback URI display is fine
+      }
+    }
+  </script>
+</body>
+</html>
