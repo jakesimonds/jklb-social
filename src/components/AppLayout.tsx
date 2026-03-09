@@ -57,8 +57,10 @@ import type { ChorusState } from '../lib/chorus';
 import type { Post, FeedItem, Settings, PDSFeedItem, LikedPost, SessionMetrics } from '../types';
 import type { ResolvedFeed } from '../lib/saved-feeds';
 import type { ComposerMode } from './ComposerPanel';
-import { ComposeModal } from './compose/ComposeModal';
+// ComposeModal removed — compose now uses ContentPanel like Settings/Hotkeys
 import type { PlayerFMTrack } from '../lib/pds';
+import { CuratorIndicator } from './CuratorIndicator';
+import { usePremium } from '../hooks/usePremium';
 
 /**
  * Props for the AppLayout component
@@ -254,15 +256,9 @@ function InlineLoginForm({ login, isLoading }: { login: (handle: string) => void
   return (
     <form
       onSubmit={handleSubmit}
-      className="topbar-login-form flex items-center rounded-lg border border-[var(--memphis-pink)] bg-[var(--memphis-bg)] px-3 gap-3"
-      style={{ maxWidth: `${8 * 72 + 7 * 4}px`, height: '72px', minWidth: 0, flexShrink: 1 }}
+      className="topbar-login-form flex items-center rounded-lg border border-[var(--memphis-pink)] bg-[var(--memphis-bg)] px-3 gap-3 flex-shrink min-w-0"
+      style={{ width: `${8 * 72 + 7 * 4}px`, maxWidth: '100%', height: '72px' }}
     >
-      <span
-        className="topbar-login-begin font-bold leading-none flex-shrink-0"
-        style={{ color: 'var(--memphis-pink)', fontSize: '42px' }}
-      >
-        Begin
-      </span>
       <div ref={containerRef} className="relative flex flex-col gap-0.5 flex-1 min-w-0">
         <input
           type="text"
@@ -276,7 +272,7 @@ function InlineLoginForm({ login, isLoading }: { login: (handle: string) => void
           className="w-full px-2 py-1 rounded text-sm bg-white/10 border border-[var(--memphis-cyan)] text-white placeholder-white/40 focus:outline-none focus:border-[var(--memphis-pink)] disabled:opacity-50"
         />
         <span className="text-[9px] text-[var(--memphis-text-muted)] leading-tight">
-          your <a href="https://internethandle.org/" target="_blank" rel="noopener noreferrer" className="underline hover:text-[var(--memphis-cyan)]">internet handle</a> (Bluesky account)
+          Log in with your Bluesky handle
         </span>
 
         {/* Typeahead dropdown - portaled to body so it escapes overflow:hidden parents */}
@@ -286,7 +282,7 @@ function InlineLoginForm({ login, isLoading }: { login: (handle: string) => void
             style={{
               top: containerRef.current.getBoundingClientRect().bottom + 4,
               left: containerRef.current.getBoundingClientRect().left,
-              width: containerRef.current.getBoundingClientRect().width,
+              width: containerRef.current.closest('form')?.getBoundingClientRect().width ?? containerRef.current.getBoundingClientRect().width,
             }}
             onMouseDown={(e) => e.preventDefault()}
           >
@@ -323,9 +319,10 @@ function InlineLoginForm({ login, isLoading }: { login: (handle: string) => void
       <button
         type="submit"
         disabled={isLoading}
-        className="flex-shrink-0 px-3 py-1.5 rounded-lg font-semibold text-sm bg-[var(--memphis-pink)] text-white hover:bg-[var(--memphis-pink)]/80 disabled:opacity-50 transition-colors"
+        className="flex-shrink-0 px-5 rounded-lg font-bold bg-[var(--memphis-pink)] text-white hover:bg-[var(--memphis-pink)]/80 disabled:opacity-50 transition-colors"
+        style={{ fontSize: '32px', lineHeight: 1, paddingTop: '6px', paddingBottom: '6px' }}
       >
-        {isLoading ? '...' : 'Log in'}
+        {isLoading ? '...' : 'begin'}
       </button>
     </form>
   );
@@ -409,6 +406,7 @@ export function AppLayout({
 }: AppLayoutProps) {
   // Get auth state for conditional rendering
   const { agent, isAuthenticated } = useAuth();
+  const { isPremium } = usePremium();
 
   // Profile hover state
   const [hoveredProfile, setHoveredProfile] = useState<ProfileHoverData | null>(null);
@@ -655,7 +653,7 @@ export function AppLayout({
         case 'hotkeys':
           return (
             <div className="postcard-container">
-              <ContentPanel title="Keyboard Shortcuts" onClose={onClosePanel}>
+              <ContentPanel title="Hotkeys" onClose={onClosePanel}>
                 <HotkeysPanel />
               </ContentPanel>
             </div>
@@ -691,11 +689,14 @@ export function AppLayout({
         case 'composer-new':
           return (
             <div className="postcard-container">
-              <ComposeModal
-                onSubmit={(text) => handleSubmitComposer(text, 'new')}
-                onCancel={onClosePanel}
-                isSubmitting={isSubmittingComposer}
-              />
+              <ContentPanel title="Compose" onClose={onClosePanel}>
+                <ComposerPanel
+                  mode="new"
+                  onSubmit={(text) => handleSubmitComposer(text, 'new')}
+                  onCancel={onClosePanel}
+                  isSubmitting={isSubmittingComposer}
+                />
+              </ContentPanel>
             </div>
           );
       }
@@ -707,6 +708,7 @@ export function AppLayout({
         return (
           <div className="postcard-container">
             <TutorialCard
+              id={viewState.stage.id}
               title={TUTORIAL_CONTENT[viewState.stage.id]?.title ?? ''}
               message={TUTORIAL_CONTENT[viewState.stage.id]?.message ?? ''}
               onAdvance={goToNextPost}
@@ -751,7 +753,7 @@ export function AppLayout({
         return (
             <div
               className="postcard-container relative z-10"
-              style={authorBanner ? { background: '#1a1a2e', borderRadius: '0.5rem' } : undefined}
+              style={authorBanner ? { background: '#1a1a2e', borderRadius: 'var(--card-radius)' } : undefined}
             >
               {feedLoading && feedItems.length === 0 ? (
                 <div className="h-full flex items-center justify-center">
@@ -927,7 +929,8 @@ export function AppLayout({
           <PerimeterCell
             onClick={goToNextPost}
             aria-label="j - Next post"
-            className="!rounded-lg jklb-button flex-col !gap-0"
+            className="jklb-button flex-col !gap-0"
+            style={{ borderColor: 'var(--memphis-pink)' }}
           >
             <span className="font-mono text-lg font-bold text-[var(--memphis-pink)]">j</span>
             <span className="text-[8px] text-[var(--memphis-text-muted)] leading-none">next</span>
@@ -940,7 +943,8 @@ export function AppLayout({
           <PerimeterCell
             onClick={goToPreviousPost}
             aria-label="k - Previous post"
-            className="!rounded-lg jklb-button flex-col !gap-0"
+            className="jklb-button flex-col !gap-0"
+            style={{ borderColor: 'var(--memphis-cyan)' }}
           >
             <span className="font-mono text-lg font-bold text-[var(--memphis-cyan)]">k</span>
             <span className="text-[8px] text-[var(--memphis-text-muted)] leading-none">prev</span>
@@ -953,7 +957,8 @@ export function AppLayout({
           <PerimeterCell
             onClick={handleLike}
             aria-label="l - Like post"
-            className="!rounded-lg jklb-button flex-col !gap-0"
+            className="jklb-button flex-col !gap-0"
+            style={{ borderColor: 'var(--memphis-pink)' }}
           >
             <span className="font-mono text-lg font-bold text-[var(--memphis-pink)]">l</span>
             <span className="text-[8px] text-[var(--memphis-text-muted)] leading-none">like</span>
@@ -966,48 +971,53 @@ export function AppLayout({
           <PerimeterCell
             onClick={handleBoost}
             aria-label="b - Boost"
-            className="!rounded-lg jklb-button flex-col !gap-0"
+            className="jklb-button flex-col !gap-0"
+            style={{ borderColor: 'var(--memphis-yellow)' }}
           >
             <span className="font-mono text-lg font-bold text-[var(--memphis-yellow)]">b</span>
             <span className="text-[8px] text-[var(--memphis-text-muted)] leading-none">boost</span>
           </PerimeterCell>
         </div>
 
-        {/* Chorus avatars - fills remaining space, renders exactly what fits */}
-        <div className="chorus-grid-top">
-          {topChorusMembers.map((member) => {
-            const isNewest = member.did === chorusState.newestMemberDid;
-            const isEntering = newChorusDids.has(member.did);
-            const staggerIdx = enteringStaggerIndex.get(member.did) ?? 0;
-            return (
-              <div
-                key={member.did}
-                className={`relative flex-shrink-0 ${isEntering ? 'chorus-entering' : ''}`}
-                style={isEntering ? { animationDelay: `${staggerIdx * 50}ms` } : undefined}
-                onMouseEnter={(e) => handleAvatarMouseEnter(member, e)}
-                onMouseLeave={handleAvatarMouseLeave}
-              >
-                <PerimeterCell
-                  onClick={() => window.open(`https://bsky.app/profile/${member.handle}`, '_blank')}
-                  title={`@${member.handle}${member.interactionType ? ` (${member.interactionType})` : ''}${isNewest ? ' (newest!)' : ''}`}
-                  className={`!p-0 overflow-hidden ${
-                    isNewest
-                      ? '!border-[var(--memphis-yellow)] shadow-[0_0_6px_var(--memphis-yellow)]'
-                      : ''
-                  }`}
+        {/* Spacer / Chorus avatars - fills remaining space */}
+        {isAuthenticated ? (
+          <div className="chorus-grid-top">
+            {topChorusMembers.map((member) => {
+              const isNewest = member.did === chorusState.newestMemberDid;
+              const isEntering = newChorusDids.has(member.did);
+              const staggerIdx = enteringStaggerIndex.get(member.did) ?? 0;
+              return (
+                <div
+                  key={member.did}
+                  className={`relative flex-shrink-0 ${isEntering ? 'chorus-entering' : ''}`}
+                  style={isEntering ? { animationDelay: `${staggerIdx * 50}ms` } : undefined}
+                  onMouseEnter={(e) => handleAvatarMouseEnter(member, e)}
+                  onMouseLeave={handleAvatarMouseLeave}
                 >
-                  {member.avatar ? (
-                    <img src={member.avatar} alt={member.handle} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full bg-[var(--memphis-cyan)] flex items-center justify-center text-sm font-bold text-white">
-                      {member.handle.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </PerimeterCell>
-              </div>
-            );
-          })}
-        </div>
+                  <PerimeterCell
+                    onClick={() => window.open(`https://bsky.app/profile/${member.handle}`, '_blank')}
+                    title={`@${member.handle}${member.interactionType ? ` (${member.interactionType})` : ''}${isNewest ? ' (newest!)' : ''}`}
+                    className={`!p-0 overflow-hidden ${
+                      isNewest
+                        ? '!border-[var(--memphis-yellow)] shadow-[0_0_6px_var(--memphis-yellow)]'
+                        : ''
+                    }`}
+                  >
+                    {member.avatar ? (
+                      <img src={member.avatar} alt={member.handle} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-[var(--memphis-cyan)] flex items-center justify-center text-sm font-bold text-white">
+                        {member.handle.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </PerimeterCell>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex-1" /> /* Spacer pushes login form to right corner */
+        )}
 
         {/* Phase indicator (logged in) or inline login form (logged out) - pinned to far-right corner */}
         {isAuthenticated ? (
@@ -1068,9 +1078,10 @@ export function AppLayout({
             onClick={handleShowHotkeys}
             aria-label="space - All hotkeys"
             title="space → all hotkeys"
-            className="!rounded-lg jklb-button flex-col !gap-0"
+            className="jklb-button flex-col !gap-0"
+            style={{ borderColor: 'var(--memphis-cyan)' }}
           >
-            <span className="font-mono text-lg font-bold text-[var(--memphis-cyan)]">⎵</span>
+            <span className="font-mono text-xs font-bold text-[var(--memphis-cyan)]">space</span>
             <span className="text-[8px] text-[var(--memphis-text-muted)] leading-none">all hotkeys</span>
           </PerimeterCell>
         </div>
@@ -1082,7 +1093,8 @@ export function AppLayout({
           <PerimeterCell
             onClick={onToggleSettings}
             aria-label="s - Settings"
-            className="!rounded-lg jklb-button flex-col !gap-0"
+            className="jklb-button flex-col !gap-0"
+            style={{ borderColor: 'var(--memphis-yellow)' }}
           >
             <span className="font-mono text-lg font-bold text-[var(--memphis-yellow)]">s</span>
             <span className="text-[8px] text-[var(--memphis-text-muted)] leading-none">settings</span>
@@ -1094,7 +1106,8 @@ export function AppLayout({
             onClick={onQuit}
             aria-label="Log out"
             title="log out"
-            className="!rounded-lg jklb-button flex-col !gap-0"
+            className="jklb-button flex-col !gap-0"
+            style={{ borderColor: 'var(--memphis-pink)' }}
           >
             <span className="font-mono text-lg font-bold text-[var(--memphis-pink)]">⏻</span>
             <span className="text-[8px] text-[var(--memphis-text-muted)] leading-none">log out</span>
@@ -1121,6 +1134,7 @@ export function AppLayout({
         <button
           onClick={goToNextPost}
           className="mobile-jklb-button"
+          style={{ borderColor: 'var(--memphis-pink)' }}
           title="j → Next post"
         >
           <span className="font-mono text-lg font-bold text-[var(--memphis-pink)]">j</span>
@@ -1128,6 +1142,7 @@ export function AppLayout({
         <button
           onClick={goToPreviousPost}
           className="mobile-jklb-button"
+          style={{ borderColor: 'var(--memphis-cyan)' }}
           title="k → Previous post"
         >
           <span className="font-mono text-lg font-bold text-[var(--memphis-cyan)]">k</span>
@@ -1135,6 +1150,7 @@ export function AppLayout({
         <button
           onClick={handleLike}
           className="mobile-jklb-button"
+          style={{ borderColor: 'var(--memphis-pink)' }}
           title="l → Like post"
         >
           <span className="font-mono text-lg font-bold text-[var(--memphis-pink)]">l</span>
@@ -1142,6 +1158,7 @@ export function AppLayout({
         <button
           onClick={handleBoost}
           className="mobile-jklb-button"
+          style={{ borderColor: 'var(--memphis-yellow)' }}
           title="b → Boost"
         >
           <span className="font-mono text-lg font-bold text-[var(--memphis-yellow)]">b</span>
@@ -1190,6 +1207,11 @@ export function AppLayout({
         <span className="mx-2">|</span>
         {'thank you for trying this!'}
       </div>
+
+      {/* Curator Indicator — shows curation status for Premium users */}
+      {isPremium && (
+        <CuratorIndicator onClick={() => console.log('curator ready, user clicked checkmark')} />
+      )}
 
       {/* Login Prompt Modal - shown when unauthenticated user tries an action */}
       {showLoginPrompt && (
