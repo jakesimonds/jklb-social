@@ -5,14 +5,17 @@ import App from './App.tsx'
 import { AuthProvider } from './lib/AuthContext'
 import { SettingsProvider } from './lib/SettingsContext'
 import { ToastProvider } from './lib/ToastContext'
+import { CuratorProvider } from './lib/CuratorContext'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <SettingsProvider>
-        <ToastProvider>
-          <App />
-        </ToastProvider>
+        <CuratorProvider>
+          <ToastProvider>
+            <App />
+          </ToastProvider>
+        </CuratorProvider>
       </SettingsProvider>
     </AuthProvider>
   </StrictMode>,
