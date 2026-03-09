@@ -14,6 +14,7 @@ import { TUTORIAL_CONTENT } from '../../lib/tutorials';
 import { UnactionableItemsView } from './UnactionableItemsView';
 import { NewFollowerCard } from './NewFollowerCard';
 import { BeginningPostCard } from './BeginningPostCard';
+import { CuratorCard } from './CuratorCard';
 
 interface BeginningViewProps {
   state: BeginningState;
@@ -49,11 +50,37 @@ export function BeginningView({ state, advance, goBack: _goBack, agent, setBegin
   }
 
   switch (state.stage) {
+    case 'curator':
+      return <CuratorCard onSubmit={advance} />;
+
     case 'tutorialNav':
       return (
         <TutorialCard
+          id="nav"
           title={TUTORIAL_CONTENT.nav.title}
           message={TUTORIAL_CONTENT.nav.message}
+          onAdvance={advance}
+          handleKeys={false}
+        />
+      );
+
+    case 'tutorialActions':
+      return (
+        <TutorialCard
+          id="actions"
+          title={TUTORIAL_CONTENT.actions.title}
+          message={TUTORIAL_CONTENT.actions.message}
+          onAdvance={advance}
+          handleKeys={false}
+        />
+      );
+
+    case 'tutorialMoreKeys':
+      return (
+        <TutorialCard
+          id="moreKeys"
+          title={TUTORIAL_CONTENT.moreKeys.title}
+          message={TUTORIAL_CONTENT.moreKeys.message}
           onAdvance={advance}
           handleKeys={false}
         />
@@ -76,16 +103,6 @@ export function BeginningView({ state, advance, goBack: _goBack, agent, setBegin
           index={state.currentIndex}
           total={state.items.followers.length}
           setBeginningActions={setBeginningActions}
-        />
-      );
-
-    case 'tutorialActions':
-      return (
-        <TutorialCard
-          title={TUTORIAL_CONTENT.actions.title}
-          message={TUTORIAL_CONTENT.actions.message}
-          onAdvance={advance}
-          handleKeys={false}
         />
       );
 

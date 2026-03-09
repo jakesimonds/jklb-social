@@ -45,11 +45,6 @@ function App() {
   const { settings, updateFeed } = useSettings();
   const { isPremium } = usePremium();
 
-  // ── Mobile "coming soon" modal ────────────────────────────────────────
-  const [showMobileModal, setShowMobileModal] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth < 768
-  );
-
   // ── ViewState: single source of truth for app stage + panel ──────────
   const [viewState, setViewState] = useState<ViewState>({
     stage: { type: 'post', index: 0 },
@@ -73,12 +68,12 @@ function App() {
     advance: beginningAdvance,
     goBack: beginningGoBack,
     isDone: beginningDone,
-    showedActionsTutorial,
     sectionAvatarMap,
   } = useBeginning({
     agent,
     isAuthenticated,
     tutorialEnabled: settings.tutorial,
+    isPremium,
   });
 
   // Chorus state for the right sidebar
@@ -434,8 +429,9 @@ function App() {
 
     let stage: StageView;
     switch (beginningState.stage) {
-      case 'tutorialNav':     stage = { type: 'tutorial', id: 'nav' }; break;
-      case 'tutorialActions': stage = { type: 'tutorial', id: 'actions' }; break;
+      case 'tutorialNav':      stage = { type: 'tutorial', id: 'nav' }; break;
+      case 'tutorialActions':  stage = { type: 'tutorial', id: 'actions' }; break;
+      case 'tutorialMoreKeys': stage = { type: 'tutorial', id: 'moreKeys' }; break;
       case 'unactionable':    stage = { type: 'unactionable', index: beginningState.currentIndex }; break;
       case 'follower':        stage = { type: 'follower', index: beginningState.currentIndex }; break;
       case 'quotePost':       stage = { type: 'quote-post', index: beginningState.currentIndex }; break;
@@ -452,16 +448,12 @@ function App() {
   useEffect(() => {
     if (beginningDone) {
       if (isPremium) {
-        if (settings.tutorial && !showedActionsTutorial) {
-          setStage({ type: 'tutorial', id: 'actions' });
-        } else {
-          setStage({ type: 'post', index: 0 });
-        }
+        setStage({ type: 'post', index: 0 });
       } else {
         setStage({ type: 'middle-card' });
       }
     }
-  }, [beginningDone, setStage, isPremium, settings.tutorial, showedActionsTutorial]);
+  }, [beginningDone, setStage, isPremium]);
 
   // Premium users always use chronological feed
   useEffect(() => {
@@ -625,44 +617,26 @@ function App() {
   const effectiveGoToNext = useCallback(() => {
     const phase = getPhase(viewState.stage);
 
-    // Actions tutorial shown between middleCard and feed (beginningDone = true means we're past beginning)
-    if (viewState.stage.type === 'tutorial' && viewState.stage.id === 'actions' && beginningDone) {
-      setStage({ type: 'post', index: 0 });
-    } else if (phase === 'beginning') {
+    if (phase === 'beginning') {
       beginningAdvance();
     } else if (viewState.stage.type === 'middle-card') {
-      // If tutorial is on and L/B tutorial wasn't shown in Beginning, show it now
-      if (settings.tutorial && !showedActionsTutorial) {
-        setStage({ type: 'tutorial', id: 'actions' });
-      } else {
-        setStage({ type: 'post', index: 0 });
-      }
+      setStage({ type: 'post', index: 0 });
     } else {
       goToNextPost();
     }
-  }, [viewState.stage, beginningAdvance, beginningDone, goToNextPost, settings.tutorial, showedActionsTutorial, setStage]);
+  }, [viewState.stage, beginningAdvance, goToNextPost, setStage]);
 
   const effectiveGoToPrev = useCallback(() => {
     const phase = getPhase(viewState.stage);
 
-    // Actions tutorial shown between middleCard and feed (beginningDone = true)
-    if (viewState.stage.type === 'tutorial' && viewState.stage.id === 'actions' && beginningDone) {
-      if (isPremium) {
-        // Premium users skip middle-card — go back to Beginning
-        beginningGoBack();
-      } else {
-        setStage({ type: 'middle-card' });
-      }
-    } else if (phase === 'beginning') {
+    if (phase === 'beginning') {
       beginningGoBack();
     } else if (viewState.stage.type === 'middle-card') {
       // Go back from middleCard to the last content stage in Beginning
       beginningGoBack();
     } else if (viewState.stage.type === 'post' && viewState.stage.index === 0) {
-      // At first feed post — go back to actions tutorial or middle-card (or Beginning for premium)
-      if (settings.tutorial && !showedActionsTutorial) {
-        setStage({ type: 'tutorial', id: 'actions' });
-      } else if (isPremium) {
+      // At first feed post — go back to middle-card (or Beginning for premium)
+      if (isPremium) {
         beginningGoBack();
       } else {
         setStage({ type: 'middle-card' });
@@ -670,7 +644,7 @@ function App() {
     } else {
       goToPreviousPost();
     }
-  }, [viewState.stage, beginningGoBack, beginningDone, goToPreviousPost, settings.tutorial, showedActionsTutorial, setStage, isPremium]);
+  }, [viewState.stage, beginningGoBack, goToPreviousPost, setStage, isPremium]);
 
   // ── Action handlers ──────────────────────────────────────────────────
 
@@ -1192,11 +1166,7 @@ function App() {
       setBeginningActions={setBeginningActions}
       onBeginningReply={handleBeginningReply}
       onMiddleCardAdvance={() => {
-        if (settings.tutorial && !showedActionsTutorial) {
-          setStage({ type: 'tutorial', id: 'actions' });
-        } else {
-          setStage({ type: 'post', index: 0 });
-        }
+        setStage({ type: 'post', index: 0 });
       }}
       // Quit/logout handler
       onQuit={logout}
@@ -1224,25 +1194,6 @@ function App() {
       // Quote focus state for Shift+J/K
       isFocusedOnQuote={focusTarget === 'quote'}
     />
-    {showMobileModal && (
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70">
-        <div className="relative mx-4 max-w-sm rounded-lg border border-[var(--memphis-border)] bg-[var(--memphis-bg)] p-8 text-center shadow-lg">
-          <button
-            onClick={() => setShowMobileModal(false)}
-            className="absolute top-2 right-2 text-[var(--memphis-text-muted)] hover:text-white text-xl leading-none px-2 py-1"
-            aria-label="Close"
-          >
-            ×
-          </button>
-          <p className="text-[var(--memphis-cyan)] text-lg font-bold">
-            jklb.social mobile coming soon
-          </p>
-          <p className="text-[var(--memphis-text-muted)] text-sm mt-2">
-            (Android first)
-          </p>
-        </div>
-      </div>
-    )}
     </>
   );
 }

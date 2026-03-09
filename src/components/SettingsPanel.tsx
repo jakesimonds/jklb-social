@@ -6,7 +6,7 @@
  * Code currently has 6 — Award Nomination, Like Chorus, and Cover Photo are not in spec.
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useSettings } from '../lib/SettingsContext';
 import { DEFAULT_MUSIC_SETTINGS } from '../lib/settings';
 import { usePremium } from '../hooks/usePremium';
@@ -214,23 +214,8 @@ function PremiumFeedSettings() {
   const { isPremium } = usePremium();
   const { settings, updateAwardSettings } = useSettings();
   const [editingCount, setEditingCount] = useState<string | null>(null);
-  const [preference, setPreference] = useState('');
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('jklb-feed-preference');
-    if (saved) setPreference(saved);
-  }, []);
 
   if (!isPremium) return null;
-
-  const handlePreferenceChange = (value: string) => {
-    setPreference(value);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      localStorage.setItem('jklb-feed-preference', value);
-    }, 500);
-  };
 
   return (
     <div className="pt-4 border-t border-[var(--memphis-border)] space-y-4">
@@ -289,23 +274,10 @@ function PremiumFeedSettings() {
           </button>
         </div>
       </div>
-
-      {/* Feed preference textarea */}
-      <div>
-        <label className="block text-[var(--memphis-text-muted)] text-xs mb-2">
-          What do you want to see?
-        </label>
-        <textarea
-          value={preference}
-          onChange={(e) => handlePreferenceChange(e.target.value)}
-          placeholder="e.g. 'no politics, no sports spoilers, show me tech and art posts'"
-          rows={3}
-          className="w-full bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded px-3 py-2 text-sm text-[var(--memphis-text)] placeholder:text-[var(--memphis-text-muted)] focus:border-[var(--memphis-cyan)] focus:outline-none resize-none"
-        />
-      </div>
     </div>
   );
 }
+
 
 /**
  * SettingsPanel - Clean, minimal settings UI
@@ -326,11 +298,27 @@ export function SettingsPanel({
       {/* 2. Text Size */}
       <TextSizeSettings />
 
-      {/* 3. Background Music */}
+
+      {/* 4. Background Music */}
       <BackgroundMusicSettings tracks={tracks} isLoadingTracks={isLoadingTracks} />
 
-      {/* 4. JKLB Premium (only renders for whitelisted users) */}
+      {/* 5. JKLB Premium (only renders for whitelisted users) */}
       <PremiumFeedSettings />
+
+      {/* Footer hint */}
+      <div className="pt-2 border-t border-[var(--memphis-border)] text-center">
+        <p className="text-xs text-[var(--memphis-text-muted)]">
+          Press{' '}
+          <kbd className="px-1 py-0.5 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded text-xs">
+            S
+          </kbd>
+          {' '}or{' '}
+          <kbd className="px-1 py-0.5 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded text-xs">
+            Esc
+          </kbd>
+          {' '}to close
+        </p>
+      </div>
     </div>
   );
 }

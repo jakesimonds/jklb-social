@@ -17,10 +17,12 @@ import { TEST_NOTIFICATIONS } from '../lib/flags';
 // ── Types ───────────────────────────────────────────────────────────
 
 export type BeginningStage =
-  | 'tutorialNav'      // Tutorial card: "Press J forward, K back"
+  | 'curator'          // Premium: curator config card (textarea + post count slider)
+  | 'tutorialNav'      // Tutorial card 1: Welcome + j/space
+  | 'tutorialActions'  // Tutorial card 2: Philosophy + l/b
+  | 'tutorialMoreKeys' // Tutorial card 3: q/v/o hotkeys
   | 'unactionable'     // Likes & boosts combined (informational)
   | 'follower'         // New follower (serial, one at a time)
-  | 'tutorialActions'  // Tutorial card: "For posts: L like, B boost"
   | 'quotePost'        // Quote post (serial)
   | 'reply'            // Reply (serial)
   | 'mention'          // Mention (serial)
@@ -104,6 +106,8 @@ export interface UseBeginningParams {
   isAuthenticated: boolean;
   /** Whether tutorial cards should be shown */
   tutorialEnabled?: boolean;
+  /** Whether this is a JKLB Premium user (shows curator card first) */
+  isPremium?: boolean;
 }
 
 export interface UseBeginningReturn {
@@ -161,15 +165,21 @@ function buildUnactionableSlides(groups: UnactionableGroup[]): UnactionableSlide
 function buildStageSequence(
   items: NotificationsByType,
   tutorialEnabled: boolean,
+  isPremium: boolean = false,
 ): BeginningStage[] {
   const stages: BeginningStage[] = [];
 
-  // Tutorial nav card (first thing the user sees)
-  if (tutorialEnabled) {
-    stages.push('tutorialNav');
+  // Premium users get the curator card first
+  if (isPremium) {
+    stages.push('curator');
   }
 
-  // Beginning section card removed — phase indicator in top bar replaces it
+  // Tutorial cards 1-3 (all at the start, before any notifications)
+  if (tutorialEnabled) {
+    stages.push('tutorialNav');      // Card 1: Welcome + j/space
+    stages.push('tutorialActions');   // Card 2: Philosophy + l/b
+    stages.push('tutorialMoreKeys'); // Card 3: q/v/o hotkeys
+  }
 
   // Unactionable (likes & boosts) — skip if no slides
   if (items.unactionableSlides.length > 0) {
@@ -179,13 +189,6 @@ function buildStageSequence(
   // Followers — skip if empty
   if (items.followers.length > 0) {
     stages.push('follower');
-  }
-
-  // Tutorial actions card — insert before the first actionable stage
-  // (quote posts, replies, or mentions — whichever comes first)
-  const hasActionable = items.quotePosts.length > 0 || items.replies.length > 0 || items.mentions.length > 0;
-  if (tutorialEnabled && hasActionable) {
-    stages.push('tutorialActions');
   }
 
   // Quote posts — skip if empty
@@ -225,6 +228,8 @@ function getStageItemCount(stage: BeginningStage, items: NotificationsByType): n
       return items.replies.length;
     case 'mention':
       return items.mentions.length;
+    case 'curator':
+      return 1; // Single card
     default:
       return 1; // Single-item stages (tutorial, done)
   }
@@ -372,9 +377,10 @@ export function useBeginning({
   agent,
   isAuthenticated,
   tutorialEnabled = true,
+  isPremium = false,
 }: UseBeginningParams): UseBeginningReturn {
   const [state, setState] = useState<BeginningState>({
-    stage: tutorialEnabled ? 'tutorialNav' : 'unactionable',
+    stage: isPremium ? 'curator' : (tutorialEnabled ? 'tutorialNav' : 'unactionable'),
     currentIndex: 0,
     items: EMPTY_ITEMS,
     isLoading: true,
@@ -410,7 +416,7 @@ export function useBeginning({
         ] as AppBskyNotificationListNotifications.Notification[];
 
         const items = processNotifications(allNotifs, seenAt);
-        const sequence = buildStageSequence(items, tutorialEnabled);
+        const sequence = buildStageSequence(items, tutorialEnabled, isPremium);
         stageSequenceRef.current = sequence;
 
         setState({
@@ -423,7 +429,7 @@ export function useBeginning({
       } catch (err) {
         console.error('useBeginning: Failed to fetch notifications:', err);
         // On error, skip to done (let user proceed to Middle)
-        const sequence = buildStageSequence(EMPTY_ITEMS, tutorialEnabled);
+        const sequence = buildStageSequence(EMPTY_ITEMS, tutorialEnabled, isPremium);
         stageSequenceRef.current = sequence;
         setState({
           stage: sequence[0],
@@ -436,24 +442,24 @@ export function useBeginning({
     };
 
     fetchNotifications();
-  }, [agent, isAuthenticated, tutorialEnabled]);
+  }, [agent, isAuthenticated, tutorialEnabled, isPremium]);
 
   // Rebuild stage sequence when tutorialEnabled changes (without re-fetching)
   useEffect(() => {
     if (!hasFetchedRef.current) return; // Haven't fetched yet, nothing to rebuild
 
     setState(prev => {
-      const sequence = buildStageSequence(prev.items, tutorialEnabled);
+      const sequence = buildStageSequence(prev.items, tutorialEnabled, isPremium);
       stageSequenceRef.current = sequence;
 
       // If currently on a tutorial stage and tutorials just got disabled, advance past it
-      const isTutorialStage = prev.stage === 'tutorialNav' || prev.stage === 'tutorialActions';
+      const isTutorialStage = prev.stage === 'tutorialNav' || prev.stage === 'tutorialActions' || prev.stage === 'tutorialMoreKeys';
       if (!tutorialEnabled && isTutorialStage) {
         return { ...prev, stage: sequence[0] || 'done', currentIndex: 0 };
       }
       return prev;
     });
-  }, [tutorialEnabled]);
+  }, [tutorialEnabled, isPremium]);
 
   // Mark notifications as seen when Beginning flow completes
   // This updates the localStorage seenAt cursor so next reload only shows new notifications
