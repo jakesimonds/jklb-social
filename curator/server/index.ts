@@ -1,7 +1,7 @@
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { gatherCandidates, getUserLikesSample, getUserProfile } from "./feeds.js";
+import { gatherCandidates, getUserTasteSample, getUserProfile } from "./feeds.js";
 import { curate } from "./agent.js";
 import type { CurationRequest } from "./types.js";
 
@@ -30,11 +30,11 @@ app.post("/curate", async (req, res) => {
     const fetchStart = Date.now();
     const [candidates, likes, profile] = await Promise.all([
       gatherCandidates(handle),
-      getUserLikesSample(handle, 50),
+      getUserTasteSample(handle, 30),
       getUserProfile(handle),
     ]);
     const fetchMs = Date.now() - fetchStart;
-    console.log(`Fetch phase: ${fetchMs}ms (${candidates.length} candidates, ${likes.length} likes)`);
+    console.log(`Fetch phase: ${fetchMs}ms (${candidates.length} candidates, ${likes.length} taste samples)`);
 
     if (profile) {
       console.log(`Profile: ${profile.displayName} (@${profile.handle})`);

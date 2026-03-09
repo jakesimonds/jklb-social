@@ -1,8 +1,5 @@
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
+import { spawn } from "node:child_process";
 import type { CandidatePost, CurationResult } from "./types.js";
-
-const execFileAsync = promisify(execFile);
 
 /** Build the prompt for the curation agent */
 function buildPrompt(
@@ -45,6 +42,52 @@ ${candidatesSection}
 Return the JSON array now:`;
 }
 
+/** Run a command with stdin input and return stdout */
+function runWithStdin(
+  cmd: string,
+  args: string[],
+  input: string,
+  timeoutMs: number
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const proc = spawn(cmd, args, {
+      stdio: ["pipe", "pipe", "pipe"],
+    });
+
+    let stdout = "";
+    let stderr = "";
+
+    proc.stdout.on("data", (chunk) => {
+      stdout += chunk.toString();
+    });
+    proc.stderr.on("data", (chunk) => {
+      stderr += chunk.toString();
+    });
+
+    const timer = setTimeout(() => {
+      proc.kill("SIGKILL");
+      reject(new Error("Agent timed out"));
+    }, timeoutMs);
+
+    proc.on("close", (code) => {
+      clearTimeout(timer);
+      if (code !== 0) {
+        reject(new Error(`claude exited with code ${code}: ${stderr.slice(0, 500)}`));
+      } else {
+        resolve(stdout);
+      }
+    });
+
+    proc.on("error", (err) => {
+      clearTimeout(timer);
+      reject(err);
+    });
+
+    proc.stdin.write(input);
+    proc.stdin.end();
+  });
+}
+
 /** Run the curation agent via Claude Code CLI */
 export async function curate(
   candidates: CandidatePost[],
@@ -56,34 +99,27 @@ export async function curate(
   console.log(
     `Running agent with ${candidates.length} candidates, ${userLikes.length} taste samples...`
   );
+  console.log(`Prompt size: ${(prompt.length / 1024).toFixed(1)}KB`);
 
-  try {
-    const { stdout } = await execFileAsync(
-      "claude",
-      ["-p", prompt, "--output-format", "text"],
-      {
-        timeout: 120_000, // 2 minute timeout
-        maxBuffer: 10 * 1024 * 1024, // 10MB buffer for large responses
-      }
-    );
+  const stdout = await runWithStdin(
+    "claude",
+    ["-p", "--output-format", "text"],
+    prompt,
+    180_000 // 3 minute timeout
+  );
 
-    // Extract JSON array from the response
-    const jsonMatch = stdout.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) {
-      throw new Error("Agent response did not contain a JSON array");
-    }
-
-    const uris: unknown = JSON.parse(jsonMatch[0]);
-    if (!Array.isArray(uris) || !uris.every((u) => typeof u === "string")) {
-      throw new Error("Agent returned invalid URI array");
-    }
-
-    console.log(`Agent selected ${uris.length} posts`);
-    return { postUris: uris };
-  } catch (err: any) {
-    if (err.killed) {
-      throw new Error("Agent timed out after 2 minutes");
-    }
-    throw new Error(`Agent failed: ${err.message}`);
+  // Extract JSON array from the response
+  const jsonMatch = stdout.match(/\[[\s\S]*\]/);
+  if (!jsonMatch) {
+    console.error("Agent output (first 500 chars):", stdout.slice(0, 500));
+    throw new Error("Agent response did not contain a JSON array");
   }
+
+  const uris: unknown = JSON.parse(jsonMatch[0]);
+  if (!Array.isArray(uris) || !uris.every((u) => typeof u === "string")) {
+    throw new Error("Agent returned invalid URI array");
+  }
+
+  console.log(`Agent selected ${uris.length} posts`);
+  return { postUris: uris };
 }

@@ -3,17 +3,13 @@ import type { CandidatePost } from "./types.js";
 
 const agent = new BskyAgent({ service: "https://public.api.bsky.app" });
 
-// Feed generator URIs
-const FEED_FOR_YOU =
-  "at://did:plc:3guzzweuqraryl3rdkimjamk/app.bsky.feed.generator/for-you";
-const FEED_QUIET_POSTERS =
-  "at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/infreq";
-const FEED_MUTUALS =
-  "at://did:plc:z72i7hdynmk6r22z27h6tvur/feed/mutuals";
+// What's Hot — works without auth
+const FEED_WHATS_HOT =
+  "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot";
 
 /** Convert an API feed post into our CandidatePost shape */
 function toCandidate(item: any): CandidatePost | null {
-  const post = item.post;
+  const post = item.post ?? item;
   if (!post?.record) return null;
   const record = post.record as any;
   const embed = post.embed;
@@ -37,7 +33,7 @@ function toCandidate(item: any): CandidatePost | null {
   };
 }
 
-/** Pull ~limit posts from a feed generator, paginating if needed */
+/** Pull posts from a feed generator */
 export async function getAlgorithmicFeed(
   feedUri: string,
   limit: number = 100
@@ -69,36 +65,59 @@ export async function getAlgorithmicFeed(
   return posts;
 }
 
-/** Fetch a sample of user's recent likes for taste profiling */
-export async function getUserLikesSample(
-  handle: string,
-  count: number = 50
+/** Get recent posts from a specific user */
+async function getAuthorPosts(
+  actor: string,
+  limit: number = 10
 ): Promise<CandidatePost[]> {
-  const posts: CandidatePost[] = [];
+  try {
+    const res = await agent.app.bsky.feed.getAuthorFeed({
+      actor,
+      limit,
+      filter: "posts_no_replies",
+    });
+    return res.data.feed
+      .map((item) => toCandidate(item))
+      .filter((p): p is CandidatePost => p !== null);
+  } catch {
+    return [];
+  }
+}
+
+/** Get user's follows */
+async function getFollows(
+  handle: string,
+  limit: number = 50
+): Promise<{ did: string; handle: string }[]> {
+  const follows: { did: string; handle: string }[] = [];
   let cursor: string | undefined;
 
   try {
-    while (posts.length < count) {
-      const pageSize = Math.min(count - posts.length, 50);
-      const res = await agent.app.bsky.feed.getActorLikes({
+    while (follows.length < limit) {
+      const res = await agent.app.bsky.graph.getFollows({
         actor: handle,
-        limit: pageSize,
+        limit: Math.min(limit - follows.length, 50),
         cursor,
       });
-
-      for (const item of res.data.feed) {
-        const candidate = toCandidate(item);
-        if (candidate) posts.push(candidate);
+      for (const f of res.data.follows) {
+        follows.push({ did: f.did, handle: f.handle });
       }
-
       cursor = res.data.cursor;
-      if (!cursor || res.data.feed.length === 0) break;
+      if (!cursor || res.data.follows.length === 0) break;
     }
   } catch (err) {
-    console.error(`Error fetching likes for ${handle}:`, err);
+    console.error(`Error fetching follows for ${handle}:`, err);
   }
 
-  return posts;
+  return follows;
+}
+
+/** Fetch user's own posts as a taste signal (since likes aren't public) */
+export async function getUserTasteSample(
+  handle: string,
+  count: number = 30
+): Promise<CandidatePost[]> {
+  return getAuthorPosts(handle, count);
 }
 
 /** Fetch user profile for context */
@@ -112,27 +131,39 @@ export async function getUserProfile(handle: string) {
   }
 }
 
-/** Pull from all 3 feeds, deduplicate by URI, return ~300 candidates */
+/** Gather ~300 candidates from follows' posts + What's Hot, deduplicated */
 export async function gatherCandidates(
   handle: string
 ): Promise<CandidatePost[]> {
   console.log(`Gathering candidates for ${handle}...`);
 
-  const [forYou, quietPosters, mutuals] = await Promise.all([
-    getAlgorithmicFeed(FEED_FOR_YOU, 100),
-    getAlgorithmicFeed(FEED_QUIET_POSTERS, 100),
-    getAlgorithmicFeed(FEED_MUTUALS, 100),
-  ]);
+  // Get follows
+  const follows = await getFollows(handle, 50);
+  console.log(`Found ${follows.length} follows`);
 
-  console.log(
-    `Raw counts — For You: ${forYou.length}, Quiet Posters: ${quietPosters.length}, Mutuals: ${mutuals.length}`
-  );
+  // Fetch posts from follows in parallel (batches of 10 to avoid hammering)
+  const followPosts: CandidatePost[] = [];
+  const batchSize = 10;
+  for (let i = 0; i < follows.length; i += batchSize) {
+    const batch = follows.slice(i, i + batchSize);
+    const results = await Promise.all(
+      batch.map((f) => getAuthorPosts(f.did, 10))
+    );
+    for (const posts of results) {
+      followPosts.push(...posts);
+    }
+  }
+  console.log(`Follow posts: ${followPosts.length}`);
+
+  // Get What's Hot for discovery
+  const hotPosts = await getAlgorithmicFeed(FEED_WHATS_HOT, 100);
+  console.log(`What's Hot posts: ${hotPosts.length}`);
 
   // Deduplicate by URI
   const seen = new Set<string>();
   const all: CandidatePost[] = [];
 
-  for (const post of [...forYou, ...quietPosters, ...mutuals]) {
+  for (const post of [...followPosts, ...hotPosts]) {
     if (!seen.has(post.uri)) {
       seen.add(post.uri);
       all.push(post);
