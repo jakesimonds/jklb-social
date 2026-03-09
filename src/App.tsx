@@ -9,7 +9,7 @@ import { useCurator } from './lib/CuratorContext';
 import { applyTheme } from './lib/theme';
 import { getPhase } from './lib/tutorials';
 import type { ViewState, PanelView, StageView } from './types';
-import { fetchPostReplies, getCachedReplies, transformPostView } from './lib/feed';
+import { fetchPostReplies, getCachedReplies, transformPostView, wrapPostsAsFeedItems } from './lib/feed';
 // Note: action functions are now called from usePostActions hook
 import {
   createInitialChorusState,
@@ -43,9 +43,9 @@ function App() {
     logout,
   } = useAuth();
 
-  const { settings } = useSettings();
+  const { settings, updateAwardSettings } = useSettings();
   const { isPremium } = usePremium();
-  const { status: curatorStatus } = useCurator();
+  const { status: curatorStatus, curatedUris, requestedCount: curatorRequestedCount, enterCuratedMode, inCuratedMode } = useCurator();
 
   // ── ViewState: single source of truth for app stage + panel ──────────
   const [viewState, setViewState] = useState<ViewState>({
@@ -1028,12 +1028,51 @@ function App() {
   // Skip during Ghost Middle (curator working/idle for premium users) — no auto-end while browsing
   useEffect(() => {
     if (middleProgress < 1) return;
-    if (isPremium && (curatorStatus === 'working' || curatorStatus === 'idle')) return; // Ghost Middle — no end
+    if (isPremium && !inCuratedMode && (curatorStatus === 'working' || curatorStatus === 'idle')) return; // Ghost Middle — no end
     const phase = getPhase(viewState.stage);
     if (phase !== 'middle') return; // Only trigger from Middle phase
     if (endFlowState.isActive) return; // Already in End flow
     enterEndFlow();
-  }, [middleProgress, viewState.stage, endFlowState.isActive, enterEndFlow, isPremium, curatorStatus]);
+  }, [middleProgress, viewState.stage, endFlowState.isActive, enterEndFlow, isPremium, curatorStatus, inCuratedMode]);
+
+  // ── Curator: resolve URIs and enter curated mode ─────────────────────
+  const handleCuratorReady = useCallback(async () => {
+    if (curatedUris.length === 0) return;
+
+    try {
+      // Resolve curated URIs to full post objects via public API
+      // getPosts supports up to 25 URIs per call, so batch if needed
+      const PUBLIC_API = 'https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts';
+      const allPosts: import('./types').Post[] = [];
+
+      for (let i = 0; i < curatedUris.length; i += 25) {
+        const batch = curatedUris.slice(i, i + 25);
+        const params = new URLSearchParams();
+        batch.forEach(uri => params.append('uris', uri));
+        const response = await fetch(`${PUBLIC_API}?${params.toString()}`);
+        if (!response.ok) throw new Error(`getPosts failed: ${response.status}`);
+        const data = await response.json();
+        const posts = data.posts.map((postView: Parameters<typeof transformPostView>[0]) =>
+          transformPostView(postView)
+        );
+        allPosts.push(...posts);
+      }
+
+      // Replace the feed with curated posts
+      setFeedItems(wrapPostsAsFeedItems(allPosts));
+      setCurrentItemIndex(0);
+      resetPostsViewed();
+      setStage({ type: 'post', index: 0 });
+
+      // Set postsBeforePrompt to curated count so progress bar works
+      updateAwardSettings({ postsBeforePrompt: curatorRequestedCount });
+
+      // Mark curated mode active (hides indicator, enables end transition)
+      enterCuratedMode();
+    } catch (err) {
+      console.error('Failed to resolve curated posts:', err);
+    }
+  }, [curatedUris, curatorRequestedCount, setFeedItems, setCurrentItemIndex, setStage, updateAwardSettings, enterCuratedMode]);
 
   // ── Render ───────────────────────────────────────────────────────────
 
@@ -1182,6 +1221,7 @@ function App() {
       activeUrl={currentLinks[activeLinkIndex]?.url}
       // Quote focus state for Shift+J/K
       isFocusedOnQuote={focusTarget === 'quote'}
+      onCuratorReady={handleCuratorReady}
     />
     </>
   );

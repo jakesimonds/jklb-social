@@ -8,11 +8,13 @@ interface CuratorState {
   curatedUris: string[];
   requestedCount: number;
   userPrompt: string;
+  inCuratedMode: boolean;
 }
 
 interface CuratorContextValue extends CuratorState {
   startCuration: (prompt: string, count: number) => void;
   getCuratedPosts: () => string[];
+  enterCuratedMode: () => void;
   reset: () => void;
 }
 
@@ -36,6 +38,7 @@ export function CuratorProvider({ children }: { children: ReactNode }) {
   const [curatedUris, setCuratedUris] = useState<string[]>([]);
   const [requestedCount, setRequestedCount] = useState<number>(getInitialCount);
   const [userPrompt, setUserPrompt] = useState<string>(getInitialPrompt);
+  const [inCuratedMode, setInCuratedMode] = useState(false);
 
   const startCuration = useCallback((prompt: string, count: number) => {
     setUserPrompt(prompt);
@@ -57,9 +60,15 @@ export function CuratorProvider({ children }: { children: ReactNode }) {
     return curatedUris;
   }, [curatedUris]);
 
+  const enterCuratedMode = useCallback(() => {
+    setInCuratedMode(true);
+    setStatus('idle');
+  }, []);
+
   const reset = useCallback(() => {
     setStatus('idle');
     setCuratedUris([]);
+    setInCuratedMode(false);
   }, []);
 
   const value: CuratorContextValue = {
@@ -67,8 +76,10 @@ export function CuratorProvider({ children }: { children: ReactNode }) {
     curatedUris,
     requestedCount,
     userPrompt,
+    inCuratedMode,
     startCuration,
     getCuratedPosts,
+    enterCuratedMode,
     reset,
   };
 

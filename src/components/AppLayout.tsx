@@ -195,6 +195,9 @@ export interface AppLayoutProps {
 
   // Quote focus state for Shift+J/K
   isFocusedOnQuote?: boolean;
+
+  // Curator: called when user clicks the green checkmark to enter curated mode
+  onCuratorReady?: () => void;
 }
 
 /** Inline "Begin" login form with typeahead autocomplete */
@@ -403,6 +406,7 @@ export function AppLayout({
   isLoadingTracks = false,
   activeUrl,
   isFocusedOnQuote = false,
+  onCuratorReady,
 }: AppLayoutProps) {
   // Get auth state for conditional rendering
   const { agent, isAuthenticated } = useAuth();
@@ -1210,7 +1214,7 @@ export function AppLayout({
 
       {/* Curator Indicator — shows curation status for Premium users */}
       {isPremium && (
-        <CuratorIndicator onClick={() => console.log('curator ready, user clicked checkmark')} />
+        <CuratorIndicator onClick={() => onCuratorReady?.()} />
       )}
 
       {/* Login Prompt Modal - shown when unauthenticated user tries an action */}
