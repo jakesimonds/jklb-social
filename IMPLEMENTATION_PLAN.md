@@ -860,7 +860,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-SLAB-3: Extend Slab with accentColor prop
+- [x] TASK-SLAB-3: Extend Slab with accentColor prop ✓
 
   **Complexity:** Trivial
   **File(s):** `src/components/Slab.tsx`
