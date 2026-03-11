@@ -724,14 +724,16 @@ export function AppLayout({
       case 'tutorial':
         return (
           <div className="postcard-container">
-            <TutorialCard
-              id={viewState.stage.id}
-              title={TUTORIAL_CONTENT[viewState.stage.id]?.title ?? ''}
-              message={TUTORIAL_CONTENT[viewState.stage.id]?.message ?? ''}
-              onAdvance={goToNextPost}
-              onGoBack={goToPreviousPost}
-              handleKeys={false}
-            />
+            <Slab title="Tutorial" accentColor="var(--memphis-yellow)" hideClose>
+              <TutorialCard
+                id={viewState.stage.id}
+                title={TUTORIAL_CONTENT[viewState.stage.id]?.title ?? ''}
+                message={TUTORIAL_CONTENT[viewState.stage.id]?.message ?? ''}
+                onAdvance={goToNextPost}
+                onGoBack={goToPreviousPost}
+                handleKeys={false}
+              />
+            </Slab>
           </div>
         );
 
@@ -756,13 +758,15 @@ export function AppLayout({
       case 'middle-card':
         return (
           <div className="postcard-container">
-            <SectionCard
-              section="middle"
-              onAdvance={onMiddleCardAdvance}
-              onGoBack={goToPreviousPost}
-              availableFeeds={availableFeeds}
-              handleKeys={false}
-            />
+            <Slab title="Choose Your Algorithm" accentColor="var(--memphis-cyan)" hideClose>
+              <SectionCard
+                section="middle"
+                onAdvance={onMiddleCardAdvance}
+                onGoBack={goToPreviousPost}
+                availableFeeds={availableFeeds}
+                handleKeys={false}
+              />
+            </Slab>
           </div>
         );
 
