@@ -53,6 +53,7 @@ import { LikedPostsGrid } from './LikedPostsGrid';
 import { EndScreenGrid } from './end/EndScreenGrid';
 import { SessionStats } from './end/SessionStats';
 import { ParticipationClaim } from './end/ParticipationClaim';
+import { TrophyCase } from './end/TrophyCase';
 import type { ChorusState } from '../lib/chorus';
 import type { Post, FeedItem, Settings, PDSFeedItem, LikedPost, SessionMetrics } from '../types';
 import type { ResolvedFeed } from '../lib/saved-feeds';
@@ -179,8 +180,13 @@ export interface AppLayoutProps {
   onEndFlowAdvanceAward: () => void;
   onEndFlowGoBackAward: () => void;
   onEndFlowSelectPost: (post: LikedPost | null) => void;
-  /** Trophy state for End screen dynamic buttons */
-  trophyState: { hasParticipationTrophy: boolean; hasTrophies: boolean };
+  /** Trophy state for End screen dynamic buttons + Trophy Case */
+  trophyState: {
+    hasParticipationTrophy: boolean;
+    hasTrophies: boolean;
+    participationTrophyNumber: number | null;
+    hasGivenBestThing: boolean;
+  };
   /** Exit the end flow entirely (close Slab) */
   onEndFlowExit: () => void;
   /** Refetch trophy data after claiming */
@@ -922,9 +928,13 @@ export function AppLayout({
             break;
           case 'trophy-case':
             content = (
-              <div className="flex items-center justify-center h-full">
-                <p className="text-[var(--memphis-text-muted)] text-sm">Trophy case — coming soon</p>
-              </div>
+              <TrophyCase
+                onBack={onEndReturnToGrid}
+                onStartNomination={() => onEndButton('active-award')}
+                hasParticipationTrophy={trophyState.hasParticipationTrophy}
+                participationTrophyNumber={trophyState.participationTrophyNumber}
+                hasGivenBestThing={trophyState.hasGivenBestThing}
+              />
             );
             break;
         }

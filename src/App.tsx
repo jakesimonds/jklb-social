@@ -1179,6 +1179,8 @@ function App() {
       trophyState={{
         hasParticipationTrophy: trophies.hasParticipationTrophy,
         hasTrophies: trophies.hasParticipationTrophy || trophies.hasGivenBestThing || trophies.hasWonBestThing,
+        participationTrophyNumber: trophies.participationTrophy?.number ?? null,
+        hasGivenBestThing: trophies.hasGivenBestThing,
       }}
       onEndFlowExit={exitEndFlow}
       onRefetchTrophies={trophies.refetch}

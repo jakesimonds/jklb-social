@@ -747,7 +747,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-TROPHY-8: Trophy Case Slab
+- [x] TASK-TROPHY-8: Trophy Case Slab ✓
 
   **Complexity:** Medium
   **File(s):** new `src/components/end/TrophyCase.tsx`
