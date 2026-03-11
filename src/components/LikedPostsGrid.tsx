@@ -13,6 +13,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { LikedPost } from '../types';
+import { EndSubFlowWrapper } from './end/EndSubFlowWrapper';
 
 const ROWS = 4;
 const CELL_WIDTH = 220; // px — fixed width for horizontal scroll
@@ -88,9 +89,16 @@ export function LikedPostsGrid({
           }
           break;
         }
-        case 'k': {
+        case 'Escape': {
           e.preventDefault();
           onGoBack();
+          break;
+        }
+        case 'k': {
+          e.preventDefault();
+          const nextK = focusIndex === null ? 0 : Math.max(focusIndex - 1, 0);
+          setFocusIndex(nextK);
+          selectAtIndex(nextK);
           break;
         }
         case 'ArrowDown': {
@@ -169,33 +177,36 @@ export function LikedPostsGrid({
   // Empty state — no likes, just skip
   if (likedPosts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full w-full px-6">
-        <div
-          className="w-24 h-1 mb-8 rounded-full"
-          style={{ backgroundColor: 'var(--memphis-yellow)' }}
-        />
-        <h2
-          className="text-3xl font-bold tracking-tight mb-3"
-          style={{ color: 'var(--memphis-yellow)' }}
-        >
-          No likes this session
-        </h2>
-        <p className="text-sm text-[var(--memphis-text-muted)] mb-10">
-          You didn't like any posts. That's okay.
-        </p>
-        <div className="mt-auto pb-6">
-          <span className="text-sm text-[var(--memphis-text-muted)]">
-            <kbd className="px-1.5 py-0.5 rounded border border-[var(--memphis-border)] text-[var(--memphis-text)] text-xs">
-              j
-            </kbd>
-            {' '}to continue
-          </span>
+      <EndSubFlowWrapper onBack={onGoBack}>
+        <div className="flex flex-col items-center justify-center h-full w-full px-6">
+          <div
+            className="w-24 h-1 mb-8 rounded-full"
+            style={{ backgroundColor: 'var(--memphis-yellow)' }}
+          />
+          <h2
+            className="text-3xl font-bold tracking-tight mb-3"
+            style={{ color: 'var(--memphis-yellow)' }}
+          >
+            No likes this session
+          </h2>
+          <p className="text-sm text-[var(--memphis-text-muted)] mb-10">
+            You didn't like any posts. That's okay.
+          </p>
+          <div className="mt-auto pb-6">
+            <span className="text-sm text-[var(--memphis-text-muted)]">
+              <kbd className="px-1.5 py-0.5 rounded border border-[var(--memphis-border)] text-[var(--memphis-text)] text-xs">
+                j
+              </kbd>
+              {' '}to continue
+            </span>
+          </div>
         </div>
-      </div>
+      </EndSubFlowWrapper>
     );
   }
 
   return (
+    <EndSubFlowWrapper onBack={onGoBack}>
     <div className="flex flex-col w-full h-full p-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 flex-shrink-0">
@@ -361,9 +372,10 @@ export function LikedPostsGrid({
           <kbd className="px-1.5 py-0.5 rounded border border-[var(--memphis-border)] text-[var(--memphis-text)] text-xs">
             k
           </kbd>
-          {' '}back
+          {' '}up
         </span>
       </div>
     </div>
+    </EndSubFlowWrapper>
   );
 }

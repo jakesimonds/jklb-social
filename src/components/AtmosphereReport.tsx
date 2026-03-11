@@ -6,12 +6,13 @@
  * - Collapsible groups with triangle toggle (all collapsed by default)
  * - Uses pre-fetched records from useAtmosphereReport hook (background scan)
  * - Displays results using PDSEventCard components
- * - Keyboard: Escape/Delete/j to close
+ * - Keyboard: Escape/Delete to close
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import type { AtmosphereRecord } from '../hooks/useAtmosphereReport';
 import { PDSEventCard } from './PDSEventCard';
+import { EndSubFlowWrapper } from './end/EndSubFlowWrapper';
 
 interface AtmosphereReportProps {
   /** Pre-fetched records from useAtmosphereReport hook */
@@ -67,7 +68,7 @@ function CollectionDirectory({
   const url = getDirectoryUrl(directoryKey);
 
   return (
-    <div className="border border-[var(--memphis-cyan)]/30 rounded-lg overflow-hidden">
+    <div className="border border-[var(--memphis-cyan)]/30 overflow-hidden" style={{ borderRadius: 'var(--card-radius)' }}>
       <div
         onClick={onToggle}
         className="
@@ -136,7 +137,7 @@ export function AtmosphereReport({
   // Keyboard handler: j/Escape/Delete to close
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === 'Escape' || event.key === 'Delete' || event.key === 'j') {
+      if (event.key === 'Escape' || event.key === 'Delete') {
         event.preventDefault();
         event.stopImmediatePropagation();
         onClose();
@@ -153,6 +154,7 @@ export function AtmosphereReport({
   }, [handleKeyDown]);
 
   return (
+    <EndSubFlowWrapper onBack={onClose}>
     <article
       className="
         bg-[var(--memphis-bg)]
@@ -176,23 +178,8 @@ export function AtmosphereReport({
             </span>
           )}
         </div>
-        <button
-          onClick={onClose}
-          className="
-            px-3 py-1 flex items-center gap-2
-            rounded-full
-            text-white/50 hover:text-white
-            hover:bg-white/10
-            transition-colors
-            text-sm
-          "
-          aria-label="Close"
-          title="Close (J / ESC)"
-        >
-          <span className="text-[var(--memphis-text-muted)]">press</span>
-          <span className="font-mono text-[var(--memphis-pink)] font-bold">j</span>
-          <span className="text-[var(--memphis-text-muted)]">to continue</span>
-        </button>
+        <span />
+
       </header>
 
       {/* Content area */}
@@ -229,5 +216,6 @@ export function AtmosphereReport({
         )}
       </div>
     </article>
+    </EndSubFlowWrapper>
   );
 }

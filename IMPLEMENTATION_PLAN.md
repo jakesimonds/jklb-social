@@ -823,7 +823,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-SLAB-2: Unify End Flow back-button behavior
+- [x] TASK-SLAB-2: Unify End Flow back-button behavior ✓
 
   **Complexity:** Low
   **File(s):** `src/components/end/SessionStats.tsx`, `src/components/LikedPostsGrid.tsx`, `src/components/AtmosphereReport.tsx`, `src/components/end/EndSubFlowWrapper.tsx`

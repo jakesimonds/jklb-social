@@ -6,6 +6,7 @@
  */
 
 import { useEffect, useCallback } from 'react';
+import { EndSubFlowWrapper } from './EndSubFlowWrapper';
 
 interface SessionStatsProps {
   postsViewed: number;
@@ -42,7 +43,7 @@ export function SessionStats({
       ) {
         return;
       }
-      if (e.key === 'Escape' || e.key === 'k') {
+      if (e.key === 'Escape') {
         e.preventDefault();
         onBack();
       }
@@ -56,42 +57,34 @@ export function SessionStats({
   }, [handleKeyDown]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-6">
-      <div
-        className="w-full max-w-sm rounded border border-[var(--memphis-border)] p-6"
-        style={{ backgroundColor: 'var(--memphis-bg)' }}
-      >
-        <h2
-          className="text-lg font-bold mb-6 tracking-wide"
-          style={{ color: 'var(--memphis-yellow)' }}
+    <EndSubFlowWrapper onBack={onBack}>
+      <div className="flex flex-col items-center justify-center h-full px-6">
+        <div
+          className="w-full max-w-sm rounded border border-[var(--memphis-border)] p-6"
+          style={{ backgroundColor: 'var(--memphis-bg)' }}
         >
-          Stats
-        </h2>
-
-        <div className="flex flex-col gap-2">
-          {STAT_ROWS.map(({ label, key }) => (
-            <div key={key} className="flex items-baseline justify-between gap-2">
-              <span className="text-sm" style={{ color: 'var(--memphis-text-muted)' }}>
-                {label}
-              </span>
-              <span className="flex-1 border-b border-dotted border-white/15 mx-1 mb-1" />
-              <span className="text-sm font-mono font-bold text-white tabular-nums">
-                {stats[key]}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={onBack}
-            className="text-xs cursor-pointer transition-colors hover:text-white"
-            style={{ color: 'var(--memphis-text-muted)' }}
+          <h2
+            className="text-lg font-bold mb-6 tracking-wide"
+            style={{ color: 'var(--memphis-yellow)' }}
           >
-            ← back
-          </button>
+            Stats
+          </h2>
+
+          <div className="flex flex-col gap-2">
+            {STAT_ROWS.map(({ label, key }) => (
+              <div key={key} className="flex items-baseline justify-between gap-2">
+                <span className="text-sm" style={{ color: 'var(--memphis-text-muted)' }}>
+                  {label}
+                </span>
+                <span className="flex-1 border-b border-dotted border-white/15 mx-1 mb-1" />
+                <span className="text-sm font-mono font-bold text-white tabular-nums">
+                  {stats[key]}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </EndSubFlowWrapper>
   );
 }
