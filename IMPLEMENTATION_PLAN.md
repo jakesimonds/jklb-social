@@ -594,7 +594,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-TROPHY-3: Refactor `/api/nominations` → `/api/best-thing`
+- [x] TASK-TROPHY-3: Refactor `/api/nominations` → `/api/best-thing` ✓
 
   **Complexity:** Low
   **File(s):** new `functions/api/best-thing.ts`, `functions/api/nominations.ts` (delete or redirect), `wrangler.toml`
