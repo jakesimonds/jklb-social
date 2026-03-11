@@ -716,7 +716,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-TROPHY-7: Refactor Best Thing I Saw nomination flow
+- [x] TASK-TROPHY-7: Refactor Best Thing I Saw nomination flow ✓
 
   **Complexity:** Medium
   **File(s):** `src/components/end/LikedPostsGrid.tsx`, `src/components/end/AwardNominationPanel.tsx`, `src/lib/actions.ts`

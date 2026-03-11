@@ -1,16 +1,19 @@
 /**
- * AwardNominationPanel - JKLB Award nomination post composer
+ * AwardNominationPanel - Share composer for JKLB awards.
  *
- * Displays a non-editable nomination post with a quoted post embed.
- * The favorite post is pre-selected in the LikedPostsGrid (previous step).
+ * Displays an editable textarea with a prefilled nomination message
+ * and an optional quoted post embed. Used by both the Best Thing I Saw
+ * nomination flow and the participation trophy share flow.
  */
 
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { LikedPost } from '../types';
 
 interface AwardNominationPanelProps {
-  /** Pre-selected favorite post from LikedPostsGrid (null if none selected) */
-  selectedPost: LikedPost | null;
+  /** Default text to prefill in the textarea */
+  defaultText: string;
+  /** Optional quoted post to embed */
+  quotedPost?: LikedPost | null;
   /** Called when user posts */
   onPost: (selectedPost: LikedPost | null, postText: string, image: File | null) => Promise<void>;
   /** Called when user skips */
@@ -28,45 +31,45 @@ function truncate(text: string, maxLen: number): string {
 }
 
 export function AwardNominationPanel({
-  selectedPost,
+  defaultText,
+  quotedPost,
   onPost,
   onSkip,
   isSubmitting = false,
 }: AwardNominationPanelProps) {
-  // Full post text — simple nomination format
-  const fullPostText = selectedPost
-    ? `I nominate @${selectedPost.authorHandle} for a JKLB award for this post`
-    : '';
+  const [postText, setPostText] = useState(defaultText);
 
   // Submit the post
   const handlePost = useCallback(async () => {
     if (isSubmitting) return;
-    await onPost(selectedPost, fullPostText, null);
-  }, [isSubmitting, selectedPost, fullPostText, onPost]);
+    await onPost(quotedPost ?? null, postText, null);
+  }, [isSubmitting, quotedPost, postText, onPost]);
 
-  const canPost = !isSubmitting && !!selectedPost;
+  const canPost = !isSubmitting && postText.trim().length > 0;
 
   return (
     <div className="flex flex-col h-full space-y-3">
-      {/* Post preview */}
+      {/* Editable post text */}
       <div>
         <label className="block text-sm text-[var(--memphis-text-muted)] mb-2">
-          POST PREVIEW:
+          POST:
         </label>
-        <div className="p-3 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded-md space-y-2">
-          {/* Post text preview */}
-          <pre className="text-sm text-[var(--memphis-text)] whitespace-pre-wrap font-sans">
-            {fullPostText}
-          </pre>
-
-          {/* Quoted post indicator */}
-          {selectedPost && (
-            <div className="p-2 border border-dashed border-[var(--memphis-yellow)] rounded-md text-xs text-[var(--memphis-text-muted)]">
-              Quote embed: @{selectedPost.authorHandle} — {truncate(selectedPost.textPreview, 60)}
-            </div>
-          )}
-        </div>
+        <textarea
+          value={postText}
+          onChange={(e) => setPostText(e.target.value)}
+          disabled={isSubmitting}
+          rows={3}
+          className="w-full p-3 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded-md text-sm text-[var(--memphis-text)] resize-none focus:outline-none focus:border-[var(--memphis-cyan)] disabled:opacity-50"
+          placeholder="Write your nomination..."
+        />
       </div>
+
+      {/* Quoted post indicator */}
+      {quotedPost && (
+        <div className="p-2 border border-dashed border-[var(--memphis-yellow)] rounded-md text-xs text-[var(--memphis-text-muted)]">
+          Quote embed: @{quotedPost.authorHandle} — {truncate(quotedPost.textPreview, 60)}
+        </div>
+      )}
 
       <hr className="border-[var(--memphis-border)]" />
 

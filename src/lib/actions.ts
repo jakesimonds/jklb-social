@@ -533,9 +533,9 @@ export async function createAwardNominationPost(
 
         const nominationResult = await agent.com.atproto.repo.createRecord({
           repo: agent.assertDid,
-          collection: 'social.jklb.award.nomination',
+          collection: 'social.jklb.bestThingISawAwardGiver',
           record: {
-            $type: 'social.jklb.award.nomination',
+            $type: 'social.jklb.bestThingISawAwardGiver',
             subject: quotedPost.uri,
             subjectCid: quotedPost.cid,
             recipient: recipientDid,
@@ -545,34 +545,27 @@ export async function createAwardNominationPost(
           },
         });
 
-        // Notify the nominations index worker (fire-and-forget)
-        try {
-          fetch('https://jklb.social/api/nominations', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              awarderDid: agent.assertDid,
-              awarderHandle: '',
-              recipientDid,
-              nominationUri: nominationResult.data.uri,
-              subjectUri: quotedPost.uri,
-              exitPostUri: response.uri,
-              createdAt: nominationCreatedAt,
-            }),
-          }).catch((err) => {
-            console.error('Failed to notify nominations worker:', err);
-          });
-        } catch (err) {
-          console.error('Failed to notify nominations worker:', err);
-        }
-      } catch (err) {
-        console.error('Failed to write nomination record:', err);
-        // Don't fail the whole exit — nomination is bonus
-      }
+        // Notify the best-thing index worker (fire-and-forget)
+        fetch('https://jklb.social/api/best-thing', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'give',
+            awarderDid: agent.assertDid,
+            awarderHandle: '',
+            recipientDid,
+            nominationUri: nominationResult.data.uri,
+            subjectUri: quotedPost.uri,
+            exitPostUri: response.uri,
+            createdAt: nominationCreatedAt,
+          }),
+        }).catch((err) => {
+          console.error('Failed to notify best-thing worker:', err);
+        });
 
-      // Silent reply to own post: @mention the winner with claim link
-      try {
-        const replyText = `@${quotedPost.authorHandle} To claim your award (writes a social.jklb.award record to your PDS) click here: jklb.social/claimAward`;
+        // Silent reply to own post: @mention the winner with claim link
+        const claimLink = `jklb.social/claim?nomination=${nominationResult.data.uri}`;
+        const replyText = `@${quotedPost.authorHandle} To claim your award (writes a social.jklb.bestThingISawAwardWinner record to your PDS) click here: ${claimLink}`;
         const replyRt = new RichText({ text: replyText });
         await replyRt.detectFacets(agent);
 
@@ -587,8 +580,8 @@ export async function createAwardNominationPost(
           console.error('Failed to create award claim reply:', err);
         });
       } catch (err) {
-        console.error('Failed to create award claim reply:', err);
-        // Don't fail the whole exit — reply is bonus
+        console.error('Failed to write nomination record:', err);
+        // Don't fail the whole exit — nomination + reply are bonus
       }
     }
 

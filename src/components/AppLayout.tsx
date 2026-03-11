@@ -887,18 +887,24 @@ export function AppLayout({
             );
             break;
           }
-          case 'share':
+          case 'share': {
+            const selectedPost = endFlowState.selectedPost;
+            const nominationDefault = selectedPost
+              ? `I nominate @${selectedPost.authorHandle} for a JKLB award for this post`
+              : '';
             content = (
               <AwardNominationPanel
-                selectedPost={endFlowState.selectedPost}
-                onPost={async (selectedPost, postText, image) => {
-                  await onAwardPost(selectedPost, postText, image);
+                defaultText={nominationDefault}
+                quotedPost={selectedPost}
+                onPost={async (post, postText, image) => {
+                  await onAwardPost(post, postText, image);
                 }}
                 onSkip={onSkipJournal}
                 isSubmitting={isSubmittingAward}
               />
             );
             break;
+          }
           case 'participation-claim':
             content = (
               <ParticipationClaim
