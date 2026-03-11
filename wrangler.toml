@@ -17,3 +17,9 @@ preview_id = "490875dac52a425eb90e75d617153f25"
 binding = "COMMUNITY_POSTS"
 id = "6484d4e2b2c54df0bae97bdd80918974"
 preview_id = "a2c85f9be78c46ffac10f7eb4bfd5565"
+
+# KV Namespace for trophy system (participation trophies, awards, member records)
+[[kv_namespaces]]
+binding = "TROPHIES"
+id = "PLACEHOLDER_CREATE_VIA_WRANGLER_KV_NAMESPACE_CREATE"
+preview_id = "PLACEHOLDER_PREVIEW"
