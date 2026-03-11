@@ -620,7 +620,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-TROPHY-4: `useTrophies` hook — PDS trophy check
+- [x] TASK-TROPHY-4: `useTrophies` hook — PDS trophy check ✓
 
   **Complexity:** Low
   **File(s):** new `src/hooks/useTrophies.ts`

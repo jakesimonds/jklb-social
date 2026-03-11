@@ -22,3 +22,5 @@ export { useBeginning } from './useBeginning';
 export type { UseBeginningParams, UseBeginningReturn, BeginningStage, BeginningState, NotificationsByType, UnactionableGroup, BeginningNotification, NotificationActor } from './useBeginning';
 export { useEndFlow } from './useEndFlow';
 export type { EndFlowStage, EndFlowState, UseEndFlowReturn } from './useEndFlow';
+export { useTrophies } from './useTrophies';
+export type { UseTrophiesReturn } from './useTrophies';
