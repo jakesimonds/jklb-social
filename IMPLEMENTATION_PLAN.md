@@ -773,7 +773,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-TROPHY-9: Sparse claim page for winners
+- [x] TASK-TROPHY-9: Sparse claim page for winners ✓
 
   **Complexity:** Medium
   **File(s):** `src/claim/main.ts` (refactor), `src/claim/index.html`

@@ -3,4 +3,6 @@
 /claimmyjklbie/ /claimAward/ 301
 /claimMyJklbie /claimAward 301
 /claimMyJklbie/ /claimAward/ 301
+/claim /claimAward/ 301
+/claim/* /claimAward/:splat 301
 /* /index.html 200

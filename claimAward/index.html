@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>jklbie Award for Excellence in Posting</title>
+  <title>Claim Your jklbie Award</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <style>
     * {
@@ -17,672 +17,278 @@
       color: #e0e0e0;
       font-family: 'Courier New', Courier, monospace;
       min-height: 100vh;
-      padding: 0;
-    }
-
-    /* Top header bar — matches main app */
-    .header-bar {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      padding: 0;
-      background: #1a1a2e;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .header-cell {
-      width: 72px;
-      height: 72px;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      background: #16213e;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: border-color 0.15s;
-    }
-
-    .header-cell:hover {
-      border-color: rgba(0, 188, 212, 0.5);
-    }
-
-    .header-cell .letter {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 1.15rem;
-      font-weight: bold;
-      line-height: 1;
-    }
-
-    .header-cell .label {
-      font-size: 8px;
-      color: rgba(255, 255, 255, 0.4);
-      line-height: 1;
-    }
-
-    .header-spacer {
-      flex: 1;
-    }
-
-    .header-feed-link {
-      flex-shrink: 0;
-      font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.4);
-      text-decoration: none;
-      padding: 0 0.5rem;
-    }
-
-    .header-feed-link:hover {
-      color: #00bcd4;
-    }
-
-    .header-login-btn {
-      height: 48px;
-      padding: 0 0.75rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      background: #1a1a2e;
-      cursor: pointer;
-      flex-shrink: 0;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: #00bcd4;
-      text-decoration: none;
-      margin-right: 4px;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
-    .header-login-btn:hover {
-      background: rgba(233, 30, 99, 0.2);
-      border-color: rgba(233, 30, 99, 0.5);
-    }
-
-    .header-user {
-      height: 48px;
-      padding: 0 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      background: #1a1a2e;
-      flex-shrink: 0;
-      margin-right: 4px;
-    }
-
-    .header-user .user-handle {
-      font-size: 0.7rem;
-      color: #ffeb3b;
-      font-weight: bold;
-    }
-
-    .header-user .logout-btn {
-      background: none;
-      border: none;
-      color: #e0e0e0;
-      font-size: 0.9rem;
-      cursor: pointer;
-      padding: 2px 4px;
-      border-radius: 4px;
-      transition: background 0.15s;
-    }
-
-    .header-user .logout-btn:hover {
-      background: rgba(233, 30, 99, 0.2);
-    }
-
-    .container {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 2rem 1rem;
-    }
-
-    h1 {
-      color: #e91e63;
-      font-size: 2rem;
-      text-align: center;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.25rem;
-    }
-
-    .divider {
-      width: 80px;
-      height: 4px;
-      background: #00bcd4;
-      margin: 0 auto 2rem;
-    }
-
-    /* Form */
-    .search-form {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .search-form input {
-      flex: 1;
-      background: #16213e;
-      border: 2px solid #00bcd4;
-      color: #e0e0e0;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 1rem;
-      padding: 0.75rem 1rem;
-      outline: none;
-    }
-
-    .search-form input::placeholder {
-      color: #666;
-    }
-
-    .search-form input:focus {
-      border-color: #e91e63;
-    }
-
-    .search-form button {
-      background: #e91e63;
-      color: #1a1a2e;
-      border: none;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.9rem;
-      font-weight: bold;
-      padding: 0.75rem 1.25rem;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-    }
-
-    .search-form button:hover {
-      background: #ff4081;
-    }
-
-    .search-form button:disabled {
-      background: #555;
-      cursor: not-allowed;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* Results */
-    #results {
-      margin-bottom: 2rem;
-    }
-
-    .status-msg {
-      text-align: center;
       padding: 1rem;
-      font-size: 0.95rem;
     }
 
-    .status-msg.error {
-      color: #e91e63;
-    }
-
-    .status-msg.empty {
-      color: #888;
-    }
-
-    .status-msg.loading {
-      color: #00bcd4;
-    }
-
-    .status-msg.success {
-      color: #4caf50;
-    }
-
-    /* Nomination cards */
-    .nomination-card {
+    /* Slab-styled card */
+    .slab {
+      width: 100%;
+      max-width: 500px;
+      border: 2px solid #e91e63;
+      border-radius: 8px;
       background: #16213e;
-      border: 2px solid #00bcd4;
-      padding: 1.25rem;
-      margin-bottom: 1rem;
+      box-shadow: 0 4px 24px rgba(233, 30, 99, 0.2);
+      overflow: hidden;
     }
 
-    .nomination-card .awarded-by {
-      color: #ffeb3b;
+    .slab-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .slab-header h2 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #00bcd4;
+    }
+
+    .slab-body {
+      padding: 1.5rem;
+    }
+
+    .hidden { display: none !important; }
+
+    /* States */
+    .state-loading {
+      text-align: center;
+      color: #00bcd4;
       font-size: 0.95rem;
-      margin-bottom: 0.5rem;
+      padding: 2rem 0;
     }
 
-    .nomination-card .awarded-by a {
-      color: #ffeb3b;
-      text-decoration: underline;
+    .state-error {
+      text-align: center;
+      padding: 2rem 0;
     }
 
-    .nomination-card .for-post {
-      color: #e0e0e0;
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
+    .state-error p {
+      color: #e91e63;
+      font-size: 0.95rem;
+      line-height: 1.6;
     }
 
-    .nomination-card .for-post a {
+    .state-error a {
       color: #00bcd4;
       text-decoration: underline;
     }
 
-    .nomination-card .nom-date {
+    /* Nomination display */
+    .nomination-label {
       color: #888;
       font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
       margin-bottom: 0.75rem;
     }
 
-    .nomination-card .accept-btn {
+    .nomination-text {
+      color: #ffeb3b;
+      font-size: 1.05rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+
+    .nomination-text a {
+      color: #ffeb3b;
+      text-decoration: underline;
+    }
+
+    .nominated-post {
+      background: #1a1a2e;
+      border: 2px dashed rgba(255, 235, 59, 0.4);
+      padding: 0.75rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.85rem;
+    }
+
+    .nominated-post .post-label {
+      color: #888;
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .nominated-post a {
+      color: #00bcd4;
+      text-decoration: underline;
+    }
+
+    .nom-date {
+      color: #666;
+      font-size: 0.8rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Claim button */
+    .claim-btn {
+      display: block;
+      width: 100%;
       background: #e91e63;
       color: #1a1a2e;
       border: none;
       font-family: 'Courier New', Courier, monospace;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       font-weight: bold;
-      padding: 0.5rem 1rem;
+      padding: 0.75rem;
       cursor: pointer;
       text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .nomination-card .accept-btn:hover {
+    .claim-btn:hover {
       background: #ff4081;
     }
 
-    .nomination-card .accept-btn:disabled {
+    .claim-btn:disabled {
       background: #555;
       color: #888;
       cursor: not-allowed;
     }
 
-    .nomination-card .accept-btn.needs-login {
-      background: #333;
+    .claim-btn.needs-login {
+      background: #1a1a2e;
       border: 2px solid #e91e63;
       color: #e91e63;
     }
 
-    .nomination-card .accept-btn.needs-login:hover {
+    .claim-btn.needs-login:hover {
       background: #e91e63;
       color: #1a1a2e;
     }
 
-    .nomination-card .claimed-badge {
-      display: inline-block;
-      background: #4caf50;
-      color: #1a1a2e;
-      font-size: 0.8rem;
-      font-weight: bold;
-      padding: 0.4rem 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .congrats-view {
+    /* Success state */
+    .success-view {
       text-align: center;
       padding: 1rem 0;
     }
 
-    .congrats-view .congrats-text {
+    .success-badge {
+      display: inline-block;
+      background: #4caf50;
+      color: #1a1a2e;
+      font-size: 0.85rem;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+    }
+
+    .success-text {
       color: #ffeb3b;
       font-size: 0.95rem;
-      margin-top: 0.75rem;
-      line-height: 1.5;
-    }
-
-    .congrats-view .congrats-text code {
-      background: rgba(0, 188, 212, 0.2);
-      padding: 0.1rem 0.3rem;
-      border-radius: 3px;
-      font-size: 0.85rem;
-    }
-
-    .congrats-view .pdsls-link {
-      color: #00bcd4;
-      text-decoration: underline;
-      font-weight: bold;
-    }
-
-    .congrats-view .pdsls-link:hover {
-      color: #26c6da;
-    }
-
-    .results-header {
-      color: #e91e63;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-
-    /* Explainer */
-    .explainer {
-      border-top: 2px solid #16213e;
-      padding-top: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    .explainer h2 {
-      color: #ffeb3b;
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .explainer p {
-      color: #aaa;
-      font-size: 0.9rem;
       line-height: 1.6;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.75rem;
     }
 
-    .explainer a {
-      color: #00bcd4;
-    }
-
-    /* Footer */
-    .footer-links {
-      display: flex;
-      gap: 2rem;
-      justify-content: center;
-      padding-top: 1.5rem;
-      border-top: 2px solid #16213e;
-    }
-
-    .footer-links a {
-      color: #ffeb3b;
-      text-decoration: none;
-      font-size: 0.9rem;
-      padding: 0.4rem 0.8rem;
-      border: 2px solid #ffeb3b;
-    }
-
-    .footer-links a:hover {
-      background: #ffeb3b;
-      color: #1a1a2e;
-    }
-
-    /* jklbie Award coloring — matches the shared post card */
-    .jklbie-colored { font-weight: bold; }
-    .jklbie-j { color: #FF69B4; }
-    .jklbie-k { color: #00CED1; }
-    .jklbie-l { color: #FF69B4; }
-    .jklbie-b { color: #FFD700; }
-    .jklbie-i { color: #FFD700; }
-    .jklbie-e { color: #FFD700; }
-    .award-colored { color: #00CED1; font-weight: bold; }
-
-    /* Share modal overlay */
-    .share-modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-
-    .share-modal {
-      background: #16213e;
-      border: 3px solid #4caf50;
-      max-width: 500px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 1.5rem;
-    }
-
-    .share-modal h2 {
-      color: #4caf50;
-      font-size: 1.5rem;
-      text-align: center;
-      margin-bottom: 0.5rem;
-    }
-
-    .share-modal .congrats-text {
-      color: #ffeb3b;
-      text-align: center;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-      line-height: 1.5;
-    }
-
-    .share-modal .congrats-text code {
+    .success-text code {
       background: rgba(0, 188, 212, 0.2);
       padding: 0.1rem 0.3rem;
       border-radius: 3px;
       font-size: 0.85rem;
     }
 
-    .share-modal .pdsls-link {
+    .pdsls-link {
       color: #00bcd4;
       text-decoration: underline;
       font-weight: bold;
     }
 
-    .share-modal .pdsls-link:hover {
+    .pdsls-link:hover {
       color: #26c6da;
     }
 
-    .share-modal label {
-      display: block;
-      color: #e0e0e0;
-      font-size: 0.85rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .share-modal textarea {
-      width: 100%;
-      background: #1a1a2e;
-      border: 2px solid #00bcd4;
-      color: #e0e0e0;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.95rem;
-      padding: 0.75rem;
-      resize: vertical;
-      min-height: 80px;
-      margin-bottom: 1rem;
-    }
-
-    .share-modal textarea:focus {
-      border-color: #e91e63;
-      outline: none;
-    }
-
-    .share-modal .char-count {
-      text-align: right;
-      font-size: 0.75rem;
-      color: #888;
-      margin-top: -0.75rem;
-      margin-bottom: 1rem;
-    }
-
-    .share-modal .quoted-post-preview {
-      background: #1a1a2e;
-      border: 2px dashed #ffeb3b;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      font-size: 0.85rem;
-    }
-
-    .share-modal .quoted-post-preview .preview-label {
-      color: #ffeb3b;
-      font-size: 0.75rem;
-      margin-bottom: 0.25rem;
-    }
-
-    .share-modal .quoted-post-preview a {
-      color: #00bcd4;
-    }
-
-    .share-modal .photo-section {
-      margin-bottom: 1rem;
-    }
-
-    .share-modal .photo-buttons {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .share-modal .photo-btn {
-      background: #1a1a2e;
-      border: 2px solid #00bcd4;
-      color: #00bcd4;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.8rem;
-      padding: 0.5rem 0.75rem;
-      cursor: pointer;
-    }
-
-    .share-modal .photo-btn:hover {
-      background: #00bcd4;
-      color: #1a1a2e;
-    }
-
-    .share-modal .photo-preview {
-      margin-top: 0.75rem;
+    /* Auth bar (small, inside slab) */
+    .auth-info {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-    }
-
-    .share-modal .photo-preview img {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border: 2px solid #00bcd4;
-    }
-
-    .share-modal .photo-preview .remove-photo {
-      color: #e91e63;
-      font-size: 0.8rem;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-
-    .share-modal .webcam-container {
-      margin-top: 0.75rem;
-    }
-
-    .share-modal .webcam-container video {
-      width: 100%;
-      max-width: 300px;
-      border: 2px solid #00bcd4;
-      background: #000;
-    }
-
-    .share-modal .webcam-container canvas {
-      display: none;
-    }
-
-    .share-modal .webcam-buttons {
-      display: flex;
       gap: 0.5rem;
-      margin-top: 0.5rem;
+      font-size: 0.75rem;
     }
 
-    .share-modal .modal-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 2px solid rgba(255, 255, 255, 0.1);
+    .auth-info .handle {
+      color: #ffeb3b;
+      font-weight: bold;
     }
 
-    .share-modal .skip-btn {
+    .auth-info .logout-btn {
       background: none;
       border: none;
-      color: #888;
-      font-family: 'Courier New', Courier, monospace;
+      color: rgba(255, 255, 255, 0.4);
       font-size: 0.85rem;
       cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
     }
 
-    .share-modal .skip-btn:hover {
+    .auth-info .logout-btn:hover {
+      background: rgba(233, 30, 99, 0.2);
       color: #e0e0e0;
     }
 
-    .share-modal .share-btn {
-      background: #00bcd4;
-      border: none;
-      color: #1a1a2e;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.9rem;
-      font-weight: bold;
-      padding: 0.75rem 1.5rem;
-      cursor: pointer;
-      text-transform: uppercase;
+    /* Footer link */
+    .slab-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 0.75rem;
+      text-align: center;
     }
 
-    .share-modal .share-btn:hover {
-      background: #26c6da;
+    .slab-footer a {
+      color: rgba(255, 255, 255, 0.3);
+      text-decoration: none;
+      font-size: 0.75rem;
     }
 
-    .share-modal .share-btn:disabled {
-      background: #555;
-      cursor: not-allowed;
+    .slab-footer a:hover {
+      color: #00bcd4;
     }
   </style>
 </head>
 <body>
-  <!-- Top header bar — matches main app -->
-  <div class="header-bar" id="headerBar">
-    <a href="https://jklb.social" class="header-cell" title="Next post (j)">
-      <span class="letter" style="color: #e91e63;">j</span>
-      <span class="label">next</span>
-    </a>
-    <a href="https://jklb.social" class="header-cell" title="Previous post (k)">
-      <span class="letter" style="color: #00bcd4;">k</span>
-      <span class="label">prev</span>
-    </a>
-    <a href="https://jklb.social" class="header-cell" title="Like (l)">
-      <span class="letter" style="color: #e91e63;">l</span>
-      <span class="label">like</span>
-    </a>
-    <a href="https://jklb.social" class="header-cell" title="Repost (b)">
-      <span class="letter" style="color: #ffeb3b;">b</span>
-      <span class="label">repost</span>
-    </a>
-
-    <div class="header-spacer"></div>
-
-    <!-- User widget (shown when authenticated) -->
-    <div class="header-user hidden" id="headerUser">
-      <span class="user-handle" id="headerHandle"></span>
-      <button class="logout-btn" id="headerLogoutBtn" title="Sign Out">↩</button>
+  <div class="slab">
+    <div class="slab-header">
+      <h2>jklbie Award</h2>
+      <div class="auth-info hidden" id="authBar">
+        <span class="handle" id="authHandle"></span>
+        <button class="logout-btn" id="logoutBtn" title="Sign Out">↩</button>
+      </div>
     </div>
-  </div>
 
-  <div class="container">
-    <h1><span class="jklbie-colored"><span class="jklbie-j">j</span><span class="jklbie-k">k</span><span class="jklbie-l">l</span><span class="jklbie-b">b</span><span class="jklbie-i">i</span><span class="jklbie-e">e</span></span> <span class="award-colored">Award</span> for Excellence in Posting</h1>
-    <div class="divider"></div>
+    <div class="slab-body">
+      <!-- Loading state -->
+      <div id="stateLoading" class="state-loading">
+        Loading nomination...
+      </div>
 
-    <form class="search-form" id="searchForm">
-      <input
-        type="text"
-        id="handleInput"
-        placeholder="yourname.bsky.social"
-        autocomplete="off"
-        spellcheck="false"
-      >
-      <button type="submit" id="searchBtn">Check</button>
-    </form>
+      <!-- Error state -->
+      <div id="stateError" class="state-error hidden"></div>
 
-    <div id="results"></div>
+      <!-- Nomination display + claim -->
+      <div id="stateNomination" class="hidden">
+        <div class="nomination-label">Best Thing I Saw</div>
+        <p class="nomination-text" id="nominationText"></p>
 
-    <div class="explainer" id="explainer"></div>
+        <div class="nominated-post">
+          <div class="post-label">nominated post</div>
+          <a id="postLink" href="#" target="_blank" rel="noopener">view on Bluesky</a>
+        </div>
 
-    <div class="footer-links">
+        <div class="nom-date" id="nomDate"></div>
+
+        <button class="claim-btn" id="claimBtn">Claim Award</button>
+      </div>
+
+      <!-- Success state -->
+      <div id="stateSuccess" class="success-view hidden"></div>
+    </div>
+
+    <div class="slab-footer">
       <a href="https://jklb.social">jklb.social</a>
     </div>
   </div>
