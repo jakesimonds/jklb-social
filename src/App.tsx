@@ -3,7 +3,7 @@ import { AppLayout, SunsetPage, LoginModal } from './components';
 import { useAuth } from './lib/AuthContext';
 import { useSettings } from './lib/SettingsContext';
 import { useToast } from './lib/ToastContext';
-import { useFocusNavigation, useKeybindings, useFeed, useThread, usePostActions, useFullscreenMedia, useUnreadNotifications, useAtmosphereReport, useAvailableFeeds, useAuthorBanner, useBackgroundMusic, useBeginning, useEndFlow, useTrophies } from './hooks';
+import { useFocusNavigation, useKeybindings, useFeed, useThread, usePostActions, useFullscreenMedia, useAtmosphereReport, useAvailableFeeds, useAuthorBanner, useBackgroundMusic, useBeginning, useEndFlow, useTrophies } from './hooks';
 import { usePremium } from './hooks/usePremium';
 import { useCurator } from './lib/CuratorContext';
 import { applyTheme } from './lib/theme';
@@ -144,12 +144,6 @@ function App() {
 
   // Toast notifications from context
   const { showError, showInfo } = useToast();
-
-  // Unread notifications indicator state via useUnreadNotifications hook
-  // Defer polling until Beginning is done — the Beginning screen already shows notifications
-  const {
-    clearUnread: clearUnreadNotifications,
-  } = useUnreadNotifications({ agent, isAuthenticated, beginningComplete: beginningDone });
 
   // Fullscreen media state via useFullscreenMedia hook
   const {
@@ -465,6 +459,7 @@ function App() {
       case 'stats':               setStage({ type: 'end-stats' }); break;
       case 'atmosphere':          setStage({ type: 'atmosphere' }); break;
       case 'participation-claim': setStage({ type: 'participation-claim' }); break;
+      case 'participation-share': setStage({ type: 'participation-share' }); break;
       case 'award-nominate':      setStage({ type: 'award-nominate' }); break;
       case 'trophy-case':         setStage({ type: 'trophy-case' }); break;
     }
@@ -1225,8 +1220,6 @@ function App() {
       handleFollow={handleFollow}
       handleViewOnBluesky={handleViewOnBluesky}
       handleShowHotkeys={handleShowHotkeys}
-      // Unread notifications (kept for Beginning flow)
-      clearUnreadNotifications={clearUnreadNotifications}
       // Reply notification handler
       onReplyNotificationClick={handleReplyNotificationClick}
       // Atmosphere report (pre-fetched data)

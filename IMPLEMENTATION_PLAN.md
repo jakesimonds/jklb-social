@@ -797,28 +797,160 @@ End Slab (3x3 grid)
 
 ---
 
+---
+
+### Slab Unification — PostCards + Slabs
+
+> Reference: `specs/audit-march-11.md`, `specs/beginning-flow.md` (Slab-Based Rendering section), `specs/constitution.md` (UI Primitives section)
+>
+> Goal: The entire app renders two content primitives — PostCards (post content) and Slabs (everything else). This simplifies AppLayout from ~300 lines of rendering logic to ~50, and makes the codebase dramatically easier for sub-agents to maintain.
+
+---
+
+- [x] TASK-SLAB-1: Delete useUnreadNotifications hook ✓
+
+  **Complexity:** Trivial
+  **File(s):** `src/hooks/useUnreadNotifications.ts`, `src/hooks/index.ts`, `src/App.tsx`
+
+  **Context:** This hook polls for unread notifications every 60 seconds after Beginning completes, but the `hasUnread` boolean it returns is never connected to any visible UI. It's dead code that makes unnecessary API calls. Delete it.
+
+  1. Delete `src/hooks/useUnreadNotifications.ts`
+  2. In `src/hooks/index.ts`: remove the export line for `useUnreadNotifications` and its type exports (`UseUnreadNotificationsParams`, `UseUnreadNotificationsReturn`)
+  3. In `src/App.tsx`: remove the import of `useUnreadNotifications` from `'./hooks'`, and remove the call site (around line 148-152) where `useUnreadNotifications` is called and its destructured return values (`hasUnread`, `checkForUnread`, `clearUnread`) are assigned. Remove any references to those variables elsewhere in the file.
+  4. Check if `hasUnreadNotifications` and `getTestNotifications` in `src/lib/notifications.ts` are used by anything else. If the only consumer was this hook, leave them for now (they may be useful later).
+
+  **Done when:** `npm run build` passes. No more 60-second polling for unread notifications. No references to `useUnreadNotifications` anywhere in the codebase.
+
+---
+
+- [ ] TASK-SLAB-2: Unify End Flow back-button behavior
+
+  **Complexity:** Low
+  **File(s):** `src/components/end/SessionStats.tsx`, `src/components/LikedPostsGrid.tsx`, `src/components/AtmosphereReport.tsx`, `src/components/end/EndSubFlowWrapper.tsx`
+
+  **Context:** End sub-flows have 4 different back-button patterns. The target: every sub-flow uses `EndSubFlowWrapper` for a visible "back to end menu" button, plus Escape returns to grid. The Slab's X button always exits the End flow entirely.
+
+  Current state of each sub-flow:
+  - **SessionStats** — has its own inline "← back" button at bottom-right + handles Escape and `k`. Should: wrap in EndSubFlowWrapper, remove the inline back button, remove the `k` key handler (keep Escape).
+  - **LikedPostsGrid** — uses `k` key to go back, no visible back button, no Escape handler. Should: wrap in EndSubFlowWrapper, keep `k` for grid navigation within the liked posts but add Escape to return to end menu.
+  - **AtmosphereReport** — handles Escape/Delete to close, no visible back button. Should: wrap in EndSubFlowWrapper, keep Escape handler (it already works correctly).
+  - **TrophyCase** — already uses EndSubFlowWrapper + Escape. No changes needed.
+  - **ParticipationClaim** — already uses EndSubFlowWrapper. No changes needed.
+
+  Changes:
+
+  1. **SessionStats.tsx:**
+     - Import and wrap content in `EndSubFlowWrapper`
+     - Remove the manual "← back" button JSX
+     - Remove the `k` key handler from the useEffect (keep Escape calling `onBack`)
+     - Pass `onBack` to EndSubFlowWrapper
+
+  2. **LikedPostsGrid.tsx:**
+     - Import and wrap content in `EndSubFlowWrapper`
+     - Add Escape key handler that calls `onGoBack()`
+     - Keep existing `k` behavior for post-selection navigation (k moves selection up within the grid, not back to end menu)
+     - Pass `onGoBack` as EndSubFlowWrapper's `onBack`
+
+  3. **AtmosphereReport.tsx:**
+     - Import and wrap content in `EndSubFlowWrapper`
+     - Pass `onClose` as EndSubFlowWrapper's `onBack`
+     - Keep existing Escape/Delete handler
+
+  **Done when:** `npm run build` passes. Every End sub-flow shows a visible "back to end menu" button (from EndSubFlowWrapper). Escape returns to grid from any sub-flow. No sub-flow uses `k` as "back to grid."
+
+---
+
+- [ ] TASK-SLAB-3: Extend Slab with accentColor prop
+
+  **Complexity:** Trivial
+  **File(s):** `src/components/Slab.tsx`
+
+  **Context:** Slab currently hardcodes `border-[var(--memphis-pink)]` and `text-[var(--memphis-cyan)]` for title. To support Beginning notification types (each with their own accent color), Slab needs an optional `accentColor` prop.
+
+  1. Add optional `accentColor?: string` to `SlabProps`
+  2. Replace the hardcoded border color:
+     - Current: `border-[var(--memphis-pink)]`
+     - New: use inline `style` for `borderColor` when `accentColor` is provided, fall back to `var(--memphis-pink)` when not
+  3. Replace the hardcoded shadow color:
+     - Current: `shadow-[var(--memphis-pink)]/20`
+     - New: use inline `style` for `boxShadow` when `accentColor` is provided
+  4. Replace the hardcoded title color:
+     - Current: `text-[var(--memphis-cyan)]`
+     - New: use inline `style` for title `color` when `accentColor` is provided, fall back to `var(--memphis-cyan)`
+  5. Make `onClose` optional — when `hideClose` is true and no `onClose` is provided, the header still renders but without the X button. Default `onClose` to a no-op if not provided.
+
+  **Done when:** `npm run build` passes. Existing Slab usage (Settings, Hotkeys, End screens) looks identical (no visual changes). `<Slab accentColor="var(--memphis-cyan)" title="test">` renders with cyan border and title.
+
+---
+
+- [ ] TASK-SLAB-4: Beginning notifications in Slabs
+
+  **Complexity:** Medium
+  **File(s):** `src/components/beginning/BeginningView.tsx`, `src/components/beginning/UnactionableItemsView.tsx`, `src/components/beginning/NewFollowerCard.tsx`, `src/components/beginning/BeginningPostCard.tsx`, `src/components/TutorialCard.tsx`
+  **Depends on:** TASK-SLAB-3
+
+  **Context:** Each Beginning notification stage renders inside a Slab with a fun title and the appropriate accent color. This is the key task — once Beginning uses Slabs, the whole app is PostCards + Slabs. See `specs/beginning-flow.md` § "Slab-Based Rendering" for the full design.
+
+  The section labels already exist in BeginningView.tsx — `sectionLabel` is passed to BeginningPostCard. The Slab title replaces these.
+
+  1. **BeginningView.tsx** — wrap each case's return in a Slab:
+     - `unactionable`: `<Slab title="your posts got some love" accentColor="var(--memphis-pink)" hideClose>`
+     - `follower`: `<Slab title="somebody's ears are burning" accentColor="var(--memphis-cyan)" hideClose>`
+     - `quotePost`: `<Slab title="you've been quote posted" accentColor="var(--memphis-yellow)" hideClose>`
+     - `reply`: `<Slab title="your post got a reply" accentColor="var(--memphis-cyan)" hideClose>`
+     - `mention`: `<Slab title="somebody's ears are burning" accentColor="var(--memphis-pink)" hideClose>`
+     - Tutorial cards: `<Slab title={tutorialTitle} accentColor="var(--memphis-yellow)" hideClose>`
+     - `curator`: leave as-is for now (Premium feature, separate concern)
+     - `hideClose` is `true` on all Beginning Slabs — navigation is j/k, not Esc
+  2. **UnactionableItemsView.tsx** — remove its own section header (`<h2>` with "Likes" / "Boosts"), "N of M" counter styling, and colored outline wrapper. The Slab provides the header and border. Keep the inner content (PostCards + avatar tiles).
+  3. **NewFollowerCard.tsx** — remove its own section header and colored outline. Keep the follower card content (cover photo, avatar, bio, counts, action hints).
+  4. **BeginningPostCard.tsx** — remove the `sectionLabel` prop rendering (the `<h2>` above the card) and the colored `border-2` outline wrapper. Keep the PostCard content. The `sectionLabel` prop can stay in the interface for now but won't be rendered.
+  5. **TutorialCard.tsx** — remove its own wrapper chrome if it has any bespoke border/header styling. The Slab provides the wrapper.
+  6. Move the "N of M" counter inside the Slab body (first child, small text, right-aligned or centered).
+
+  **Done when:** `npm run build` passes. Beginning flow renders each notification stage inside a Slab with the appropriate title and accent color. Navigation (j/k), action keys, and chorus fill work identically to before. No visual chrome duplication (no double borders, no duplicate headers).
+
+---
+
+- [ ] TASK-SLAB-5: Simplify AppLayout stage rendering
+
+  **Complexity:** Medium
+  **File(s):** `src/components/AppLayout.tsx`
+  **Depends on:** TASK-SLAB-2, TASK-SLAB-4
+
+  **Context:** With Beginning in Slabs and End already in Slabs, AppLayout's stage rendering can be simplified. Every stage now renders either a PostCard or a Slab. The ~300-line conditional rendering section becomes a flat switch.
+
+  1. Review the current stage rendering section in AppLayout.tsx (the large conditional block that checks `viewState.stage.type`)
+  2. Refactor into a clean `switch (viewState.stage.type)` that maps each stage to its component:
+     - Tutorial stages → Slab (via BeginningView)
+     - Beginning stages → Slab (via BeginningView)
+     - `middle-card` → SectionCard (or Slab if SectionCard is absorbed)
+     - `post` → PostCard
+     - `thread` → ScrollThread (leave as-is, out of scope)
+     - End stages → Slab (already working)
+  3. Panel rendering (`viewState.panel`) stays as-is — panels already render in Slabs
+  4. Remove any dead conditional branches, redundant checks, or leftover ternary nesting
+  5. If SectionCard (the "Choose Your Algorithm" middle card) can be trivially wrapped in a Slab, do it. If it's complex, leave for a follow-up.
+
+  **Done when:** `npm run build` passes. AppLayout's stage rendering is a flat switch statement. No nested ternaries for content routing. App behavior is identical to before.
+
+---
+
 ## Task Order
 
-All CURFE and previous tasks are complete.
+All CURFE and TROPHY tasks are complete.
 
-**Trophy System:**
+**Slab Unification — PostCards + Slabs refactor:**
 
 ```
-TASK-TROPHY-1 (types)  ─────────────────────────────────┐
-                                                         ├── TASK-TROPHY-5 (end Slab) ──┐
-TASK-TROPHY-4 (useTrophies hook) ───────────────────────┘                                │
-                                                                                          │
-TASK-TROPHY-2 (/api/participation) ─────────────────────────── TASK-TROPHY-6 (claim flow) ┤
-                                                                                          │
-TASK-TROPHY-3 (/api/best-thing) ────────────────────────────── TASK-TROPHY-7 (nominate)  ─┤
-                                                                                          │
-                                                               TASK-TROPHY-8 (trophy case)┘
-
-TASK-TROPHY-9 (claim page) — depends on TROPHY-2 + TROPHY-3, can run in parallel with frontend work
+TASK-SLAB-1 (delete dead hook) ─── no deps, trivial cleanup
+TASK-SLAB-2 (end back buttons) ─── no deps, small cleanup
+TASK-SLAB-3 (extend Slab)      ─── no deps, prerequisite for SLAB-4
+TASK-SLAB-4 (Beginning in Slabs)── depends on SLAB-3
+TASK-SLAB-5 (AppLayout simplify)── depends on SLAB-2 + SLAB-4
 ```
 
 **Parallel tracks:**
-- Track A (types + frontend): TROPHY-1 → TROPHY-4 → TROPHY-5 → TROPHY-6 → TROPHY-8
-- Track B (backend): TROPHY-2 + TROPHY-3 (parallel, no deps on each other)
-- Track C (claim page): TROPHY-9 (after Track B)
-- TROPHY-7 needs TROPHY-3 + TROPHY-5
+- Track A (cleanup): SLAB-1 + SLAB-2 (parallel, no deps)
+- Track B (feature): SLAB-3 → SLAB-4 → SLAB-5
+- SLAB-1 and SLAB-2 can run in parallel with Track B

@@ -163,7 +163,6 @@ export interface AppLayoutProps {
   handleShowHotkeys: () => void;
 
   // Unread notifications (used by Beginning flow)
-  clearUnreadNotifications: () => void;
 
   // Reply notification handler
   onReplyNotificationClick?: (replyUri: string) => void;
@@ -400,7 +399,6 @@ export function AppLayout({
   handleFollow,
   handleViewOnBluesky: _handleViewOnBluesky,
   handleShowHotkeys,
-  clearUnreadNotifications: _clearUnreadNotifications,
   onReplyNotificationClick: _onReplyNotificationClick,
   atmosphereRecords,
   atmosphereScanning,
@@ -424,7 +422,7 @@ export function AppLayout({
   onCuratorReady,
 }: AppLayoutProps) {
   // Get auth state for conditional rendering
-  const { agent, isAuthenticated } = useAuth();
+  const { agent, isAuthenticated, profile } = useAuth();
   const { isPremium } = usePremium();
 
   // Profile hover state
@@ -835,13 +833,15 @@ export function AppLayout({
       case 'liked-posts-grid':
       case 'share':
       case 'participation-claim':
+      case 'participation-share':
       case 'award-nominate':
       case 'trophy-case': {
         // All end stages render inside a single Slab.
         // Escape from a sub-flow → back to grid; Escape from grid → exit end flow.
         const isAtGrid = viewState.stage.type === 'end-grid';
         const slabClose = isAtGrid ? onEndFlowExit : onEndReturnToGrid;
-        const slabTitle = isAtGrid ? 'End' : undefined;
+        const slabTitle = isAtGrid ? 'End' : viewState.stage.type === 'trophy-case' ? 'Trophy Case' : undefined;
+        const hideSlabClose = isAtGrid;
 
         let content: React.ReactNode = null;
         switch (viewState.stage.type) {
@@ -916,9 +916,25 @@ export function AppLayout({
               <ParticipationClaim
                 onBack={onEndReturnToGrid}
                 onRefetchTrophies={onRefetchTrophies}
+                onSuccess={() => onEndButton('participation-share')}
               />
             );
             break;
+          case 'participation-share': {
+            const pdsLink = `https://pdsls.dev/at/${profile?.did}/social.jklb.participationTrophy`;
+            const defaultShareText = `I just got a participation trophy on jklb.social!\n\n${pdsLink}`;
+            content = (
+              <AwardNominationPanel
+                defaultText={defaultShareText}
+                onPost={async (_post, postText, image) => {
+                  await onAwardPost(null, postText, image);
+                }}
+                onSkip={onEndReturnToGrid}
+                isSubmitting={isSubmittingAward}
+              />
+            );
+            break;
+          }
           case 'award-nominate':
             content = (
               <div className="flex items-center justify-center h-full">
@@ -932,7 +948,6 @@ export function AppLayout({
                 onBack={onEndReturnToGrid}
                 onStartNomination={() => onEndButton('active-award')}
                 hasParticipationTrophy={trophyState.hasParticipationTrophy}
-                participationTrophyNumber={trophyState.participationTrophyNumber}
                 hasGivenBestThing={trophyState.hasGivenBestThing}
               />
             );
@@ -941,7 +956,7 @@ export function AppLayout({
 
         return (
           <div className="postcard-container">
-            <Slab title={slabTitle} onClose={slabClose}>
+            <Slab title={slabTitle} onClose={slabClose} hideClose={hideSlabClose}>
               {content}
             </Slab>
           </div>

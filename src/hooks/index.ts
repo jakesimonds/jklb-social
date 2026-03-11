@@ -6,7 +6,6 @@ export { useFullscreenMedia } from './useFullscreenMedia';
 export { useKeybindings } from './useKeybindings';
 // useAwardNomination available but prompt logic replaced by useEndFlow (TASK-BME-15)
 export { usePostActions } from './usePostActions';
-export { useUnreadNotifications } from './useUnreadNotifications';
 export { useAtmosphereReport } from './useAtmosphereReport';
 export { useAvailableFeeds } from './useAvailableFeeds';
 export { useAuthorBanner } from './useAuthorBanner';
@@ -15,7 +14,6 @@ export type { UseFeedReturn, UseFeedParams } from './useFeed';
 export type { UseThreadReturn, UseThreadParams } from './useThread';
 export type { UseFullscreenMediaReturn, UseFullscreenMediaParams, FullscreenMediaContent } from './useFullscreenMedia';
 export type { UsePostActionsParams, UsePostActionsReturn, FocusTarget } from './usePostActions';
-export type { UseUnreadNotificationsParams, UseUnreadNotificationsReturn } from './useUnreadNotifications';
 export type { UseAtmosphereReportParams, UseAtmosphereReportReturn, AtmosphereRecord } from './useAtmosphereReport';
 export type { UseBackgroundMusicParams, UseBackgroundMusicReturn } from './useBackgroundMusic';
 export { useBeginning } from './useBeginning';
