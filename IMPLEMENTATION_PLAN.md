@@ -685,7 +685,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-TROPHY-6: Participation trophy claim flow
+- [x] TASK-TROPHY-6: Participation trophy claim flow ✓
 
   **Complexity:** Medium
   **File(s):** new `src/components/end/ParticipationClaim.tsx`

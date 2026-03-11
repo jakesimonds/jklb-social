@@ -52,6 +52,7 @@ import { getPhaseBackground } from '../lib/themeConfig';
 import { LikedPostsGrid } from './LikedPostsGrid';
 import { EndScreenGrid } from './end/EndScreenGrid';
 import { SessionStats } from './end/SessionStats';
+import { ParticipationClaim } from './end/ParticipationClaim';
 import type { ChorusState } from '../lib/chorus';
 import type { Post, FeedItem, Settings, PDSFeedItem, LikedPost, SessionMetrics } from '../types';
 import type { ResolvedFeed } from '../lib/saved-feeds';
@@ -182,6 +183,8 @@ export interface AppLayoutProps {
   trophyState: { hasParticipationTrophy: boolean; hasTrophies: boolean };
   /** Exit the end flow entirely (close Slab) */
   onEndFlowExit: () => void;
+  /** Refetch trophy data after claiming */
+  onRefetchTrophies: () => void;
 
   // Quit/logout handler (q key)
   onQuit: () => void;
@@ -405,6 +408,7 @@ export function AppLayout({
   onEndFlowSelectPost,
   trophyState,
   onEndFlowExit,
+  onRefetchTrophies,
   onQuit,
   availableFeeds = [],
   tracks = [],
@@ -897,9 +901,10 @@ export function AppLayout({
             break;
           case 'participation-claim':
             content = (
-              <div className="flex items-center justify-center h-full">
-                <p className="text-[var(--memphis-text-muted)] text-sm">Participation claim — coming soon</p>
-              </div>
+              <ParticipationClaim
+                onBack={onEndReturnToGrid}
+                onRefetchTrophies={onRefetchTrophies}
+              />
             );
             break;
           case 'award-nominate':

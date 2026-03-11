@@ -1181,6 +1181,7 @@ function App() {
         hasTrophies: trophies.hasParticipationTrophy || trophies.hasGivenBestThing || trophies.hasWonBestThing,
       }}
       onEndFlowExit={exitEndFlow}
+      onRefetchTrophies={trophies.refetch}
       // Fullscreen media state
       isMediaFullscreen={isMediaFullscreen}
       fullscreenStartTime={fullscreenStartTime}
