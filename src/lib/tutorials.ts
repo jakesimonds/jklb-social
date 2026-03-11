@@ -16,17 +16,24 @@ export interface TutorialContent {
 }
 
 export const TUTORIAL_CONTENT: Record<string, TutorialContent> = {
-  /** First thing the user sees — introduces j/k navigation. Empty title signals TutorialCard to use styled j/k button layout. */
+  /** Card 1: Welcome — introduces j navigation and space for hotkeys */
   nav: {
-    title: '',
-    message: 'Press J to go forward, K to go back',
+    title: 'Welcome to jklb.social!',
+    message: 'First (& only) thing you need to know:\n[j] to go forward.\n[space] to see all hotkeys',
   },
 
-  /** Shown before the first actionable post — introduces l/b actions */
+  /** Card 2: Philosophy — reducing friction to sociable behaviors, introduces l/b */
   actions: {
-    title: 'Actions',
-    message: 'For posts: L to like, B to boost',
+    title: '',
+    message: 'jklb.social is about reducing friction to sociable behaviors and increasing friction to mindless scrolling. It\'s as easy to like a post as it is to see the next post. Consider liking more posts!\n\n[l] likes a post\n[b] boosts (reposts)\n(why not [r] for re-post? Because [r] is for reply)',
   },
+
+  /** Card 3: More keys — q, v, o hotkeys */
+  moreKeys: {
+    title: '',
+    message: 'You can [q] to quote-post\nYou can [v] to view any post on Bluesky\n[o] opens hyperlinks',
+  },
+
 } as const;
 
 export interface TutorialCardDef {
@@ -41,16 +48,23 @@ export const tutorials: TutorialCardDef[] = [
   {
     id: 'nav',
     phase: 'beginning',
-    title: '',
-    body: 'Press J to go forward, K to go back',
+    title: 'Welcome to jklb.social!',
+    body: 'First (& only) thing you need to know: [j] to go forward.',
     placement: 'beforeAll',
   },
   {
     id: 'actions',
     phase: 'beginning',
-    title: 'Actions',
-    body: 'For posts: L to like, B to boost',
-    placement: 'beforeActionable',
+    title: '',
+    body: 'Philosophy + like/boost intro',
+    placement: 'beforeAll',
+  },
+  {
+    id: 'moreKeys',
+    phase: 'beginning',
+    title: '',
+    body: 'More hotkeys: q, v, o',
+    placement: 'beforeAll',
   },
 ];
 
@@ -78,6 +92,9 @@ export function getPhase(stage: StageView): 'beginning' | 'middle' | 'end' {
     case 'liked-posts-grid':
     case 'share':
     case 'end-stats':
+    case 'participation-claim':
+    case 'award-nominate':
+    case 'trophy-case':
       return 'end';
   }
 }

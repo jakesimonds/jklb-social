@@ -3,7 +3,7 @@ import { AppLayout, SunsetPage, LoginModal } from './components';
 import { useAuth } from './lib/AuthContext';
 import { useSettings } from './lib/SettingsContext';
 import { useToast } from './lib/ToastContext';
-import { useFocusNavigation, useKeybindings, useFeed, useThread, usePostActions, useFullscreenMedia, useUnreadNotifications, useAtmosphereReport, useAvailableFeeds, useAuthorBanner, useBackgroundMusic, useBeginning, useEndFlow } from './hooks';
+import { useFocusNavigation, useKeybindings, useFeed, useThread, usePostActions, useFullscreenMedia, useUnreadNotifications, useAtmosphereReport, useAvailableFeeds, useAuthorBanner, useBackgroundMusic, useBeginning, useEndFlow, useTrophies } from './hooks';
 import { usePremium } from './hooks/usePremium';
 import { useCurator } from './lib/CuratorContext';
 import { applyTheme } from './lib/theme';
@@ -45,6 +45,7 @@ function App() {
 
   const { settings, updateAwardSettings } = useSettings();
   const { isPremium } = usePremium();
+  const trophies = useTrophies();
   const { status: curatorStatus, curatedUris, requestedCount: curatorRequestedCount, enterCuratedMode, inCuratedMode } = useCurator();
 
   // ── ViewState: single source of truth for app stage + panel ──────────
@@ -458,11 +459,14 @@ function App() {
     if (!endFlowState.isActive) return;
 
     switch (endFlowState.stage) {
-      case 'grid':          setStage({ type: 'end-grid' }); break;
-      case 'award-liked':   setStage({ type: 'liked-posts-grid' }); break;
-      case 'award-share':   setStage({ type: 'share' }); break;
-      case 'stats':         setStage({ type: 'end-stats' }); break;
-      case 'atmosphere':    setStage({ type: 'atmosphere' }); break;
+      case 'grid':                setStage({ type: 'end-grid' }); break;
+      case 'award-liked':         setStage({ type: 'liked-posts-grid' }); break;
+      case 'award-share':         setStage({ type: 'share' }); break;
+      case 'stats':               setStage({ type: 'end-stats' }); break;
+      case 'atmosphere':          setStage({ type: 'atmosphere' }); break;
+      case 'participation-claim': setStage({ type: 'participation-claim' }); break;
+      case 'award-nominate':      setStage({ type: 'award-nominate' }); break;
+      case 'trophy-case':         setStage({ type: 'trophy-case' }); break;
     }
   }, [endFlowState.isActive, endFlowState.stage, setStage]);
 
@@ -758,8 +762,19 @@ function App() {
       showInfo(`Copied ${savedPosts.length} post(s) to clipboard!`);
       return;
     }
+    // Active Award button: routes based on trophy state
+    if (id === 'active-award') {
+      if (trophies.hasParticipationTrophy) {
+        // Has participation trophy → go to award nomination (liked posts)
+        endFlowOpenSubFlow('award');
+      } else {
+        // No participation trophy → go to claim flow
+        endFlowOpenSubFlow('participation-claim');
+      }
+      return;
+    }
     endFlowOpenSubFlow(id);
-  }, [logout, exitEndFlow, endFlowOpenSubFlow, savedPosts, showInfo, setCurrentItemIndex, setStage]);
+  }, [logout, exitEndFlow, endFlowOpenSubFlow, savedPosts, showInfo, setCurrentItemIndex, setStage, trophies.hasParticipationTrophy]);
 
   /**
    * Handle End screen grid hover — sync mouse highlight with keyboard state
@@ -781,16 +796,13 @@ function App() {
       const idx = endFlowState.highlightedIndex ?? 0;
       const COLS = 3;
       const MAX = 8; // 0-8 for 3x3 grid
-      const NON_EMPTY_COUNT = 6; // first 6 buttons are active
 
-      // Helper: find next non-empty index in a direction
       const clamp = (n: number) => Math.max(0, Math.min(n, MAX));
-      const skipEmpty = (target: number) => Math.min(target, NON_EMPTY_COUNT - 1);
 
       switch (e.key) {
         case 'ArrowRight': {
           e.preventDefault();
-          endFlowSetHighlightedIndex(skipEmpty(clamp(idx + 1)));
+          endFlowSetHighlightedIndex(clamp(idx + 1));
           break;
         }
         case 'ArrowLeft': {
@@ -800,7 +812,7 @@ function App() {
         }
         case 'ArrowDown': {
           e.preventDefault();
-          endFlowSetHighlightedIndex(skipEmpty(clamp(idx + COLS)));
+          endFlowSetHighlightedIndex(clamp(idx + COLS));
           break;
         }
         case 'ArrowUp': {
@@ -811,10 +823,10 @@ function App() {
         case 'Enter':
         case ' ': {
           e.preventDefault();
-          // Import END_BUTTONS config inline to get button id
-          const END_BUTTON_IDS = ['award', 'stats', 'atmosphere', 'clipboard', 'another', 'logout', 'empty1', 'empty2', 'empty3'];
+          // Button IDs match the order in getEndButtons()
+          const END_BUTTON_IDS = ['stats', 'atmosphere', 'clipboard', 'another', 'logout', 'glitch', 'plyr', 'active-award', 'trophy-case'];
           const id = END_BUTTON_IDS[idx];
-          if (id && !id.startsWith('empty')) {
+          if (id) {
             handleEndButton(id);
           }
           break;
@@ -1164,6 +1176,11 @@ function App() {
       onEndFlowAdvanceAward={endFlowAdvanceAward}
       onEndFlowGoBackAward={endFlowGoBackAward}
       onEndFlowSelectPost={selectEndFlowPost}
+      trophyState={{
+        hasParticipationTrophy: trophies.hasParticipationTrophy,
+        hasTrophies: trophies.hasParticipationTrophy || trophies.hasGivenBestThing || trophies.hasWonBestThing,
+      }}
+      onEndFlowExit={exitEndFlow}
       // Fullscreen media state
       isMediaFullscreen={isMediaFullscreen}
       fullscreenStartTime={fullscreenStartTime}

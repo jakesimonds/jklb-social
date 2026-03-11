@@ -655,7 +655,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-TROPHY-5: End screen as Slab
+- [x] TASK-TROPHY-5: End screen as Slab ✓
 
   **Complexity:** Medium
   **File(s):** `src/components/end/EndScreenGrid.tsx`, `src/components/end/EndButton.tsx`, `src/components/AppLayout.tsx`, `src/types/viewState.ts`

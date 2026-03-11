@@ -13,7 +13,7 @@ import { useState, useCallback } from 'react';
 import type { LikedPost } from '../types';
 
 /** Top-level: grid or a sub-flow */
-export type EndFlowStage = 'grid' | 'award-liked' | 'award-share' | 'stats' | 'atmosphere';
+export type EndFlowStage = 'grid' | 'award-liked' | 'award-share' | 'stats' | 'atmosphere' | 'participation-claim' | 'award-nominate' | 'trophy-case';
 
 export interface EndFlowState {
   stage: EndFlowStage;
@@ -64,9 +64,12 @@ export function useEndFlow(): UseEndFlowReturn {
     setState(prev => {
       if (!prev.isActive) return prev;
       switch (id) {
-        case 'award':      return { ...prev, stage: 'award-liked' as const };
-        case 'stats':       return { ...prev, stage: 'stats' as const };
-        case 'atmosphere':  return { ...prev, stage: 'atmosphere' as const };
+        case 'award':               return { ...prev, stage: 'award-liked' as const };
+        case 'stats':               return { ...prev, stage: 'stats' as const };
+        case 'atmosphere':          return { ...prev, stage: 'atmosphere' as const };
+        case 'participation-claim':  return { ...prev, stage: 'participation-claim' as const };
+        case 'award-nominate':      return { ...prev, stage: 'award-nominate' as const };
+        case 'trophy-case':         return { ...prev, stage: 'trophy-case' as const };
         // 'another', 'logout', 'clipboard' are instant actions handled by App.tsx
         default:            return prev;
       }

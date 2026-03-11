@@ -15,6 +15,8 @@ interface EndButtonProps {
   isHighlighted?: boolean;
   /** True for empty/placeholder slots */
   isEmpty?: boolean;
+  /** True to grey out and disable interaction */
+  disabled?: boolean;
   onMouseEnter?: () => void;
 }
 
@@ -25,12 +27,14 @@ export function EndButton({
   accentColor: _accentColor,
   isHighlighted = false,
   isEmpty = false,
+  disabled = false,
   onMouseEnter,
 }: EndButtonProps) {
   if (isEmpty) {
     return (
       <div
-        className="flex items-center justify-center rounded border border-dashed border-white/15 bg-[var(--memphis-bg)] cursor-default aspect-square"
+        className="flex items-center justify-center border border-dashed border-white/15 bg-[var(--memphis-bg)] cursor-default aspect-square"
+        style={{ borderRadius: 'var(--card-radius)' }}
       >
         <span className="text-white/20 text-2xl select-none">+</span>
       </div>
@@ -41,15 +45,19 @@ export function EndButton({
 
   return (
     <button
-      onClick={onClick}
-      onMouseEnter={onMouseEnter}
-      className={`group relative flex items-center justify-center rounded cursor-pointer aspect-square overflow-hidden transition-all duration-200 focus:outline-none ${
-        isHighlighted
-          ? 'border-2 border-[var(--memphis-yellow)] shadow-[0_0_8px_#ffeb3b4d]'
-          : 'border border-[var(--memphis-border)] hover:border-white/30'
+      onClick={disabled ? undefined : onClick}
+      onMouseEnter={disabled ? undefined : onMouseEnter}
+      disabled={disabled}
+      className={`group relative flex items-center justify-center aspect-square overflow-hidden transition-all duration-200 focus:outline-none ${
+        disabled
+          ? 'cursor-default opacity-40 border border-dashed border-white/15'
+          : isHighlighted
+            ? 'cursor-pointer border-2 border-[var(--memphis-yellow)] shadow-[0_0_8px_#ffeb3b4d]'
+            : 'cursor-pointer border border-[var(--memphis-border)] hover:border-white/30'
       }`}
       style={{
         backgroundColor: 'var(--memphis-bg)',
+        borderRadius: 'var(--card-radius)',
       }}
     >
       {/* Title — visible by default, fades out on hover/highlight */}

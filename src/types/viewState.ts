@@ -22,9 +22,13 @@ export type StageView =
   | { type: 'liked-posts-grid' }
   | { type: 'share' }
   | { type: 'end-stats' }
+  | { type: 'participation-claim' }
+  | { type: 'award-nominate' }
+  | { type: 'trophy-case' }
 
 export type PanelView =
   | { type: 'settings' }
   | { type: 'hotkeys' }
   | { type: 'composer-reply'; targetUri: string }
   | { type: 'composer-quote'; targetUri: string }
+  | { type: 'composer-new' }

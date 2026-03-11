@@ -7,7 +7,7 @@
  * Layout structure:
  * - Top Bar: chorus avatars + jklb buttons + feed indicator + UserWidget
  * - Right Bar: more chorus avatars + action buttons
- * - Content Area: PostCard, ContentPanel, or ScrollThread
+ * - Content Area: PostCard, Slab, or ScrollThread
  * - Mobile Strip: jklb buttons for narrow screens
  * - Overlays: modals for login, fullscreen media, etc.
  */
@@ -27,7 +27,7 @@ import {
   ScrollThread,
   PerimeterCell,
   UserWidget,
-  ContentPanel,
+  Slab,
   ProfileHover,
   calculateHoverPosition,
   HotkeyTooltip,
@@ -52,12 +52,11 @@ import { getPhaseBackground } from '../lib/themeConfig';
 import { LikedPostsGrid } from './LikedPostsGrid';
 import { EndScreenGrid } from './end/EndScreenGrid';
 import { SessionStats } from './end/SessionStats';
-import { EndSubFlowWrapper } from './end/EndSubFlowWrapper';
 import type { ChorusState } from '../lib/chorus';
 import type { Post, FeedItem, Settings, PDSFeedItem, LikedPost, SessionMetrics } from '../types';
 import type { ResolvedFeed } from '../lib/saved-feeds';
 import type { ComposerMode } from './ComposerPanel';
-// ComposeModal removed — compose now uses ContentPanel like Settings/Hotkeys
+// ComposeModal removed — compose now uses Slab like Settings/Hotkeys
 import type { PlayerFMTrack } from '../lib/pds';
 import { CuratorIndicator } from './CuratorIndicator';
 import { usePremium } from '../hooks/usePremium';
@@ -179,6 +178,10 @@ export interface AppLayoutProps {
   onEndFlowAdvanceAward: () => void;
   onEndFlowGoBackAward: () => void;
   onEndFlowSelectPost: (post: LikedPost | null) => void;
+  /** Trophy state for End screen dynamic buttons */
+  trophyState: { hasParticipationTrophy: boolean; hasTrophies: boolean };
+  /** Exit the end flow entirely (close Slab) */
+  onEndFlowExit: () => void;
 
   // Quit/logout handler (q key)
   onQuit: () => void;
@@ -400,6 +403,8 @@ export function AppLayout({
   onEndFlowAdvanceAward,
   onEndFlowGoBackAward,
   onEndFlowSelectPost,
+  trophyState,
+  onEndFlowExit,
   onQuit,
   availableFeeds = [],
   tracks = [],
@@ -649,23 +654,23 @@ export function AppLayout({
         case 'settings':
           return (
             <div className="postcard-container">
-              <ContentPanel title="Settings" onClose={onClosePanel}>
+              <Slab title="Settings" onClose={onClosePanel}>
                 <SettingsPanel tracks={tracks} isLoadingTracks={isLoadingTracks} />
-              </ContentPanel>
+              </Slab>
             </div>
           );
         case 'hotkeys':
           return (
             <div className="postcard-container">
-              <ContentPanel title="Hotkeys" onClose={onClosePanel}>
+              <Slab title="Hotkeys" onClose={onClosePanel}>
                 <HotkeysPanel />
-              </ContentPanel>
+              </Slab>
             </div>
           );
         case 'composer-reply':
           return (
             <div className="postcard-container">
-              <ContentPanel title="Reply" onClose={() => { setComposerTarget(null); onClosePanel(); }}>
+              <Slab title="Reply" onClose={() => { setComposerTarget(null); onClosePanel(); }}>
                 <ComposerPanel
                   mode="reply"
                   targetPost={composerTarget}
@@ -673,13 +678,13 @@ export function AppLayout({
                   onCancel={() => { setComposerTarget(null); onClosePanel(); }}
                   isSubmitting={isSubmittingComposer}
                 />
-              </ContentPanel>
+              </Slab>
             </div>
           );
         case 'composer-quote':
           return (
             <div className="postcard-container">
-              <ContentPanel title="Quote Post" onClose={() => { setComposerTarget(null); onClosePanel(); }}>
+              <Slab title="Quote Post" onClose={() => { setComposerTarget(null); onClosePanel(); }}>
                 <ComposerPanel
                   mode="quote"
                   targetPost={composerTarget}
@@ -687,20 +692,20 @@ export function AppLayout({
                   onCancel={() => { setComposerTarget(null); onClosePanel(); }}
                   isSubmitting={isSubmittingComposer}
                 />
-              </ContentPanel>
+              </Slab>
             </div>
           );
         case 'composer-new':
           return (
             <div className="postcard-container">
-              <ContentPanel title="Compose" onClose={onClosePanel}>
+              <Slab title="Compose" onClose={onClosePanel}>
                 <ComposerPanel
                   mode="new"
                   onSubmit={(text) => handleSubmitComposer(text, 'new')}
                   onCancel={onClosePanel}
                   isSubmitting={isSubmittingComposer}
                 />
-              </ContentPanel>
+              </Slab>
             </div>
           );
       }
@@ -815,36 +820,45 @@ export function AppLayout({
         ) : null;
 
       case 'end-grid':
-        return (
-          <div className="notification-grid-container">
-            <EndScreenGrid
-              onSelectButton={onEndButton}
-              onHoverButton={onEndHoverButton}
-              highlightedIndex={endFlowState.highlightedIndex}
-            />
-          </div>
-        );
-
       case 'atmosphere':
-        return (
-          <div className="notification-grid-container">
-            <EndSubFlowWrapper onBack={onEndReturnToGrid}>
+      case 'end-stats':
+      case 'liked-posts-grid':
+      case 'share':
+      case 'participation-claim':
+      case 'award-nominate':
+      case 'trophy-case': {
+        // All end stages render inside a single Slab.
+        // Escape from a sub-flow → back to grid; Escape from grid → exit end flow.
+        const isAtGrid = viewState.stage.type === 'end-grid';
+        const slabClose = isAtGrid ? onEndFlowExit : onEndReturnToGrid;
+        const slabTitle = isAtGrid ? 'End' : undefined;
+
+        let content: React.ReactNode = null;
+        switch (viewState.stage.type) {
+          case 'end-grid':
+            content = (
+              <EndScreenGrid
+                onSelectButton={onEndButton}
+                onHoverButton={onEndHoverButton}
+                highlightedIndex={endFlowState.highlightedIndex}
+                trophyState={trophyState}
+              />
+            );
+            break;
+          case 'atmosphere':
+            content = (
               <AtmosphereReport
                 cachedRecords={atmosphereRecords}
                 isScanning={atmosphereScanning}
                 progress={atmosphereProgress}
                 onClose={onEndReturnToGrid}
               />
-            </EndSubFlowWrapper>
-          </div>
-        );
-
-      case 'end-stats': {
-        const sessionData = getSessionData();
-        const netLikes = sessionData.metrics.likes - sessionData.metrics.unlikes;
-        return (
-          <div className="postcard-container">
-            <EndSubFlowWrapper onBack={onEndReturnToGrid}>
+            );
+            break;
+          case 'end-stats': {
+            const sessionData = getSessionData();
+            const netLikes = sessionData.metrics.likes - sessionData.metrics.unlikes;
+            content = (
               <SessionStats
                 postsViewed={sessionData.metrics.postsViewed}
                 likes={netLikes}
@@ -853,16 +867,12 @@ export function AppLayout({
                 linksOpened={sessionData.metrics.linksOpened}
                 onBack={onEndReturnToGrid}
               />
-            </EndSubFlowWrapper>
-          </div>
-        );
-      }
-
-      case 'liked-posts-grid': {
-        const sessionData = getSessionData();
-        return (
-          <div className="notification-grid-container">
-            <EndSubFlowWrapper onBack={onEndFlowGoBackAward}>
+            );
+            break;
+          }
+          case 'liked-posts-grid': {
+            const sessionData = getSessionData();
+            content = (
               <LikedPostsGrid
                 likedPosts={sessionData.likedPosts}
                 onSelectPost={onEndFlowSelectPost}
@@ -870,29 +880,49 @@ export function AppLayout({
                 onAdvance={onEndFlowAdvanceAward}
                 onGoBack={onEndFlowGoBackAward}
               />
-            </EndSubFlowWrapper>
-          </div>
-        );
-      }
+            );
+            break;
+          }
+          case 'share':
+            content = (
+              <AwardNominationPanel
+                selectedPost={endFlowState.selectedPost}
+                onPost={async (selectedPost, postText, image) => {
+                  await onAwardPost(selectedPost, postText, image);
+                }}
+                onSkip={onSkipJournal}
+                isSubmitting={isSubmittingAward}
+              />
+            );
+            break;
+          case 'participation-claim':
+            content = (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-[var(--memphis-text-muted)] text-sm">Participation claim — coming soon</p>
+              </div>
+            );
+            break;
+          case 'award-nominate':
+            content = (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-[var(--memphis-text-muted)] text-sm">Award nomination — coming soon</p>
+              </div>
+            );
+            break;
+          case 'trophy-case':
+            content = (
+              <div className="flex items-center justify-center h-full">
+                <p className="text-[var(--memphis-text-muted)] text-sm">Trophy case — coming soon</p>
+              </div>
+            );
+            break;
+        }
 
-      case 'share': {
         return (
           <div className="postcard-container">
-            <EndSubFlowWrapper onBack={onEndReturnToGrid}>
-              <ContentPanel
-                title="JKLB Award"
-                onClose={onSkipJournal}
-              >
-                <AwardNominationPanel
-                  selectedPost={endFlowState.selectedPost}
-                  onPost={async (selectedPost, postText, image) => {
-                    await onAwardPost(selectedPost, postText, image);
-                  }}
-                  onSkip={onSkipJournal}
-                  isSubmitting={isSubmittingAward}
-                />
-              </ContentPanel>
-            </EndSubFlowWrapper>
+            <Slab title={slabTitle} onClose={slabClose}>
+              {content}
+            </Slab>
           </div>
         );
       }
