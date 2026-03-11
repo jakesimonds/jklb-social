@@ -9,6 +9,7 @@
 import type { Agent } from '@atproto/api';
 import type { BeginningState } from '../../hooks/useBeginning';
 import type { Post } from '../../types';
+import { Slab } from '../Slab';
 import { TutorialCard } from '../TutorialCard';
 import { TUTORIAL_CONTENT } from '../../lib/tutorials';
 import { UnactionableItemsView } from './UnactionableItemsView';
@@ -55,97 +56,113 @@ export function BeginningView({ state, advance, goBack: _goBack, agent, setBegin
 
     case 'tutorialNav':
       return (
-        <TutorialCard
-          id="nav"
-          title={TUTORIAL_CONTENT.nav.title}
-          message={TUTORIAL_CONTENT.nav.message}
-          onAdvance={advance}
-          handleKeys={false}
-        />
+        <Slab title="Tutorial" accentColor="var(--memphis-yellow)" hideClose>
+          <TutorialCard
+            id="nav"
+            title={TUTORIAL_CONTENT.nav.title}
+            message={TUTORIAL_CONTENT.nav.message}
+            onAdvance={advance}
+            handleKeys={false}
+          />
+        </Slab>
       );
 
     case 'tutorialActions':
       return (
-        <TutorialCard
-          id="actions"
-          title={TUTORIAL_CONTENT.actions.title}
-          message={TUTORIAL_CONTENT.actions.message}
-          onAdvance={advance}
-          handleKeys={false}
-        />
+        <Slab title="Tutorial" accentColor="var(--memphis-yellow)" hideClose>
+          <TutorialCard
+            id="actions"
+            title={TUTORIAL_CONTENT.actions.title}
+            message={TUTORIAL_CONTENT.actions.message}
+            onAdvance={advance}
+            handleKeys={false}
+          />
+        </Slab>
       );
 
     case 'tutorialMoreKeys':
       return (
-        <TutorialCard
-          id="moreKeys"
-          title={TUTORIAL_CONTENT.moreKeys.title}
-          message={TUTORIAL_CONTENT.moreKeys.message}
-          onAdvance={advance}
-          handleKeys={false}
-        />
+        <Slab title="Tutorial" accentColor="var(--memphis-yellow)" hideClose>
+          <TutorialCard
+            id="moreKeys"
+            title={TUTORIAL_CONTENT.moreKeys.title}
+            message={TUTORIAL_CONTENT.moreKeys.message}
+            onAdvance={advance}
+            handleKeys={false}
+          />
+        </Slab>
       );
 
     case 'unactionable':
       return (
-        <UnactionableItemsView
-          slides={state.items.unactionableSlides}
-          currentIndex={state.currentIndex}
-          agent={agent}
-        />
+        <Slab title="your posts got some love" accentColor="var(--memphis-pink)" hideClose>
+          <UnactionableItemsView
+            slides={state.items.unactionableSlides}
+            currentIndex={state.currentIndex}
+            agent={agent}
+          />
+        </Slab>
       );
 
     case 'follower':
       return (
-        <NewFollowerCard
-          follower={state.items.followers[state.currentIndex]}
-          agent={agent}
-          index={state.currentIndex}
-          total={state.items.followers.length}
-          setBeginningActions={setBeginningActions}
-        />
+        <Slab title="somebody's ears are burning" accentColor="var(--memphis-cyan)" hideClose>
+          <NewFollowerCard
+            follower={state.items.followers[state.currentIndex]}
+            agent={agent}
+            index={state.currentIndex}
+            total={state.items.followers.length}
+            setBeginningActions={setBeginningActions}
+          />
+        </Slab>
       );
 
     case 'quotePost':
       return (
-        <BeginningPostCard
-          notification={state.items.quotePosts[state.currentIndex]}
-          agent={agent}
-          index={state.currentIndex}
-          total={state.items.quotePosts.length}
-          sectionLabel="you've been quote posted"
-          accentColor="var(--memphis-yellow)"
-          setBeginningActions={setBeginningActions}
-          onReplyToPost={onReplyToPost}
-        />
+        <Slab title="you've been quote posted" accentColor="var(--memphis-yellow)" hideClose>
+          <BeginningPostCard
+            notification={state.items.quotePosts[state.currentIndex]}
+            agent={agent}
+            index={state.currentIndex}
+            total={state.items.quotePosts.length}
+            sectionLabel="you've been quote posted"
+            accentColor="var(--memphis-yellow)"
+            setBeginningActions={setBeginningActions}
+            onReplyToPost={onReplyToPost}
+          />
+        </Slab>
       );
 
     case 'reply':
       return (
-        <BeginningPostCard
-          notification={state.items.replies[state.currentIndex]}
-          agent={agent}
-          index={state.currentIndex}
-          total={state.items.replies.length}
-          sectionLabel="your post got a reply"
-          accentColor="var(--memphis-cyan)"
-          setBeginningActions={setBeginningActions}
-          onReplyToPost={onReplyToPost}
-        />
+        <Slab title="your post got a reply" accentColor="var(--memphis-cyan)" hideClose>
+          <BeginningPostCard
+            notification={state.items.replies[state.currentIndex]}
+            agent={agent}
+            index={state.currentIndex}
+            total={state.items.replies.length}
+            sectionLabel="your post got a reply"
+            accentColor="var(--memphis-cyan)"
+            setBeginningActions={setBeginningActions}
+            onReplyToPost={onReplyToPost}
+          />
+        </Slab>
       );
 
     case 'mention':
       return (
-        <BeginningPostCard
-          notification={state.items.mentions[state.currentIndex]}
-          agent={agent}
-          index={state.currentIndex}
-          total={state.items.mentions.length}
-          sectionLabel="somebody's ears are burning"
-          accentColor="var(--memphis-pink)"
-          setBeginningActions={setBeginningActions}
-          onReplyToPost={onReplyToPost}
-        />
+        <Slab title="somebody's ears are burning" accentColor="var(--memphis-pink)" hideClose>
+          <BeginningPostCard
+            notification={state.items.mentions[state.currentIndex]}
+            agent={agent}
+            index={state.currentIndex}
+            total={state.items.mentions.length}
+            sectionLabel="somebody's ears are burning"
+            accentColor="var(--memphis-pink)"
+            setBeginningActions={setBeginningActions}
+            onReplyToPost={onReplyToPost}
+          />
+        </Slab>
       );
 
     case 'done':

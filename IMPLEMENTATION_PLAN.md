@@ -883,7 +883,7 @@ End Slab (3x3 grid)
 
 ---
 
-- [ ] TASK-SLAB-4: Beginning notifications in Slabs
+- [x] TASK-SLAB-4: Beginning notifications in Slabs ✓
 
   **Complexity:** Medium
   **File(s):** `src/components/beginning/BeginningView.tsx`, `src/components/beginning/UnactionableItemsView.tsx`, `src/components/beginning/NewFollowerCard.tsx`, `src/components/beginning/BeginningPostCard.tsx`, `src/components/TutorialCard.tsx`

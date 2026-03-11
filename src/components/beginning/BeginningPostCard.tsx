@@ -15,7 +15,6 @@ import { transformPostView } from '../../lib/feed';
 import { toggleLike, toggleRepost, toggleFollow } from '../../lib/actions';
 import { buildBskyPostUrl } from '../../lib/post-utils';
 import { PostCard } from '../PostCard';
-import { getPhaseBackground } from '../../lib/themeConfig';
 interface BeginningPostCardProps {
   notification: BeginningNotification;
   agent: Agent;
@@ -43,8 +42,8 @@ export function BeginningPostCard({
   agent,
   index,
   total,
-  sectionLabel,
-  accentColor,
+  sectionLabel: _sectionLabel,
+  accentColor: _accentColor,
   setBeginningActions,
   onReplyToPost,
 }: BeginningPostCardProps) {
@@ -178,24 +177,13 @@ export function BeginningPostCard({
 
   if (isLoading) {
     return (
-      <div className="relative flex flex-col h-full w-full overflow-hidden">
-        <div className="text-center pt-6 pb-2 relative z-10">
-          <span className="text-sm text-[var(--memphis-text-muted)]">
-            <kbd className="px-1.5 py-0.5 rounded border border-[var(--memphis-pink)] text-[var(--memphis-pink)] text-xs">
-              j
-            </kbd>
-            {' '}to continue
-          </span>
-          <h2 className="text-3xl font-bold tracking-tight mt-1" style={{ color: accentColor }}>
-            {sectionLabel}
-          </h2>
-          {total > 1 && (
-            <p className="text-xs text-[var(--memphis-text-muted)] mt-1">
-              {index + 1} of {total}
-            </p>
-          )}
-        </div>
-        <div className="flex-1 flex items-center justify-center relative z-10">
+      <div className="flex flex-col w-full">
+        {total > 1 && (
+          <p className="text-xs text-[var(--memphis-text-muted)] text-center mb-2">
+            {index + 1} of {total}
+          </p>
+        )}
+        <div className="flex-1 flex items-center justify-center">
           <div className="text-[var(--memphis-text-muted)] text-sm italic">loading post...</div>
         </div>
       </div>
@@ -204,19 +192,8 @@ export function BeginningPostCard({
 
   if (error || !post) {
     return (
-      <div className="relative flex flex-col h-full w-full overflow-hidden">
-        <div className="text-center pt-6 pb-2 relative z-10">
-          <span className="text-sm text-[var(--memphis-text-muted)]">
-            <kbd className="px-1.5 py-0.5 rounded border border-[var(--memphis-pink)] text-[var(--memphis-pink)] text-xs">
-              j
-            </kbd>
-            {' '}to continue
-          </span>
-          <h2 className="text-3xl font-bold tracking-tight mt-1" style={{ color: accentColor }}>
-            {sectionLabel}
-          </h2>
-        </div>
-        <div className="flex-1 flex items-center justify-center relative z-10">
+      <div className="flex flex-col w-full">
+        <div className="flex-1 flex items-center justify-center">
           <div className="text-[var(--memphis-text-muted)] text-sm">{error || 'Post unavailable'}</div>
         </div>
       </div>
@@ -224,54 +201,34 @@ export function BeginningPostCard({
   }
 
   return (
-    <div className="relative flex flex-col h-full w-full overflow-hidden">
-      {/* Section header — big and colorful (z-10 above cover photo) */}
-      <div className="text-center pt-6 pb-2 relative z-10">
-        <span className="text-sm text-[var(--memphis-text-muted)]">
-          <kbd className="px-1.5 py-0.5 rounded border border-[var(--memphis-pink)] text-[var(--memphis-pink)] text-xs">
-            j
-          </kbd>
-          {' '}to continue
-        </span>
-        <h2 className="text-3xl font-bold tracking-tight mt-1" style={{ color: accentColor }}>
-          {sectionLabel}
-        </h2>
-        {total > 1 && (
-          <p className="text-xs text-[var(--memphis-text-muted)] mt-1">
-            {index + 1} of {total}
-          </p>
-        )}
-      </div>
+    <div className="flex flex-col w-full">
+      {total > 1 && (
+        <p className="text-xs text-[var(--memphis-text-muted)] text-center mb-2">
+          {index + 1} of {total}
+        </p>
+      )}
 
-      {/* Post(s) in colored outline (z-10, solid bg) */}
-      <div className="flex-1 relative z-10 overflow-auto">
-        <div
-          className="rounded-lg border-2 overflow-hidden w-full"
-          style={{ borderColor: accentColor, background: getPhaseBackground('beginning'), borderRadius: '0.5rem', maxHeight: '80vh' }}
-        >
-          {/* Parent post (yours) — small, read-only context */}
-          {parentPost && notification.type === 'reply' && (
-            <div className="border-b border-white/10">
-              <PostCard
-                post={parentPost}
-                size="sm"
-                isFocused={false}
-                hideActions
-              />
-            </div>
-          )}
-
-          {/* Reply/quote/mention post (theirs) — actionable */}
+      {/* Parent post (yours) — small, read-only context */}
+      {parentPost && notification.type === 'reply' && (
+        <div className="border-b border-white/10">
           <PostCard
-            post={post}
-            isFocused={true}
-            onLike={handleLike}
-            onBoost={handleBoost}
-            onFollow={handleFollow}
-            onReply={handleReply}
+            post={parentPost}
+            size="sm"
+            isFocused={false}
+            hideActions
           />
         </div>
-      </div>
+      )}
+
+      {/* Reply/quote/mention post (theirs) — actionable */}
+      <PostCard
+        post={post}
+        isFocused={true}
+        onLike={handleLike}
+        onBoost={handleBoost}
+        onFollow={handleFollow}
+        onReply={handleReply}
+      />
     </div>
   );
 }

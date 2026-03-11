@@ -307,25 +307,9 @@ export function UnactionableItemsView({ slides, currentIndex, agent }: Unactiona
     : 'var(--memphis-yellow)';
 
   return (
-    <div className="flex flex-col h-full w-full">
-      {/* Header */}
-      <div className="text-center pt-6 pb-2">
-        <span className="text-sm text-[var(--memphis-text-muted)]">
-          <kbd className="px-1.5 py-0.5 rounded border border-[var(--memphis-pink)] text-[var(--memphis-pink)] text-xs">
-            j
-          </kbd>
-          {' '}to continue
-        </span>
-        <h2
-          className="text-3xl font-bold tracking-tight mt-1"
-          style={{ color: accentColor }}
-        >
-          {slide.type === 'like' ? 'people like you!' : "you've been boosted"}
-        </h2>
-      </div>
-
+    <div className="flex flex-col w-full">
       {/* Posts with avatars — centered, side by side */}
-      <div className="flex-1 flex items-center justify-center gap-8 px-4">
+      <div className="flex-1 flex items-center justify-center gap-8 px-4 py-4">
         {slide.items.map((item) => (
           <PostWithAvatars
             key={`${slide.type}-${item.postUri}`}
@@ -337,7 +321,6 @@ export function UnactionableItemsView({ slides, currentIndex, agent }: Unactiona
           />
         ))}
       </div>
-
 
       {/* ProfileHover card (same as chorus hover) */}
       {hoveredProfile && hoverPosition && (
