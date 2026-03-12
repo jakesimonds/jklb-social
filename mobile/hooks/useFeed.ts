@@ -17,7 +17,7 @@ import {
 } from '../lib/feed';
 import { trackPostViewed, untrackPostViewed } from '../lib/session';
 
-const DEFAULT_FEED_LIMIT = 150; // Fetch extra to compensate for reply filtering (~30% are replies)
+const DEFAULT_FEED_LIMIT = 100; // Bluesky API caps at 100
 
 export interface UseFeedParams {
   agent: Agent | null;

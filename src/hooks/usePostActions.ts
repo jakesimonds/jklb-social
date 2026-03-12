@@ -6,7 +6,7 @@ import type { Agent } from '@atproto/api';
 import type { Post, FeedItem } from '../types';
 import { isPostFeedItem } from '../types';
 import type { PanelView } from '../types';
-import { toggleLike, toggleRepost, toggleFollow, createReply, createQuotePost, unfollowAuthor } from '../lib/actions';
+import { toggleLike, toggleRepost, toggleFollow, createReply, createQuotePost, createPost, unfollowAuthor } from '../lib/actions';
 import {
   trackLike,
   trackUnlike,
@@ -55,7 +55,8 @@ export interface UsePostActionsReturn {
   handleQuote: () => void;
   handleUnfollow: () => Promise<void>;
   handleFollow: () => Promise<void>;
-  handleSubmitComposer: (text: string, mode?: 'reply' | 'quote') => Promise<void>;
+  handleSubmitComposer: (text: string, mode?: 'reply' | 'quote' | 'new') => Promise<void>;
+  handleCompose: () => void;
   // Composer state (managed by hook)
   composerTarget: Post | null;
   setComposerTarget: React.Dispatch<React.SetStateAction<Post | null>>;
@@ -291,7 +292,7 @@ export function usePostActions({
     const targetPost = getTargetPost(focusTarget, currentPost, isInThreadView, threadPosts, threadIndex);
     if (!targetPost) return;
 
-    // Open reply composer via ContentPanel
+    // Open reply composer via Slab
     setComposerTarget(targetPost);
     openPanel({ type: 'composer-reply', targetUri: targetPost.uri });
   }, [agent, focusTarget, currentPost, isInThreadView, threadPosts, threadIndex, setShowLoginPrompt, openPanel]);
@@ -309,10 +310,23 @@ export function usePostActions({
     const targetPost = getTargetPost(focusTarget, currentPost, isInThreadView, threadPosts, threadIndex);
     if (!targetPost) return;
 
-    // Open quote composer via ContentPanel
+    // Open quote composer via Slab
     setComposerTarget(targetPost);
     openPanel({ type: 'composer-quote', targetUri: targetPost.uri });
   }, [agent, focusTarget, currentPost, isInThreadView, threadPosts, threadIndex, setShowLoginPrompt, openPanel]);
+
+  /**
+   * Handle compose button press ('c' key)
+   * Opens the new post composer
+   */
+  const handleCompose = useCallback(() => {
+    if (!agent) {
+      setShowLoginPrompt(true);
+      return;
+    }
+    setComposerTarget(null);
+    openPanel({ type: 'composer-new' });
+  }, [agent, setShowLoginPrompt, openPanel]);
 
   /**
    * Handle unfollow button press ('u' key)
@@ -420,7 +434,7 @@ export function usePostActions({
    * Submit composer content (reply, quote, or new post) to the API.
    * Uses composerTarget to infer mode: null = compose, non-null = reply or quote.
    */
-  const handleSubmitComposer = useCallback(async (text: string, mode?: 'reply' | 'quote') => {
+  const handleSubmitComposer = useCallback(async (text: string, mode?: 'reply' | 'quote' | 'new') => {
     if (!agent) return;
 
     setIsSubmittingComposer(true);
@@ -430,7 +444,9 @@ export function usePostActions({
     // Infer mode from composerTarget if not explicitly provided
     const effectiveMode = mode || 'reply';
 
-    if (effectiveMode === 'reply' && composerTarget) {
+    if (effectiveMode === 'new') {
+      result = await createPost(agent, text);
+    } else if (effectiveMode === 'reply' && composerTarget) {
       result = await createReply(agent, composerTarget, text);
       if (result.success) {
         trackReply();
@@ -461,6 +477,7 @@ export function usePostActions({
     handleUnfollow,
     handleFollow,
     handleSubmitComposer,
+    handleCompose,
     // Composer state
     composerTarget,
     setComposerTarget,

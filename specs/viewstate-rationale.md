@@ -1,6 +1,7 @@
 # Architecture Research: Unified CurrentView Refactor
 
 **Date**: 2026-02-24
+**Updated**: 2026-03-11 — synced End stages and PanelView with current `viewState.ts`
 **Status**: APPROVED — This refactor is the first implementation priority. The target architecture is defined in `app-architecture.md` (ViewState model). This document is the diagnostic that motivated the refactor.
 
 **Context**: During Beginning/Middle/End tutorial and hotkey work, Jake realized the app's stage area only ever displays ONE component at a time, but the code doesn't reflect this. Research agent did a thorough analysis.
@@ -14,7 +15,7 @@ The app layout has two zones:
 - **The Middle**: main content area — only ever shows ONE component at a time
 
 The entire app flow is a serial sequence of single components in the middle:
-`TutorialCard → UnactionableItemsView → NewFollowerCard → TutorialCard → BeginningPostCard → SectionCard → TutorialCard → PostCard → ContentPanel → ScrollThread → NotificationGrid → AtmosphereReport → LikedPostsGrid → ...`
+`TutorialCard → UnactionableItemsView → NewFollowerCard → TutorialCard → BeginningPostCard → SectionCard → TutorialCard → PostCard → Slab → ScrollThread → NotificationGrid → AtmosphereReport → LikedPostsGrid → ...`
 
 There is NEVER a moment where two things display in the middle simultaneously.
 
@@ -32,7 +33,7 @@ isInThreadView && threadPosts.length
   │                              → ScrollThread
   └─ contentMode === 'notifications' → NotificationGrid
       └─ contentMode === 'atmosphere' → AtmosphereReport
-          └─ contentMode !== 'post' → ContentPanel (settings/hotkeys/credibleExit/reply/quote)
+          └─ contentMode !== 'post' → Slab (settings/hotkeys/credibleExit/reply/quote)
               └─ appPhase === 'beginning' → BeginningView
                   └─ appPhase === 'middleCard' → SectionCard
                       └─ appPhase === 'middleTutorial' → TutorialCard
@@ -62,7 +63,7 @@ const [isInThreadView, setIsInThreadView] = useState(false);
 
 // Dimension 4: End flow state machine
 const [endFlowState] = useEndFlow();
-  // stage: 'atmosphere' | 'endCard' | 'likedPostsGrid' | 'share'
+  // stage: 'end-grid' | 'atmosphere' | 'liked-posts-grid' | 'share' | 'end-stats' | 'participation-claim' | 'participation-share' | 'award-nominate' | 'trophy-case'
 ```
 
 This creates a combinatorial explosion. Invalid combinations (e.g. `appPhase === 'beginning' && contentMode === 'settings'`) are prevented by runtime logic, not types.
@@ -89,39 +90,62 @@ Hotkeys are registered at THREE levels:
 Replace all four state dimensions with a single typed union:
 
 ```typescript
-type CurrentView =
+// Actual implementation: ViewState splits into stage + optional panel overlay.
+// See src/types/viewState.ts
+
+interface ViewState {
+  stage: StageView;
+  panel: PanelView | null;
+}
+
+type StageView =
+  // Tutorial (can appear in ANY phase)
   | { type: 'tutorial'; id: string }
+  // Beginning (notification walkthrough)
   | { type: 'unactionable'; index: number }
   | { type: 'follower'; index: number }
-  | { type: 'beginning-post'; category: 'quotePost' | 'reply'; index: number }
+  | { type: 'reply-to-user'; index: number }
+  | { type: 'mention'; index: number }
+  | { type: 'quote-post'; index: number }
+  // Middle
   | { type: 'middle-card' }
-  | { type: 'middle-tutorial' }
   | { type: 'post'; index: number }
-  | { type: 'thread'; mode: 'scroll' }
-  | { type: 'settings' }
-  | { type: 'hotkeys' }
-  | { type: 'credible-exit' }
-  | { type: 'composer'; mode: 'reply' | 'quote' }
-  | { type: 'notification-grid' }
+  | { type: 'thread'; postIndex: number }
+  // End
+  | { type: 'end-grid' }
   | { type: 'atmosphere' }
   | { type: 'liked-posts-grid' }
-  | { type: 'login-prompt' }
-  | { type: 'login-modal' };
+  | { type: 'share' }
+  | { type: 'end-stats' }
+  | { type: 'participation-claim' }
+  | { type: 'participation-share' }
+  | { type: 'award-nominate' }
+  | { type: 'trophy-case' }
+
+type PanelView =
+  | { type: 'settings' }
+  | { type: 'hotkeys' }
+  | { type: 'composer-reply'; targetUri: string }
+  | { type: 'composer-quote'; targetUri: string }
+  | { type: 'composer-new' }
 ```
 
 AppLayout rendering becomes a flat switch:
 
 ```typescript
-switch (currentView.type) {
+// Stage rendering is a flat switch on viewState.stage.type
+switch (viewState.stage.type) {
   case 'thread': return <ScrollThread />;
-  case 'notification-grid': return <NotificationGrid />;
   case 'atmosphere': return <AtmosphereReport />;
-  case 'settings': return <ContentPanel><SettingsPanel /></ContentPanel>;
   case 'tutorial': return <TutorialCard ... />;
   case 'follower': return <NewFollowerCard ... />;
   case 'post': return <PostCard ... />;
-  // ... ~15 flat cases, no nesting
+  case 'end-grid': return <EndScreenGrid />;
+  case 'trophy-case': return <TrophyCase />;
+  case 'participation-claim': return <ParticipationClaim />;
+  // ... flat cases for all StageView variants
 }
+// Panel overlay rendered separately when viewState.panel !== null
 ```
 
 ### Benefits

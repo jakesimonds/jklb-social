@@ -21,5 +21,5 @@ preview_id = "a2c85f9be78c46ffac10f7eb4bfd5565"
 # KV Namespace for trophy system (participation trophies, awards, member records)
 [[kv_namespaces]]
 binding = "TROPHIES"
-id = "PLACEHOLDER_CREATE_VIA_WRANGLER_KV_NAMESPACE_CREATE"
-preview_id = "PLACEHOLDER_PREVIEW"
+id = "028ad3d73d0c4b869ced62e4d83db8c5"
+preview_id = "c1d640b2dfee404fbef1e60faa11d7af"

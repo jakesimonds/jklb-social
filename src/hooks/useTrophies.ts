@@ -44,6 +44,7 @@ export function useTrophies(): UseTrophiesReturn {
   const fetchTrophies = useCallback(async () => {
     if (!agent || !profile?.did) {
       setLoading(false);
+      // Don't mark as fetched — retry when agent/profile become available
       return;
     }
 
@@ -112,12 +113,12 @@ export function useTrophies(): UseTrophiesReturn {
     }
   }, [agent, profile?.did]);
 
-  // Fetch on mount (once per agent/profile)
+  // Fetch once agent/profile are available
   useEffect(() => {
-    if (fetchedRef.current) return;
+    if (fetchedRef.current || !agent || !profile?.did) return;
     fetchedRef.current = true;
     fetchTrophies();
-  }, [fetchTrophies]);
+  }, [fetchTrophies, agent, profile?.did]);
 
   const refetch = useCallback(() => {
     fetchedRef.current = false;

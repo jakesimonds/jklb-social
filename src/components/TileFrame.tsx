@@ -100,13 +100,14 @@ export function TileFrame({ record, handle, isFocused = false }: TileFrameProps)
   return (
     <article
       className={`
-        rounded-lg border-2 transition-all duration-200
+        border-2 transition-all duration-200
         flex flex-col overflow-hidden
         ${isFocused
           ? 'border-[var(--memphis-cyan)] bg-[var(--memphis-cyan)]/5 shadow-lg shadow-[var(--memphis-cyan)]/20'
           : 'border-[var(--memphis-cyan)]/50 bg-white/5 hover:border-[var(--memphis-cyan)]'
         }
       `}
+      style={{ borderRadius: 'var(--card-radius)' }}
       data-record-uri={record.uri}
     >
       {/* Header: tile name + author */}

@@ -444,13 +444,19 @@ export function useBeginning({
     fetchNotifications();
   }, [agent, isAuthenticated, tutorialEnabled, isPremium]);
 
-  // Rebuild stage sequence when tutorialEnabled changes (without re-fetching)
+  // Rebuild stage sequence when tutorialEnabled or isPremium changes (without re-fetching)
   useEffect(() => {
     if (!hasFetchedRef.current) return; // Haven't fetched yet, nothing to rebuild
 
     setState(prev => {
       const sequence = buildStageSequence(prev.items, tutorialEnabled, isPremium);
       stageSequenceRef.current = sequence;
+
+      // If premium just became true and curator is in the new sequence but we haven't seen it yet,
+      // jump to the curator card (fixes race condition where profile loads after initial render)
+      if (isPremium && sequence[0] === 'curator' && prev.stage !== 'curator' && !prev.passedStages.includes('curator')) {
+        return { ...prev, stage: 'curator', currentIndex: 0 };
+      }
 
       // If currently on a tutorial stage and tutorials just got disabled, advance past it
       const isTutorialStage = prev.stage === 'tutorialNav' || prev.stage === 'tutorialActions' || prev.stage === 'tutorialMoreKeys';

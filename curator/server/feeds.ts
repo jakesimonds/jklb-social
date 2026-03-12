@@ -131,7 +131,16 @@ export async function getUserProfile(handle: string) {
   }
 }
 
-/** Gather ~300 candidates from follows' posts + What's Hot, deduplicated */
+/** Shuffle an array in place (Fisher-Yates) */
+function shuffle<T>(arr: T[]): T[] {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/** Gather 150 curated candidates: 75 mutuals, 25 newest, 25 oldest, 25 quiet */
 export async function gatherCandidates(
   handle: string
 ): Promise<CandidatePost[]> {
@@ -159,17 +168,83 @@ export async function gatherCandidates(
   const hotPosts = await getAlgorithmicFeed(FEED_WHATS_HOT, 100);
   console.log(`What's Hot posts: ${hotPosts.length}`);
 
-  // Deduplicate by URI
+  // Deduplicate everything by URI
   const seen = new Set<string>();
-  const all: CandidatePost[] = [];
+  const allDeduped: CandidatePost[] = [];
+  const followDeduped: CandidatePost[] = [];
 
-  for (const post of [...followPosts, ...hotPosts]) {
+  for (const post of followPosts) {
     if (!seen.has(post.uri)) {
       seen.add(post.uri);
-      all.push(post);
+      allDeduped.push(post);
+      followDeduped.push(post);
     }
   }
+  for (const post of hotPosts) {
+    if (!seen.has(post.uri)) {
+      seen.add(post.uri);
+      allDeduped.push(post);
+    }
+  }
+  console.log(`After dedup: ${allDeduped.length} total`);
 
-  console.log(`After dedup: ${all.length} candidates`);
-  return all;
+  // === Build 150-post mix ===
+  const selected = new Set<string>();
+  const final: CandidatePost[] = [];
+
+  function addPost(p: CandidatePost): boolean {
+    if (selected.has(p.uri)) return false;
+    selected.add(p.uri);
+    final.push(p);
+    return true;
+  }
+
+  // Bucket 1: 75 from mutuals (random sample of follow posts)
+  const shuffledFollows = shuffle([...followDeduped]);
+  let mutualCount = 0;
+  for (const p of shuffledFollows) {
+    if (mutualCount >= 75) break;
+    if (addPost(p)) mutualCount++;
+  }
+  console.log(`Mutuals bucket: ${mutualCount}`);
+
+  // Bucket 2: 25 newest (chronological — most recent first)
+  const byNewest = [...allDeduped].sort(
+    (a, b) => new Date(b.indexedAt).getTime() - new Date(a.indexedAt).getTime()
+  );
+  let chronoCount = 0;
+  for (const p of byNewest) {
+    if (chronoCount >= 25) break;
+    if (addPost(p)) chronoCount++;
+  }
+  console.log(`Chronological bucket: ${chronoCount}`);
+
+  // Bucket 3: 25 oldest (reverse chronological — oldest first)
+  const byOldest = [...allDeduped].sort(
+    (a, b) => new Date(a.indexedAt).getTime() - new Date(b.indexedAt).getTime()
+  );
+  let reverseCount = 0;
+  for (const p of byOldest) {
+    if (reverseCount >= 25) break;
+    if (addPost(p)) reverseCount++;
+  }
+  console.log(`Reverse-chrono bucket: ${reverseCount}`);
+
+  // Bucket 4: 25 quiet posters (lowest engagement)
+  const byQuiet = [...allDeduped].sort(
+    (a, b) =>
+      (a.likeCount + a.repostCount + a.replyCount) -
+      (b.likeCount + b.repostCount + b.replyCount)
+  );
+  let quietCount = 0;
+  for (const p of byQuiet) {
+    if (quietCount >= 25) break;
+    if (addPost(p)) quietCount++;
+  }
+  console.log(`Quiet posters bucket: ${quietCount}`);
+
+  console.log(`Final candidate pool: ${final.length} (shuffled)`);
+
+  // Shuffle the whole thing so the agent doesn't see bucket ordering
+  return shuffle(final);
 }

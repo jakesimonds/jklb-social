@@ -4,7 +4,7 @@ export { SunsetPage } from './SunsetPage';
 export { PostCard } from './PostCard';
 export { PDSEventCard } from './PDSEventCard';
 export { TileFrame } from './TileFrame';
-export { ContentPanel } from './ContentPanel';
+export { Slab } from './Slab';
 export { ScrollThread } from './ScrollThread';
 export { ComposerPanel } from './ComposerPanel';
 export type { ComposerMode } from './ComposerPanel';

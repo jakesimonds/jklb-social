@@ -5,6 +5,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import type { MusicSettings } from '../types';
 import type { PlayerFMTrack } from '../lib/pds';
 import { getPdsUrl, fetchPlayerFMLikes, resolveTrack } from '../lib/pds';
+import { DEFAULT_MUSIC_SETTINGS } from '../lib/settings';
 
 /** Module-level audio element — persists across re-renders, shared by all instances */
 let audioElement: HTMLAudioElement | null = null;
@@ -68,25 +69,41 @@ export function useBackgroundMusic({
       try {
         // Resolve user's PDS URL from their DID
         const pdsUrl = await getPdsUrl(did!);
-        if (!pdsUrl) {
-          setIsLoadingTracks(false);
-          return;
+
+        // Fetch liked track references (skip if PDS unreachable)
+        let validTracks: PlayerFMTrack[] = [];
+        if (pdsUrl) {
+          const likes = await fetchPlayerFMLikes(pdsUrl, did!);
+          if (likes.length > 0) {
+            const resolved = await Promise.all(
+              likes.map((like) => resolveTrack(like.uri))
+            );
+            validTracks = resolved.filter(
+              (t): t is PlayerFMTrack => t !== null
+            );
+          }
         }
 
-        // Fetch liked track references
-        const likes = await fetchPlayerFMLikes(pdsUrl, did!);
-        if (likes.length === 0) {
-          setIsLoadingTracks(false);
-          return;
-        }
+        // Also resolve default tracks that aren't in the user's likes
+        const defaultUris = [
+          DEFAULT_MUSIC_SETTINGS.beginning,
+          DEFAULT_MUSIC_SETTINGS.middle,
+          DEFAULT_MUSIC_SETTINGS.end,
+        ].filter((uri): uri is string => uri !== null && uri !== 'none');
 
-        // Resolve all tracks in parallel, filter out failures
-        const resolved = await Promise.all(
-          likes.map((like) => resolveTrack(like.uri))
+        const missingDefaults = defaultUris.filter(
+          (uri) => !validTracks.some((t) => t.uri === uri)
         );
-        const validTracks = resolved.filter(
-          (t): t is PlayerFMTrack => t !== null
-        );
+
+        if (missingDefaults.length > 0) {
+          const resolvedDefaults = await Promise.all(
+            missingDefaults.map((uri) => resolveTrack(uri))
+          );
+          const validDefaults = resolvedDefaults.filter(
+            (t): t is PlayerFMTrack => t !== null
+          );
+          validTracks = [...validTracks, ...validDefaults];
+        }
 
         setTracks(validTracks);
       } catch (err) {
@@ -119,7 +136,7 @@ export function useBackgroundMusic({
     const audio = getAudioElement();
     const trackUri = musicSettings.enabled ? musicSettings[appPhase] : null;
 
-    if (!trackUri) {
+    if (!trackUri || trackUri === 'none') {
       // Music disabled or no track selected for this phase — pause
       audio.pause();
       currentAudioUrlRef.current = null;

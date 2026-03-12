@@ -16,7 +16,6 @@ interface TrophyCaseProps {
   /** Enter the Best Thing I Saw nomination flow (liked-posts → share) */
   onStartNomination: () => void;
   hasParticipationTrophy: boolean;
-  participationTrophyNumber: number | null;
   hasGivenBestThing: boolean;
 }
 
@@ -35,7 +34,6 @@ export function TrophyCase({
   onBack,
   onStartNomination,
   hasParticipationTrophy,
-  participationTrophyNumber,
   hasGivenBestThing,
 }: TrophyCaseProps) {
   const { profile } = useAuth();
@@ -53,10 +51,9 @@ export function TrophyCase({
       if (level === 1) {
         // Participation Trophy
         if (hasParticipationTrophy) {
-          const num = participationTrophyNumber ?? 0;
           squares.push({
             level,
-            title: `Participation Trophy #${num}`,
+            title: 'Participation Trophy',
             description: 'view your record on pdsls.dev',
             disabled: false,
             onClick: () => {
@@ -74,33 +71,23 @@ export function TrophyCase({
           });
         }
       } else if (level === 2) {
-        // Best Thing I Saw
-        if (!hasParticipationTrophy) {
-          // Locked — prerequisite not met
+        // Best Thing I Saw (given)
+        if (hasGivenBestThing) {
           squares.push({
             level,
-            title: `${level}`,
-            description: 'claim level 1 to unlock',
-            disabled: true,
-            onClick: () => {},
-          });
-        } else if (hasGivenBestThing) {
-          // Earned — has given at least once
-          squares.push({
-            level,
-            title: 'Best Thing I Saw',
+            title: 'Best Thing I Saw (given)',
             description: 'give again',
             disabled: false,
             onClick: onStartNomination,
           });
         } else {
-          // Unlocked but not yet given
+          // Locked — show as numbered placeholder
           squares.push({
             level,
-            title: 'Best Thing I Saw',
-            description: 'give your first nomination',
-            disabled: false,
-            onClick: onStartNomination,
+            title: `${level}`,
+            description: hasParticipationTrophy ? 'give a nomination to unlock' : 'claim level 1 to unlock',
+            disabled: true,
+            onClick: () => {},
           });
         }
       } else if (award) {
@@ -127,7 +114,7 @@ export function TrophyCase({
     }
 
     return squares;
-  }, [hasParticipationTrophy, participationTrophyNumber, hasGivenBestThing, did, onStartNomination]);
+  }, [hasParticipationTrophy, hasGivenBestThing, did, onStartNomination]);
 
   const squares = buildSquares();
 

@@ -85,6 +85,8 @@
       text-decoration: none;
     }
     .stats { margin-top: 16px; font-size: 13px; color: #666; }
+    .stats a { color: #0066ff; text-decoration: none; margin-left: 8px; }
+    .stats a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
@@ -150,24 +152,35 @@
         const data = await res.json();
         const elapsed = ((Date.now() - start) / 1000).toFixed(1);
         status.style.display = "none";
-        stats.textContent = `${data.postUris.length} posts selected in ${elapsed}s`;
+        const count = data.posts ? data.posts.length : data.postUris.length;
+        stats.innerHTML = `${count} posts selected in ${elapsed}s` +
+          (data.logId ? `<a href="/log/${data.logId}" target="_blank">View reasoning log →</a>` : "");
 
-        // Render each post URI as a card with an embed link
-        for (const uri of data.postUris) {
+        // Render enriched posts with text, or fall back to URI-only
+        const items = data.posts || data.postUris.map(uri => ({ uri, text: "", author: {} }));
+        for (const post of items) {
           const card = document.createElement("div");
           card.className = "post-card";
 
-          const bskyUrl = atUriToBskyUrl(uri);
+          const bskyUrl = atUriToBskyUrl(post.uri);
+          const authorName = post.author?.displayName || post.author?.handle || "";
+          const handle = post.author?.handle ? `@${post.author.handle}` : "";
+          const text = post.text || post.uri;
+
+          const metaParts = [];
+          if (post.likeCount != null) metaParts.push(`♥ ${post.likeCount}`);
+          if (post.repostCount != null) metaParts.push(`⟳ ${post.repostCount}`);
+          if (post.replyCount != null) metaParts.push(`💬 ${post.replyCount}`);
 
           card.innerHTML = `
-            <div class="post-text" style="color:#888; font-size:13px;">${uri}</div>
+            <div class="post-author">
+              ${authorName}${authorName && handle ? " " : ""}
+              <span style="color:#888; font-weight:normal;">${handle}</span>
+            </div>
+            <div class="post-text">${escapeHtml(text)}</div>
+            ${metaParts.length ? `<div class="post-meta">${metaParts.join("  ·  ")}</div>` : ""}
             ${bskyUrl ? `<a class="post-link" href="${bskyUrl}" target="_blank">View on Bluesky →</a>` : ""}
           `;
-
-          // Try to load the oEmbed for a richer preview
-          if (bskyUrl) {
-            loadEmbed(card, bskyUrl);
-          }
 
           results.appendChild(card);
         }
@@ -179,20 +192,11 @@
       }
     });
 
-    /** Try to load a Bluesky oEmbed for richer rendering */
-    async function loadEmbed(card, bskyUrl) {
-      try {
-        const res = await fetch(
-          `https://embed.bsky.app/oembed?url=${encodeURIComponent(bskyUrl)}&format=json`
-        );
-        if (!res.ok) return;
-        const data = await res.json();
-        if (data.html) {
-          card.innerHTML = data.html;
-        }
-      } catch {
-        // silently fail, the fallback URI display is fine
-      }
+    /** Escape HTML to prevent XSS */
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
     }
   </script>
 </body>

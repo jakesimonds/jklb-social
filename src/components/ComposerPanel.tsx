@@ -1,7 +1,7 @@
 /**
  * ComposerPanel - Unified composer for new posts, replies, and quotes
  *
- * Used within ContentPanel (not as an overlay modal).
+ * Used within Slab (not as an overlay modal).
  * Replaces: PostComposer, ReplyComposer, QuoteComposer
  *
  * Modes:
@@ -84,7 +84,7 @@ export function ComposerPanel({
       e.preventDefault();
       handleSubmit();
     }
-    // Note: Escape is handled by ContentPanel at App level
+    // Note: Escape is handled by Slab at App level
   };
 
   const handleSubmit = async () => {
@@ -170,10 +170,20 @@ export function ComposerPanel({
         </div>
       </div>
 
-      {/* Keyboard hint */}
-      <p className="text-xs text-[var(--memphis-text-muted)] mt-2 mb-2">
-        Press <kbd className="px-1 py-0.5 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded text-xs">Enter</kbd> to post, <kbd className="px-1 py-0.5 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded text-xs">Esc</kbd> to cancel
-      </p>
+      {/* Footer hint */}
+      <div className="pt-2 mt-2 border-t border-[var(--memphis-border)] text-center">
+        <p className="text-xs text-[var(--memphis-text-muted)]">
+          Press{' '}
+          <kbd className="px-1 py-0.5 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded text-xs">
+            Enter
+          </kbd>
+          {' '}to post,{' '}
+          <kbd className="px-1 py-0.5 bg-[var(--memphis-bg)] border border-[var(--memphis-border)] rounded text-xs">
+            Esc
+          </kbd>
+          {' '}to cancel
+        </p>
+      </div>
     </div>
   );
 }

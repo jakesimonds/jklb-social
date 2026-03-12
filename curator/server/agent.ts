@@ -1,5 +1,11 @@
 import { spawn } from "node:child_process";
+import { writeFile, mkdir } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { CandidatePost, CurationResult } from "./types.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const LOGS_DIR = path.join(__dirname, "..", "logs");
 
 /** Build the prompt for the curation agent */
 function buildPrompt(
@@ -26,8 +32,8 @@ function buildPrompt(
 ## User's Preferences
 ${userPrompt}
 
-## User's Recent Likes (to understand their taste)
-${likesSection || "(no likes available)"}
+## User's Recent Posts (to understand their taste)
+${likesSection || "(no posts available)"}
 
 ## Candidate Posts
 ${candidatesSection}
@@ -35,11 +41,23 @@ ${candidatesSection}
 ## Instructions
 - Select exactly 50 posts that best match the user's preferences
 - Order them from most relevant to least relevant
-- Consider the user's taste (based on their likes) when making selections
-- Return ONLY a JSON array of AT URI strings, no other text
-- Example format: ["at://did:plc:xxx/app.bsky.feed.post/yyy", ...]
+- Consider the user's taste (based on their recent posts) when making selections
+- Spread out authors — never put more than 2 posts by the same person in a row
+- Only include English-language posts unless the user explicitly requests other languages
 
-Return the JSON array now:`;
+IMPORTANT: First, write a brief reasoning log explaining your curation decisions:
+1. What themes/topics you're prioritizing based on the user's preferences
+2. How many sports, pets, mutual, and other category posts you're including
+3. Any posts you're excluding and why (negativity, non-English, off-topic, etc.)
+
+Then return the JSON array of AT URI strings.
+
+Format your response as:
+## Reasoning
+[your reasoning here]
+
+## Selected Posts
+[JSON array of AT URI strings]`;
 }
 
 /** Run a command with stdin input and return stdout */
@@ -88,13 +106,14 @@ function runWithStdin(
   });
 }
 
-/** Run the curation agent via Claude Code CLI */
+/** Run the curation agent via Claude Code CLI, save reasoning log */
 export async function curate(
   candidates: CandidatePost[],
   userLikes: CandidatePost[],
   userPrompt: string
-): Promise<CurationResult> {
+): Promise<CurationResult & { logId: string }> {
   const prompt = buildPrompt(candidates, userLikes, userPrompt);
+  const logId = `curation-${Date.now()}`;
 
   console.log(
     `Running agent with ${candidates.length} candidates, ${userLikes.length} taste samples...`
@@ -120,6 +139,29 @@ export async function curate(
     throw new Error("Agent returned invalid URI array");
   }
 
-  console.log(`Agent selected ${uris.length} posts`);
-  return { postUris: uris };
+  // Extract reasoning (everything before the JSON array)
+  const jsonStart = stdout.indexOf(jsonMatch[0]);
+  const reasoning = stdout.slice(0, jsonStart).trim();
+
+  // Write reasoning log
+  await mkdir(LOGS_DIR, { recursive: true });
+  const logContent = `# Curation Log — ${new Date().toISOString()}
+
+## User Prompt
+${userPrompt}
+
+## Candidates
+${candidates.length} posts (75 mutuals, 25 chronological, 25 reverse-chrono, 25 quiet posters — shuffled)
+
+## Agent Reasoning
+${reasoning || "(no reasoning captured)"}
+
+## Selected ${uris.length} Posts
+${uris.map((u, i) => `${i + 1}. ${u}`).join("\n")}
+`;
+
+  await writeFile(path.join(LOGS_DIR, `${logId}.md`), logContent);
+  console.log(`Agent selected ${uris.length} posts — log: ${logId}`);
+
+  return { postUris: uris, logId };
 }

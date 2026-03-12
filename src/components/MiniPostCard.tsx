@@ -23,8 +23,8 @@ export function MiniPostCard({ post, accentColor }: MiniPostCardProps) {
 
   return (
     <article
-      className="rounded-lg border-2 bg-[var(--memphis-bg)] overflow-hidden"
-      style={{ borderColor: accentColor, maxWidth: 320 }}
+      className="border-2 bg-[var(--memphis-bg)] overflow-hidden"
+      style={{ borderColor: accentColor, maxWidth: 320, borderRadius: 'var(--card-radius)' }}
     >
       {/* Compact header: name · @handle · time · ↗v */}
       <header className="flex items-center gap-1.5 px-2 pt-1.5 pb-1 border-b border-white/10">

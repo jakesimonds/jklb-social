@@ -7,6 +7,8 @@ export async function postToCommunity(
   imageUri: string,
   caption: string,
   userHandle: string,
+  dimensions?: { width: number; height: number } | null,
+  includeUsername: boolean = true,
 ): Promise<{ ok: boolean; uri?: string; error?: string }> {
   const formData = new FormData();
   // React Native FormData accepts { uri, type, name } objects for file fields
@@ -17,6 +19,11 @@ export async function postToCommunity(
   } as unknown as Blob);
   formData.append('caption', caption);
   formData.append('userHandle', userHandle);
+  formData.append('includeUsername', String(includeUsername));
+  if (dimensions) {
+    formData.append('imageWidth', String(dimensions.width));
+    formData.append('imageHeight', String(dimensions.height));
+  }
 
   console.log('[COMMUNITY] Posting to', COMMUNITY_POST_URL);
   console.log('[COMMUNITY] caption:', caption, 'handle:', userHandle);

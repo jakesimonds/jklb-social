@@ -25,6 +25,7 @@ export const DEFAULT_FEED_SETTINGS: FeedSettings = {
   coverPhotoEnabled: true,
   coverPhotoPosition: 'tile',
   postTextSize: 'medium',
+  cardRadius: 20,
 };
 
 export const DEFAULT_AWARD_SETTINGS: CredibleExitSettings = {
@@ -38,9 +39,9 @@ export const DEFAULT_LLM_SETTINGS: LLMSettings = {
 
 export const DEFAULT_MUSIC_SETTINGS: MusicSettings = {
   enabled: false,
-  beginning: null,
-  middle: null,
-  end: null,
+  beginning: 'at://did:plc:hsqwcidfez66lwm3gxhfv5in/fm.plyr.track/3mgdxbah4fs2z', // "brain fog" — goose.art
+  middle: 'at://did:plc:7mnpet2pvof2llhpcwattscf/fm.plyr.track/3m5humhf7h22w',    // "banana mix" — stellz
+  end: 'at://did:plc:hsqwcidfez66lwm3gxhfv5in/fm.plyr.track/3mf3wujok2h2s',       // "missed my bus" — goose.art
 };
 
 export const DEFAULT_AWARD_ENABLED = true;
@@ -82,6 +83,7 @@ export function getSettings(): Settings {
       coverPhotoEnabled: savedFeed.coverPhotoEnabled ?? DEFAULT_FEED_SETTINGS.coverPhotoEnabled,
       coverPhotoPosition: savedFeed.coverPhotoPosition ?? DEFAULT_FEED_SETTINGS.coverPhotoPosition,
       postTextSize: savedFeed.postTextSize ?? DEFAULT_FEED_SETTINGS.postTextSize,
+      cardRadius: savedFeed.cardRadius ?? DEFAULT_FEED_SETTINGS.cardRadius,
     },
     credibleExit: {
       ...DEFAULT_AWARD_SETTINGS,

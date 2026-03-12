@@ -30,7 +30,7 @@ export function PostHeader({ author, indexedAt, hideAvatar = false, compact = fa
   const btnSize = compact ? 'text-[9px]' : 'text-xs';
 
   return (
-    <header className={`flex items-start ${compact ? 'gap-1.5 px-1.5 pt-1 pb-0.5' : 'gap-3 px-2 sm:px-3 pt-1.5 pb-1'} border-b border-white/10 flex-shrink-0`}>
+    <header className={`flex items-start ${compact ? 'gap-1.5 px-1.5 pt-1 pb-0.5' : 'gap-3 px-3 sm:px-4 pt-2 pb-1.5'} border-b border-white/10 flex-shrink-0`}>
       {/* Text info + Actions in a row */}
       <div className="flex-1 min-w-0 flex items-start gap-2">
         {/* Text stack - display name and handle tightly together */}

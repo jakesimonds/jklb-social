@@ -36,7 +36,7 @@ export const PROFILE_PIC_SIZE = 300;
  * JKLB Premium
  * Whitelisted handles that get the Premium feed experience.
  */
-const JKLB_PREMIUM_HANDLES: string[] = ['jakesimonds.com'];
+const JKLB_PREMIUM_HANDLES: string[] = [];
 
 export function isJklbPremium(handle: string | undefined): boolean {
   return handle != null && JKLB_PREMIUM_HANDLES.includes(handle);

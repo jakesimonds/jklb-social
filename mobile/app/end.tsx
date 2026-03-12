@@ -9,13 +9,14 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../lib/AuthContext';
 import { postToCommunity } from '../lib/community';
-
+import { clearCameraActive } from './index';
 let ImagePicker: typeof import('expo-image-picker') | null = null;
 try {
   ImagePicker = require('expo-image-picker');
 } catch {
   // Native module not available in this dev build
 }
+
 
 const CAPTIONS = [
   'Look where I am',
@@ -32,11 +33,13 @@ export default function EndScreen() {
   const { profile, agent } = useAuth();
 
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [imageDims, setImageDims] = useState<{ width: number; height: number } | null>(null);
   const [caption, setCaption] = useState<string>(CAPTIONS[0]);
   const [showCaptionPicker, setShowCaptionPicker] = useState(false);
   const [shareTarget, setShareTarget] = useState<ShareTarget>('community');
   const [isSharing, setIsSharing] = useState(false);
   const [shared, setShared] = useState(false);
+  const [includeUsername, setIncludeUsername] = useState(true);
 
   const hasLaunched = useRef(false);
 
@@ -58,19 +61,25 @@ export default function EndScreen() {
       console.log('[END] launching camera...');
       const result = await ImagePicker.launchCameraAsync({
         mediaTypes: ['images'],
-        allowsEditing: false,
+        allowsEditing: true,
+        aspect: [1, 1],
         quality: 0.8,
       });
       console.log('[END] camera result:', JSON.stringify(result, null, 2));
 
       if (result.canceled || !result.assets[0]) {
         console.log('[END] camera cancelled, going back');
+        clearCameraActive();
         router.back();
         return;
       }
 
-      console.log('[END] setting imageUri:', result.assets[0].uri);
-      setImageUri(result.assets[0].uri);
+      const asset = result.assets[0];
+      console.log('[END] photo dims:', asset.width, asset.height, 'uri:', asset.uri);
+      setImageUri(asset.uri);
+      if (asset.width && asset.height) {
+        setImageDims({ width: asset.width, height: asset.height });
+      }
     } catch (err) {
       console.error('[END] camera error:', err);
     }
@@ -78,6 +87,7 @@ export default function EndScreen() {
 
   const handleRetake = () => {
     setImageUri(null);
+    setImageDims(null);
     hasLaunched.current = false;
     openCamera();
   };
@@ -89,7 +99,7 @@ export default function EndScreen() {
 
     try {
       // Always post to community account
-      const communityResult = await postToCommunity(imageUri, caption, profile.handle);
+      const communityResult = await postToCommunity(imageUri, caption, profile.handle, imageDims, includeUsername);
       if (!communityResult.ok) {
         Alert.alert('Share failed', communityResult.error || 'Could not post to jklb.social');
         setIsSharing(false);
@@ -108,7 +118,11 @@ export default function EndScreen() {
             text: caption,
             embed: {
               $type: 'app.bsky.embed.images',
-              images: [{ alt: caption, image: upload.data.blob }],
+              images: [{
+                alt: caption,
+                image: upload.data.blob,
+                ...(imageDims && { aspectRatio: { width: imageDims.width, height: imageDims.height } }),
+              }],
             },
           });
         } catch (err) {
@@ -119,7 +133,7 @@ export default function EndScreen() {
 
       setIsSharing(false);
       setShared(true);
-      setTimeout(() => router.back(), 1200);
+      setTimeout(() => { clearCameraActive(); router.back(); }, 1200);
     } catch (err) {
       console.error('Share failed:', err);
       Alert.alert('Share failed', err instanceof Error ? err.message : 'Something went wrong');
@@ -133,7 +147,7 @@ export default function EndScreen() {
       <View style={[styles.container, { paddingTop: insets.top }]}>
         <View style={styles.fallback}>
           <Text style={styles.fallbackText}>Camera requires a new app build</Text>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <TouchableOpacity onPress={() => { clearCameraActive(); router.back(); }} style={styles.backButton}>
             <Text style={styles.backButtonText}>Go back</Text>
           </TouchableOpacity>
         </View>
@@ -169,7 +183,7 @@ export default function EndScreen() {
     <View style={[styles.container, { paddingTop: insets.top, paddingBottom: insets.bottom || 16 }]}>
       {/* Header with close button */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => { clearCameraActive(); router.back(); }}>
           <Text style={styles.closeButton}>✕</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Share a photo</Text>
@@ -178,7 +192,7 @@ export default function EndScreen() {
 
       {/* Photo preview */}
       <View style={styles.previewContainer}>
-        <Image source={{ uri: imageUri }} style={styles.preview} contentFit="contain" />
+        <Image source={{ uri: imageUri }} style={styles.preview} contentFit="contain" contentPosition="center" />
       </View>
 
       {/* Caption picker */}
@@ -234,6 +248,19 @@ export default function EndScreen() {
         <Text style={styles.autoDeleteNote}>
           jklb.social posts auto-delete in 48 hours
         </Text>
+      </View>
+
+      {/* Username toggle */}
+      <View style={styles.section}>
+        <TouchableOpacity
+          onPress={() => setIncludeUsername(!includeUsername)}
+          style={styles.radioRow}
+        >
+          <View style={[styles.radio, includeUsername && styles.radioActive]}>
+            {includeUsername && <View style={styles.radioDot} />}
+          </View>
+          <Text style={styles.radioLabel}>Share my username</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Action buttons */}
@@ -296,7 +323,8 @@ const styles = StyleSheet.create({
 
   // Photo preview
   previewContainer: {
-    height: 260,
+    flex: 1,
+    maxHeight: 360,
     marginHorizontal: 16,
     borderRadius: 12,
     overflow: 'hidden',

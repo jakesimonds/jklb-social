@@ -26,6 +26,7 @@ import {
   refreshChorusFromNotifications,
   type ChorusState,
 } from '../lib/chorus';
+import { prefetchBanners } from './useAuthorBanner';
 
 /** Default limit for feed fetches */
 const DEFAULT_FEED_LIMIT = 100;
@@ -394,6 +395,18 @@ export function useFeed({
 
     refetchFeed();
   }, [agent, feedSettings, chorusMemberDids]);
+
+  // =========================================================================
+  // Prefetch Effect — while the human reads, fetch what's coming next
+  // =========================================================================
+  useEffect(() => {
+    if (feedItems.length === 0) return;
+    // Prefetch banners for the next 3 posts
+    const upcomingDids = feedItems
+      .slice(currentItemIndex + 1, currentItemIndex + 4)
+      .map(item => isPostFeedItem(item) ? item.post.author.did : undefined);
+    prefetchBanners(agent, upcomingDids);
+  }, [currentItemIndex, feedItems, agent]);
 
   // =========================================================================
   // Navigation Callbacks (raw - caller wraps with thread view logic)

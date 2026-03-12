@@ -68,7 +68,7 @@ export default function SettingsScreen() {
             <Slider
               style={styles.slider}
               minimumValue={5}
-              maximumValue={100}
+              maximumValue={50}
               step={5}
               value={postBudget}
               onSlidingComplete={(val: number) => updateCredibleExit({ postsBeforePrompt: val })}

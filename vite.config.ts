@@ -34,6 +34,13 @@ export default defineConfig({
     host: true,
     // Allow ngrok tunnels for mobile testing
     allowedHosts: ['.ngrok-free.app'],
+    // Proxy /api/* to production Cloudflare Functions so `npm run dev` just works
+    proxy: {
+      '/api': {
+        target: 'https://jklb.social',
+        changeOrigin: true,
+      },
+    },
   },
   build: {
     rollupOptions: {

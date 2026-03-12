@@ -45,6 +45,7 @@ export function SettingsProvider({ children }: SettingsProviderProps) {
     updateSettings(settings);
   }, [settings]);
 
+
   // Update feed settings
   const updateFeed = useCallback((feed: Partial<FeedSettings>) => {
     setSettings(prev => ({

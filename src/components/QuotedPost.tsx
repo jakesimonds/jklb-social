@@ -49,8 +49,8 @@ export function QuotedPost({ quote, variant = 'standard', activeUrl, onImageClic
   const defaultBorder = 'border border-white/30 border-dashed';
   const borderClass = isFocused ? focusedBorder : defaultBorder;
   const containerClass = isWide
-    ? `rounded-lg ${borderClass} bg-white/5 h-full flex flex-col`
-    : `mt-3 rounded-lg ${borderClass} bg-white/5`;
+    ? `${borderClass} bg-white/5 h-full flex flex-col`
+    : `mt-3 ${borderClass} bg-white/5`;
 
   // Header classes: wide variant needs flex-shrink-0
   const headerClass = isWide
@@ -61,7 +61,7 @@ export function QuotedPost({ quote, variant = 'standard', activeUrl, onImageClic
   const contentClass = isWide ? 'p-2 flex-1 min-h-0' : 'p-2';
 
   return (
-    <div className={containerClass}>
+    <div className={containerClass} style={{ borderRadius: 'var(--card-radius)' }}>
       {/* Quote Header */}
       <div className={headerClass}>
         {/* Avatar */}

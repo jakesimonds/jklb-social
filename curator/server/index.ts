@@ -1,9 +1,10 @@
 import express from "express";
 import path from "node:path";
+import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { gatherCandidates, getUserTasteSample, getUserProfile } from "./feeds.js";
 import { curate } from "./agent.js";
-import type { CurationRequest } from "./types.js";
+import type { CurationRequest, CandidatePost, EnrichedPost } from "./types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -54,10 +55,40 @@ app.post("/curate", async (req, res) => {
     const totalMs = Date.now() - totalStart;
     console.log(`Total: ${totalMs}ms — ${result.postUris.length} posts selected\n`);
 
-    res.json(result);
+    // Build a lookup map from candidates so we can enrich the response
+    const candidateMap = new Map<string, CandidatePost>();
+    for (const c of candidates) candidateMap.set(c.uri, c);
+
+    const posts: EnrichedPost[] = result.postUris
+      .map((uri): EnrichedPost | null => {
+        const c = candidateMap.get(uri);
+        if (!c) return null;
+        return {
+          uri: c.uri,
+          author: { handle: c.author.handle, displayName: c.author.displayName },
+          text: c.text,
+          likeCount: c.likeCount,
+          repostCount: c.repostCount,
+          replyCount: c.replyCount,
+        };
+      })
+      .filter((p): p is EnrichedPost => p !== null);
+
+    res.json({ posts, postUris: result.postUris, logId: result.logId });
   } catch (err: any) {
     console.error("Curation error:", err.message);
     res.status(500).json({ error: err.message });
+  }
+});
+
+/** Serve reasoning logs */
+app.get("/log/:logId", async (req, res) => {
+  const logPath = path.join(__dirname, "..", "logs", `${req.params.logId}.md`);
+  try {
+    const content = await readFile(logPath, "utf-8");
+    res.type("text/plain").send(content);
+  } catch {
+    res.status(404).json({ error: "Log not found" });
   }
 });
 

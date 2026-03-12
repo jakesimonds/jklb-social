@@ -24,8 +24,8 @@ interface TrophyState {
 /** Build the 3x3 button array, with the last two slots dynamic based on trophy state */
 export function getEndButtons(trophyState: TrophyState): EndButtonConfig[] {
   const activeAward: EndButtonConfig = trophyState.hasParticipationTrophy
-    ? { id: 'active-award', title: 'Nominate Best Thing I Saw', description: 'award your favorite post from this session' }
-    : { id: 'active-award', title: 'Claim your participation trophy', description: 'writes a record to your PDS — join the community' };
+    ? { id: 'active-award', title: 'Give an award: nominate the Best Thing I Saw', description: 'award your favorite post from this session' }
+    : { id: 'active-award', title: 'Receive an award: claim your participation trophy', description: 'writes a record to your PDS — join the community' };
 
   const trophyCase: EndButtonConfig = trophyState.hasTrophies
     ? { id: 'trophy-case', title: 'Trophy Case', description: 'view your trophies and give awards' }

@@ -1,5 +1,7 @@
 # Constitution: russAbbot Design Principles
 
+*Last updated: March 11, 2026*
+
 This document defines the governing principles for russAbbot. All implementation decisions must align with these principles.
 
 ## Core Identity
@@ -24,8 +26,8 @@ The session has structure. Beginning shows notifications (likes, boosts, followe
 ### 4. Full ATProtocol Compliance
 The app works with ANY ATProtocol PDS, not just bsky.social. Users authenticate via handle-based OAuth discovery.
 
-### 5. Pure Client Architecture
-No backend server. The app is a static web client that communicates directly with ATProtocol APIs. All persistence is localStorage (MVP) or user's PDS (future).
+### 5. Lightweight, Serverless Architecture
+No persistent backend process, no database server, no heavy infrastructure. The app is a static web client on Cloudflare Pages that communicates directly with ATProtocol APIs. Where server-side logic is needed (trophies, community posts), it lives in **Cloudflare Pages Functions** — serverless, ephemeral, colocated with the deploy. State that doesn't belong in a user's PDS lives in **KV namespaces** — simple key-value stores, not a database. Client-side persistence uses localStorage. The spirit: minimal moving parts, nothing to keep running.
 
 ### 6. Memphis Aesthetic
 Bold 90s design: hot pink (#e91e63), cyan (#00bcd4), yellow (#ffeb3b) on dark navy (#1a1a2e). This is the signature look, not negotiable for MVP.
@@ -69,18 +71,41 @@ Images and video are the priority. Text provides context. The layout dedicates p
 - NOT a mobile app (desktop-first, responsive but not mobile-optimized)
 - NOT a full-featured client (no search, limited DM support)
 - NOT trying to replicate bsky.app (different philosophy - mindful consumption)
-- NOT a backend service (pure client)
+- NOT a traditional backend service (serverless functions + KV only, no persistent process)
 
 Reply and Quote are supported. New posts are created on Bluesky directly. DMs redirect to bsky.app.
+
+## UI Primitives
+
+The app renders three content primitives:
+
+- **PostCard** — displays post content (text, media, embeds, quote posts). This is the only component that renders ATProto post data.
+- **Slab** — displays everything else: settings, composers, notifications, end screens, tutorials. A Slab is a full-stage panel that isn't a post.
+- **PerimeterCell** — chorus items and action buttons that surround the stage. Small, fixed-size, keyboard-navigable.
+
+This is the target architecture. All new UI surfaces should be one of these three.
 
 ## Architecture Reference
 
 The two UI zones (Chorus + Stage), ViewState model, and all component specs are defined in `app-architecture.md`. This constitution defines principles; architecture defines structure.
+
+## Multi-Protocol / The JKLB Specification
+
+russAbbot is the AT Protocol implementation of the JKLB Specification — a network-agnostic UX spec for keyboard-first social media clients. The full specification lives in `specs/core/`.
+
+### Sibling Implementations
+
+| Project | Network | Directory | Status |
+|---------|---------|-----------|--------|
+| russAbbot | AT Protocol (Bluesky) | this repo | Production (Tier 3) |
+| farcaster-jklb | Farcaster | `../farcaster-jklb` | In progress (Tier 1) |
+| forkiverse-jklb | ActivityPub (Mastodon) | `../forkiverse-jklb` | In progress (Tier 1) |
+
+This repo's `specs/` directory contains AT Protocol-specific implementation details. The universal specification (adapter interface, UI rules, keybindings) lives in `specs/core/`.
 
 ## Future Vision (Post-MVP)
 
 - ATProtocol lexicon for journal entries
 - Publish session stats/journals to user's PDS
 - Standalone journal browser app for shared entries
-- Multi-protocol support (Mastodon, Farcaster)
 - ATProtocol quasi-browser, that shows events on other apps/lexicons with a link to see activity in native app

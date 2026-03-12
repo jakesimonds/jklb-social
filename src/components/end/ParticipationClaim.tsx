@@ -1,7 +1,8 @@
 /**
  * ParticipationClaim — Claim flow for participation trophies.
  *
- * Three states: confirm → loading → success.
+ * Two states: confirm → loading. On success, calls onSuccess to transition
+ * to the share composer (AwardNominationPanel).
  * Writes to both KV (via /api/participation) and PDS (createRecord).
  */
 
@@ -9,17 +10,18 @@ import { useState, useCallback, useEffect } from 'react';
 import { useAuth } from '../../lib/AuthContext';
 import { EndSubFlowWrapper } from './EndSubFlowWrapper';
 
-type ClaimStage = 'confirm' | 'loading' | 'success';
+type ClaimStage = 'confirm' | 'loading';
 
 interface ParticipationClaimProps {
   onBack: () => void;
   onRefetchTrophies: () => void;
+  /** Called after successful claim — transitions to the share composer */
+  onSuccess: () => void;
 }
 
-export function ParticipationClaim({ onBack, onRefetchTrophies }: ParticipationClaimProps) {
+export function ParticipationClaim({ onBack, onRefetchTrophies, onSuccess }: ParticipationClaimProps) {
   const { agent, profile } = useAuth();
   const [stage, setStage] = useState<ClaimStage>('confirm');
-  const [trophyNumber, setTrophyNumber] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const did = profile?.did ?? '';
@@ -46,10 +48,11 @@ export function ParticipationClaim({ onBack, onRefetchTrophies }: ParticipationC
       const data = await res.json() as { number: number; claimedAt: string };
       const number = data.number;
 
-      // 2. Write PDS record
-      await agent.com.atproto.repo.createRecord({
+      // 2. Write PDS record (putRecord with fixed rkey for idempotency)
+      await agent.com.atproto.repo.putRecord({
         repo: agent.assertDid,
         collection: 'social.jklb.participationTrophy',
+        rkey: 'self',
         record: {
           $type: 'social.jklb.participationTrophy',
           number,
@@ -57,15 +60,14 @@ export function ParticipationClaim({ onBack, onRefetchTrophies }: ParticipationC
         },
       });
 
-      setTrophyNumber(number);
-      setStage('success');
       onRefetchTrophies();
+      onSuccess();
     } catch (err) {
       console.error('Failed to claim participation trophy:', err);
       setError(err instanceof Error ? err.message : 'Something went wrong');
       setStage('confirm');
     }
-  }, [agent, did, handle, onRefetchTrophies]);
+  }, [agent, did, handle, onRefetchTrophies, onSuccess]);
 
   // Enter key confirms on confirm screen
   useEffect(() => {
@@ -74,14 +76,10 @@ export function ParticipationClaim({ onBack, onRefetchTrophies }: ParticipationC
         e.preventDefault();
         handleClaim();
       }
-      if (stage === 'success' && e.key === 'Escape') {
-        e.preventDefault();
-        onBack();
-      }
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [stage, handleClaim, onBack]);
+  }, [stage, handleClaim]);
 
   return (
     <EndSubFlowWrapper onBack={onBack}>
@@ -114,28 +112,6 @@ export function ParticipationClaim({ onBack, onRefetchTrophies }: ParticipationC
           <p className="text-sm text-[var(--memphis-text-muted)] animate-pulse">
             Writing to your PDS...
           </p>
-        )}
-
-        {stage === 'success' && trophyNumber !== null && (
-          <>
-            <h2 className="text-lg font-bold text-[var(--memphis-yellow)]">
-              You're participation trophy #{trophyNumber}!
-            </h2>
-            <a
-              href={`https://pdsls.dev/at/${did}/social.jklb.participationTrophy`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-[var(--memphis-cyan)] underline hover:opacity-80"
-            >
-              View your record on pdsls.dev
-            </a>
-            <p className="text-sm text-[var(--memphis-text-muted)] max-w-sm">
-              You're now eligible to nominate someone for a Best Thing I Saw award on your next session.
-            </p>
-            <p className="text-xs text-[var(--memphis-text-muted)] mt-2">
-              press Escape to return
-            </p>
-          </>
         )}
       </div>
     </EndSubFlowWrapper>

@@ -3,12 +3,13 @@
 // Can hold avatars, action buttons, or be empty
 // Square tiles with slightly softened corners (matches notification grid)
 
-import type { ReactNode, MouseEvent } from 'react';
+import type { ReactNode, MouseEvent, CSSProperties } from 'react';
 
 interface PerimeterCellProps {
   children?: ReactNode;
   onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
   className?: string;
+  style?: CSSProperties;
   title?: string;
   'aria-label'?: string;
 }
@@ -17,6 +18,7 @@ export function PerimeterCell({
   children,
   onClick,
   className = '',
+  style,
   title,
   'aria-label': ariaLabel,
 }: PerimeterCellProps) {
@@ -25,9 +27,10 @@ export function PerimeterCell({
   const baseClasses = `
     w-[72px] h-[72px] flex-shrink-0
     flex items-center justify-center
-    rounded
     transition-colors duration-150
   `;
+
+  const baseStyle: CSSProperties = { borderRadius: 'var(--card-radius)', ...style };
 
   const hoverClasses = isClickable
     ? 'hover:bg-[var(--memphis-pink)]/10 hover:border-[var(--memphis-pink)]/50 cursor-pointer'
@@ -41,6 +44,7 @@ export function PerimeterCell({
         type="button"
         onClick={onClick}
         className={combinedClasses}
+        style={baseStyle}
         title={title}
         aria-label={ariaLabel || title}
       >
@@ -50,7 +54,7 @@ export function PerimeterCell({
   }
 
   return (
-    <div className={combinedClasses} title={title}>
+    <div className={combinedClasses} style={baseStyle} title={title}>
       {children}
     </div>
   );

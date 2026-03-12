@@ -82,16 +82,25 @@ async function createPost(
   text: string,
   imageBlob: BlobRef,
   altText: string,
+  aspectRatio?: { width: number; height: number },
+  facets?: Array<{ index: { byteStart: number; byteEnd: number }; features: Array<{ $type: string; did: string }> }>,
 ): Promise<{ uri: string; cid: string }> {
-  const record = {
+  const imageEntry: Record<string, unknown> = { alt: altText, image: imageBlob };
+  if (aspectRatio) {
+    imageEntry.aspectRatio = aspectRatio;
+  }
+  const record: Record<string, unknown> = {
     $type: 'app.bsky.feed.post',
     text,
     embed: {
       $type: 'app.bsky.embed.images',
-      images: [{ alt: altText, image: imageBlob }],
+      images: [imageEntry],
     },
     createdAt: new Date().toISOString(),
   };
+  if (facets) {
+    record.facets = facets;
+  }
 
   const res = await fetch(`${BSKY_SERVICE}/xrpc/com.atproto.repo.createRecord`, {
     method: 'POST',
@@ -127,6 +136,19 @@ async function deleteRecord(
     body: JSON.stringify({ repo, collection, rkey }),
   });
   return res.ok;
+}
+
+async function resolveHandle(handle: string): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `${BSKY_SERVICE}/xrpc/com.atproto.identity.resolveHandle?handle=${encodeURIComponent(handle)}`,
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as { did: string };
+    return data.did;
+  } catch {
+    return null;
+  }
 }
 
 // --- Piggyback cleanup: delete community posts older than 48h ---
@@ -190,6 +212,15 @@ async function handlePost(request: Request, env: Env): Promise<Response> {
     return jsonResponse({ error: 'Missing userHandle' }, 400);
   }
 
+  const includeUsername = formData.get('includeUsername') !== 'false'; // default true
+
+  // Optional image dimensions for aspect ratio
+  const widthStr = formData.get('imageWidth') as string | null;
+  const heightStr = formData.get('imageHeight') as string | null;
+  const aspectRatio = widthStr && heightStr
+    ? { width: parseInt(widthStr, 10), height: parseInt(heightStr, 10) }
+    : undefined;
+
   // Authenticate as jklb.social community account
   let session: SessionData;
   try {
@@ -216,11 +247,30 @@ async function handlePost(request: Request, env: Env): Promise<Response> {
     return jsonResponse({ error: 'Image upload failed' }, 500);
   }
 
-  // Create the community post
-  const postText = `${caption}\n\n📸 via @${userHandle} on jklb`;
+  // Build post text and mention facet
+  let postText: string;
+  let facets: Array<{ index: { byteStart: number; byteEnd: number }; features: Array<{ $type: string; did: string }> }> | undefined;
+
+  if (includeUsername) {
+    const mention = `@${userHandle}`;
+    postText = `${caption}\n${mention}`;
+    const mentionByteStart = new TextEncoder().encode(`${caption}\n`).byteLength;
+    const mentionByteEnd = mentionByteStart + new TextEncoder().encode(mention).byteLength;
+
+    const userDid = await resolveHandle(userHandle);
+    if (userDid) {
+      facets = [{
+        index: { byteStart: mentionByteStart, byteEnd: mentionByteEnd },
+        features: [{ $type: 'app.bsky.richtext.facet#mention', did: userDid }],
+      }];
+    }
+  } else {
+    postText = caption;
+  }
+
   let post: { uri: string; cid: string };
   try {
-    post = await createPost(session.accessJwt, session.did, postText, imageBlob, caption);
+    post = await createPost(session.accessJwt, session.did, postText, imageBlob, caption, aspectRatio, facets);
   } catch (err) {
     console.error('Post failed:', err);
     return jsonResponse({ error: 'Post creation failed' }, 500);

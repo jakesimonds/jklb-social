@@ -1,8 +1,8 @@
 /**
- * HotkeysPanel - Hotkeys content for ContentPanel
+ * HotkeysPanel - Hotkeys content for Slab
  *
  * This is the content-only version of HotkeysModal, designed to be rendered
- * inside a ContentPanel instead of as an overlay modal.
+ * inside a Slab instead of as an overlay modal.
  *
  * Displays hotkeys organized by category for quick reference.
  * When rendered, it's visible. No isOpen prop needed.
@@ -27,7 +27,7 @@ const HOTKEY_CATEGORIES: HotkeyCategory[] = [
       { key: 'k / ↑', description: 'previous' },
       { key: 'l', description: 'like / unlike' },
       { key: 'b', description: 'boost / un-boost' },
-      { key: 'v', description: 'view on bluesky (seriously! jklb.social is not and never will be feature complete. I use v to view on bluesky all the time!)', wide: true },
+      { key: 'v', description: 'view on bluesky' },
     ],
   },
   {
@@ -44,17 +44,17 @@ const HOTKEY_CATEGORIES: HotkeyCategory[] = [
       { key: 'shift+k', description: 'back to main post' },
       { key: 't', description: 'toggle thread view' },
       { key: 's', description: 'settings' },
-      { key: 'Space', description: 'this panel' },
+      { key: 'space', description: 'this panel' },
       { key: ';', description: 'toggle video sound' },
-      { key: 'c', description: 'toggle cover photo to front' },
+      { key: 'c', description: 'compose new post' },
       { key: 'Esc / ⌫', description: 'close / back' },
     ],
   },
 ];
 
 /**
- * HotkeysPanel - Hotkeys content for ContentPanel
- * No modal wrapper, no overlay - just the content to render inside ContentPanel
+ * HotkeysPanel - Hotkeys content for Slab
+ * No modal wrapper, no overlay - just the content to render inside Slab
  */
 export function HotkeysPanel() {
   return (

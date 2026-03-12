@@ -49,6 +49,7 @@ export interface FeedSettings {
   coverPhotoEnabled: boolean;  // Show author's cover/banner photo behind post card
   coverPhotoPosition: 'top' | 'bottom' | 'tile';  // Pin cover photo to top, bottom, or tile to fill screen
   postTextSize: 'small' | 'medium' | 'large';  // Scale text in PostCard
+  cardRadius: number;  // Border-radius in px for all stage + perimeter cards (2–20)
 }
 
 export interface CredibleExitSettings {

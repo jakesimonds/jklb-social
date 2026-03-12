@@ -1,0 +1,1596 @@
+{
+  "castFixtures": [
+    {
+      "category": "TEXT_ONLY",
+      "note": "dwr.eth simple text-only AMA cast",
+      "fid": 3,
+      "hash": "0x10ae3565d578108f662a1cadc2b22daf6d0d9f0c",
+      "textBytes": 41,
+      "textPreview": "Friday AMA \u2014\u00a0what do you want to know?",
+      "embedUrls": 0,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 3,
+          "timestamp": 148862737,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "Friday AMA \u2014\u00a0what do you want to know?",
+            "embeds": [],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x10ae3565d578108f662a1cadc2b22daf6d0d9f0c",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "v7EJ4bU1iSJ+MOA6j2Dat3gGr/RSso7iyq28eKr7kUBTN0UBTnFzzRzmnpKi/3chikOBrgHRJihZQqR8LvfeDg==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+      }
+    },
+    {
+      "category": "TEXT_ONLY",
+      "note": "dylsteck text-only listing miniapps",
+      "fid": 616,
+      "hash": "0x0aa077d956784f8d0f201fa90a30d2d4cacb233f",
+      "textBytes": 128,
+      "textPreview": "too many to count!! bracky, wishlist, control the stream, cat town, and payment miniapps by flexa ar",
+      "embedUrls": 0,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 616,
+          "timestamp": 156793173,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": "eip155:8453/erc20:0xe226ca5bea871727733bfcf2e77666fb5b53ac1c",
+            "text": "too many to count!! bracky, wishlist, control the stream, cat town, and payment miniapps by flexa are a few that stand out to me",
+            "embeds": [],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x0aa077d956784f8d0f201fa90a30d2d4cacb233f",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "vXoiUjDDMOyUFlf3GdPp1XP01DhYiFr45JCqvf4UW0VZBGqSoI11hYaWh5GMWZla8WAr45FQb1e6wcID3gGnDQ==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x0bb410dca0bcbae4e3786d9c03bee61aaab318bf6864ef319cd54f1c3aa082d6"
+      }
+    },
+    {
+      "category": "TEXT_ONLY_LONGER",
+      "note": "dwr.eth longer text-only, 261 bytes",
+      "fid": 3,
+      "hash": "0x3c3d299882b1f90561c5d043d2cc9365ae1294bc",
+      "textBytes": 261,
+      "textPreview": "Looking for people that read *a lot* of crypto news every day.\n\nReply here if that's you!\n\nGood litm",
+      "embedUrls": 0,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 3,
+          "timestamp": 148862536,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "Looking for people that read *a lot* of crypto news every day.\n\nReply here if that's you!\n\nGood litmus test: you could accurately predict what the average Crypto Twitter person will think is the top story every day, i.e. you're good at Keynesian beauty contests",
+            "embeds": [],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x3c3d299882b1f90561c5d043d2cc9365ae1294bc",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "t2p//C64WDsJ8LUqrcrWMWxwLqupm9aDNIiYz9owMzR9xSDvbZVfPYZht53dTS6rO2wYgYSuCSbTQEZL3sENDA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+      }
+    },
+    {
+      "category": "SINGLE_IMAGE",
+      "note": "rish single image embed - 'not looking good'",
+      "fid": 194,
+      "hash": "0xc4331f9a74125ae5bdfc852efa986ee8d19c422b",
+      "textBytes": 16,
+      "textPreview": "not looking good",
+      "embedUrls": 1,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 194,
+          "timestamp": 148779371,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "not looking good",
+            "embeds": [
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/175eff09-e55d-4004-8742-3371b8789c00/original"
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0xc4331f9a74125ae5bdfc852efa986ee8d19c422b",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "Jnqavg2Ozpnb0VMQV/rNxMtG3jv2g6fEEmFF5a++2JbEwCN9lKQG96svDR1lA9p2vLb2WMX9EIGNuPFQTj/+CA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+      }
+    },
+    {
+      "category": "MULTI_IMAGE_2",
+      "note": "vitalik 2-image algodon post",
+      "fid": 5650,
+      "hash": "0x45b9b22a203029e0ed7310e7e4d22b2412991091",
+      "textBytes": 249,
+      "textPreview": "I love how \"algod\u00f3n\" is the word for cotton and apparently has connotations of healthy naturalness, ",
+      "embedUrls": 2,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 5650,
+          "timestamp": 155475883,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "I love how \"algod\u00f3n\" is the word for cotton and apparently has connotations of healthy naturalness, but the word itself (at least to my eye that has never seen it before until last month) seems like a word that clearly means \"given by an algorithm\"",
+            "embeds": [
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/0b7cff48-417c-4ada-7077-8610a3092e00/original"
+              },
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/1cedab73-522f-4325-61fa-dde44f68b800/original"
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x45b9b22a203029e0ed7310e7e4d22b2412991091",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "azdOChJKcYzg9FT5QQPa+zAN3zjaJVgC1xJx4YX/r/Oial5h4VZlQ0P8BfTZg47SysSbhQ3/y9crVmu5BKjyAQ==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x838dcce87c48bdaf70df57bf05d8228f957ad6e47a1df38bacfb52637d9c85ab"
+      }
+    },
+    {
+      "category": "MULTI_IMAGE_3",
+      "note": "vitalik 3 images reply",
+      "fid": 5650,
+      "hash": "0xc19868300bfa9918425258f77f66e0161f0a0a36",
+      "textBytes": 21,
+      "textPreview": "alternative graphics:",
+      "embedUrls": 3,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": true,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 5650,
+          "timestamp": 155348035,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": {
+              "fid": 1048093,
+              "hash": "0xc665f0411f19cd0148b52eb70c7b322e0c00fa6f"
+            },
+            "parentUrl": null,
+            "text": "alternative graphics:",
+            "embeds": [
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/405e3de3-73aa-4d69-d4e4-7638e444c000/original"
+              },
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/e353b1f0-44ea-4fea-5051-81812a875e00/original"
+              },
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/e7483a71-6a5c-4abd-58a7-61b7a1946600/original"
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0xc19868300bfa9918425258f77f66e0161f0a0a36",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "8+bNp9g3naKgi6NGrRvH5Un1sjkSDlcOEB3BLCCENTJIvl4lhJaJvWHyQSysU5U86BJ5MIvlmnFsX71eOd+nAQ==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x838dcce87c48bdaf70df57bf05d8228f957ad6e47a1df38bacfb52637d9c85ab"
+      }
+    },
+    {
+      "category": "LINK_BLOG",
+      "note": "vitalik blog link embed",
+      "fid": 5650,
+      "hash": "0x1d05cc7b9d8904b6b14ff099606af0d5f10c29c4",
+      "textBytes": 184,
+      "textPreview": "My latest views on popups, network states, coordi-nations, zones, and where all of these things coul",
+      "embedUrls": 1,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 5650,
+          "timestamp": 156539200,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "My latest views on popups, network states, coordi-nations, zones, and where all of these things could lead us.\n\n(Long poast)\n\nhttps://vitalik.eth.limo/general/2025/12/17/societies.html",
+            "embeds": [
+              {
+                "url": "https://vitalik.eth.limo/general/2025/12/17/societies.html"
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x1d05cc7b9d8904b6b14ff099606af0d5f10c29c4",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "q9GfzHh9te3EKVyFg+fu86lZjwLFtjOBH3kNJI5b7Z3mxv5TYZZOyW/4z+Ea/HKPLS+72h/v5r87DhFfD+ijDA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x838dcce87c48bdaf70df57bf05d8228f957ad6e47a1df38bacfb52637d9c85ab"
+      }
+    },
+    {
+      "category": "LINK_TWITTER",
+      "note": "vitalik twitter/x link embed",
+      "fid": 5650,
+      "hash": "0x6c5ef1f4266b8895c4c20145741e9c5fde0bce78",
+      "textBytes": 150,
+      "textPreview": "I'm impressed by Vivek and his one-man quest solo battling all of heritage american twitter.\n\nhttps:",
+      "embedUrls": 1,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 5650,
+          "timestamp": 156874929,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": "https://warpcast.com/~/channel/politics",
+            "text": "I'm impressed by Vivek and his one-man quest solo battling all of heritage american twitter.\n\nhttps://x.com/VivekGRamaswamy/status/2002209838357754064",
+            "embeds": [
+              {
+                "url": "https://x.com/VivekGRamaswamy/status/2002209838357754064"
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x6c5ef1f4266b8895c4c20145741e9c5fde0bce78",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "rzErf5IWM/+4jv8NDejjRvzNhjpeK7p94WejDwQXbaNxiEUqcxlaZIMh1G42NHpzbskEnTUJUWSZokh07TxsDg==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x838dcce87c48bdaf70df57bf05d8228f957ad6e47a1df38bacfb52637d9c85ab"
+      }
+    },
+    {
+      "category": "QUOTE_CAST",
+      "note": "dwr quote-cast embed (eyes emoji)",
+      "fid": 3,
+      "hash": "0x9a95b35ba9f7f479e327b2ac244fecbf88ebc69b",
+      "textBytes": 4,
+      "textPreview": "\ud83d\udc40",
+      "embedUrls": 0,
+      "embedCastIds": 1,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 3,
+          "timestamp": 148868835,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "\ud83d\udc40",
+            "embeds": [
+              {
+                "castId": {
+                  "fid": 129,
+                  "hash": "0x9bfa0a30d72c8452ddabd756992f609a08378e0e"
+                }
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x9a95b35ba9f7f479e327b2ac244fecbf88ebc69b",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "FG/BJOS850aaGdmMx1Zng3Ql2R2MYqxsgvyKlYYNFd5hdaOkIilO2RPnScrIaNMtZfP59k2cZgyrptuHSp0VDQ==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+      }
+    },
+    {
+      "category": "QUOTE_CAST",
+      "note": "jessepollak quote-cast 'basecamp here we come'",
+      "fid": 99,
+      "hash": "0x2407e417a6ea3d710f60c578305d93dd28f04d4e",
+      "textBytes": 21,
+      "textPreview": "basecamp here we come",
+      "embedUrls": 0,
+      "embedCastIds": 1,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 99,
+          "timestamp": 148324339,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "basecamp here we come",
+            "embeds": [
+              {
+                "castId": {
+                  "fid": 780900,
+                  "hash": "0x7527377d98de7a874bb1769576a4d7d8b785002a"
+                }
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x2407e417a6ea3d710f60c578305d93dd28f04d4e",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "Knn/qh7N4q0ib8K0sYXT9KSFiXJo+NsC+UwgAG3ofIFKBBDKAYM6wZztpx1bLAfyBoBGL4OSV3Hw6+yMepFvDg==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xa430a1c686444f31fc1c7635d8f8284e0cd947ad664a665783de3a1eabd05aea"
+      }
+    },
+    {
+      "category": "MENTIONS",
+      "note": "rish mention - 'is good at pfp changes'",
+      "fid": 194,
+      "hash": "0x1c198c461cd6c37be5094921c0425aa15cbebf02",
+      "textBytes": 23,
+      "textPreview": " is good at pfp changes",
+      "embedUrls": 0,
+      "embedCastIds": 0,
+      "mentions": [
+        7143
+      ],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 194,
+          "timestamp": 148878934,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [
+              7143
+            ],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": " is good at pfp changes",
+            "embeds": [],
+            "mentionsPositions": [
+              0
+            ],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x1c198c461cd6c37be5094921c0425aa15cbebf02",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "qXZeQ23OMNiB7TGTMoOIqHjdbycgPQGU2mLduWYgtFjYiMRlFqRmYR78wGxPXkLH9TPiIeM0o5AjWnSJpD2UAg==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+      }
+    },
+    {
+      "category": "MENTIONS",
+      "note": "jessepollak mention - picklenerds",
+      "fid": 99,
+      "hash": "0x25e47dc30202e43d19211cdf2f3c1c19eac19561",
+      "textBytes": 63,
+      "textPreview": " max buy Picklenerds in The Basecamp Pickleball Open on Bracket",
+      "embedUrls": 0,
+      "embedCastIds": 0,
+      "mentions": [
+        901053
+      ],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 99,
+          "timestamp": 148599796,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [
+              901053
+            ],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": " max buy Picklenerds in The Basecamp Pickleball Open on Bracket",
+            "embeds": [],
+            "mentionsPositions": [
+              0
+            ],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x25e47dc30202e43d19211cdf2f3c1c19eac19561",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "M/PGkS5530kwIPdbXfR9rHcwStbBDfIcjf88qDBFz+DlV7iuw1jIKZCVVf0LC0vOOOOAA+Nv952Z+Peao8isCA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xa430a1c686444f31fc1c7635d8f8284e0cd947ad664a665783de3a1eabd05aea"
+      }
+    },
+    {
+      "category": "MENTIONS_QUOTE",
+      "note": "jessepollak mention + quote-cast",
+      "fid": 99,
+      "hash": "0x1daf5acf7bda7fc1aca51189b16b0cd2e2ab6283",
+      "textBytes": 33,
+      "textPreview": "who are you onboarding to  today?",
+      "embedUrls": 0,
+      "embedCastIds": 1,
+      "mentions": [
+        12142
+      ],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 99,
+          "timestamp": 148321613,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [
+              12142
+            ],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "who are you onboarding to  today?",
+            "embeds": [
+              {
+                "castId": {
+                  "fid": 19146,
+                  "hash": "0x2845ca62833821791b6be05a9ecfc5f2d8d84d84"
+                }
+              }
+            ],
+            "mentionsPositions": [
+              26
+            ],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x1daf5acf7bda7fc1aca51189b16b0cd2e2ab6283",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "M4d8gKCqmYqLxxKEDEE4r/73I7SqOufkDBXl+YZPDt2zAlVDTuI541cq+zPU+ZFcUr/EU1qgbOURxpybE9g2BA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xa430a1c686444f31fc1c7635d8f8284e0cd947ad664a665783de3a1eabd05aea"
+      }
+    },
+    {
+      "category": "REPLY",
+      "note": "dwr simple text reply",
+      "fid": 3,
+      "hash": "0x3fcc28af43e3abbf75ade069bcb24c475dcc5725",
+      "textBytes": 95,
+      "textPreview": "We\u2019re working on a bunch of things related to social + onchain + wallet right now. More soon.",
+      "embedUrls": 0,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": true,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 3,
+          "timestamp": 148870625,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": {
+              "fid": 5494,
+              "hash": "0x0a934f5c164f1ccc9d0802d1d49d6e1f6bcf027d"
+            },
+            "parentUrl": null,
+            "text": "We\u2019re working on a bunch of things related to social + onchain + wallet right now. More soon.",
+            "embeds": [],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x3fcc28af43e3abbf75ade069bcb24c475dcc5725",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "C253XgjXKLAYpAfSFUxg8HISC9iUbmlJnMLmH07x4OD8MO9I7MqMawnK0OQVnMvy8tbIfkpcYJEpoAJyN+9PBA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+      }
+    },
+    {
+      "category": "REPLY",
+      "note": "rish text reply",
+      "fid": 194,
+      "hash": "0x2a972faf6c66ccf5d4e37e1b38b3650e7261047c",
+      "textBytes": 83,
+      "textPreview": "not sure off the top of my head, will have to look into the code first and get back",
+      "embedUrls": 0,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": true,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 194,
+          "timestamp": 148857481,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": {
+              "fid": 451226,
+              "hash": "0xa67d6e310575713e666b2b09e3953883000b3bf7"
+            },
+            "parentUrl": null,
+            "text": "not sure off the top of my head, will have to look into the code first and get back",
+            "embeds": [],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x2a972faf6c66ccf5d4e37e1b38b3650e7261047c",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "TlOQug29a8R9o1Nt0M12gH+yPSQbW7Mf+42lgeQH+ycadyktop17FiAmEs0T4Yrta22VN2lfSRY7p5pAobgTDg==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+      }
+    },
+    {
+      "category": "VIDEO",
+      "note": "jessepollak video embed - BaseCamp announcements",
+      "fid": 99,
+      "hash": "0x52df364d251eaa1e7168a7db854c625fa6b101fa",
+      "textBytes": 36,
+      "textPreview": "we announced a lot today at BaseCamp",
+      "embedUrls": 1,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 99,
+          "timestamp": 148496205,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "we announced a lot today at BaseCamp",
+            "embeds": [
+              {
+                "url": "https://res.cloudinary.com/base-app/video/upload/sp_auto/v1757955392/video_uploads/8371c884-1cee-4d15-9af4-6cdad8a68193.m3u8?zoraCoin=0x40457ea6765791f69854593949d630e747d38cfb"
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x52df364d251eaa1e7168a7db854c625fa6b101fa",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "ASeIiMXTpUWoXpE1tWvFSYC/IHYgHLrmXmGb3oGpcHDWpL494fa82xCA0nyfNaFYD4djLi0lt2PWsDGXK8MDCA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xa430a1c686444f31fc1c7635d8f8284e0cd947ad664a665783de3a1eabd05aea"
+      }
+    },
+    {
+      "category": "VIDEO",
+      "note": "chaps video embed - coffee",
+      "fid": 20701,
+      "hash": "0xbf25411d908dc18fd5cf295ed7c49450785348a3",
+      "textBytes": 41,
+      "textPreview": "first coffee of the morning feels like...",
+      "embedUrls": 1,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 20701,
+          "timestamp": 156738210,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "first coffee of the morning feels like...",
+            "embeds": [
+              {
+                "url": "https://res.cloudinary.com/base-app/video/upload/sp_auto/v1766197408/0b77cc4d-3ffc-45ca-bba5-d5e3f19d672d.m3u8"
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0xbf25411d908dc18fd5cf295ed7c49450785348a3",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "uFZ5T0cgQlksQg+iwpIBpq252+Hq23FrqXjWhHuLGtDWKXQK+b+jZ34a34RmdIkg4o3z5uLaGNzatauKsmaXAA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x0e1b1c8070753ad3fe90ab30e6fc395241943ad55123b2001b67f5ff7a102bab"
+      }
+    },
+    {
+      "category": "LONG_TEXT",
+      "note": "vitalik long text (1891 bytes) - prediction markets",
+      "fid": 5650,
+      "hash": "0xcc87e696cd681ade310499b505ba45e4300f1e3b",
+      "textBytes": 1891,
+      "textPreview": "My general view is:\n\n* The worst thing these markets _could_ do in theory, is create incentives for ",
+      "embedUrls": 0,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": true,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 5650,
+          "timestamp": 156810492,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": {
+              "fid": 4378,
+              "hash": "0xf46376ca8d2b254fd70559c5c70f3aaf3259d0a9"
+            },
+            "parentUrl": null,
+            "text": "My general view is:\n\n* The worst thing these markets _could_ do in theory, is create incentives for people to cause harm by making it easy to profit. But small-scale markets over large-scale events are not like this.\n* Many of the downsides of PMs are replicated by regular stock markets, eg. if you are a political actor with a \"CAUSE DISASTER\" button, then you could be motivated to press it simply by shorting all the stocks, which have far higher volume than the PMs\n* The benefit they provide, is that they are an environment for expressing your opinion on these topics that favors truth seeking. The thing to compare them to is social media. In social media, lots of people talk about \"THIS WAR WILL DEFINITELY HAPPEN\" and scare people, and there's no real accountability: you gain clout in the moment (and that clout is often very monetizable clout!), and no accountability after the fact. Mainstream media is somewhat better, but even there, the headlines drive you to believe sensational conclusions. With prediction markets, if you make a dumb bet, you lose, and the system (i) over time becomes more truth-seeking, and (ii) shows probabilities that reflect genuine uncertainty in the world much more faithfully than these other systems. I can personally report a few times reading a news headline, feeling scared, then checking polymarket prices and feeling calmer - the people who have experience on that topic know what's going on and the probability of anything unusual happening is only 4%. (And, on the flip side, checking those probabilities before believing anything helps me avoid feeling disappointed by false hope)\n* I actually find prediction markets to be _healthier_ to participate in than regular markets. A key reason why is that prices are bounded between 0 and 1, so they are much less dominated by reflexivity effects, \"greater fool theory\", pump-and-dumps, etc.",
+            "embeds": [],
+            "mentionsPositions": [],
+            "type": "TEN_K_CAST"
+          }
+        },
+        "hash": "0xcc87e696cd681ade310499b505ba45e4300f1e3b",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "d+CpIz0sYEZEYEDRqjKML5xCJRl3VnUVPdpWR0nkNR0E4DnmhHRotKuvVcpxjKataF4VSJF4ZM1n7rj6uCByAg==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x838dcce87c48bdaf70df57bf05d8228f957ad6e47a1df38bacfb52637d9c85ab"
+      }
+    },
+    {
+      "category": "LONG_TEXT",
+      "note": "dwr long text reply (1159 bytes) - leaderboard thoughts",
+      "fid": 3,
+      "hash": "0x1f491fb529ec914c95b94eda8b5b460a2ae686a9",
+      "textBytes": 1159,
+      "textPreview": "Let me summarize my thoughts:\n\n1. The leaderboard != the algo, i.e. if you're at the top of the lead",
+      "embedUrls": 0,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": true,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 3,
+          "timestamp": 148844719,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": {
+              "fid": 1048,
+              "hash": "0x82e059d3df96f85f7c4019b1708c9d87f2733658"
+            },
+            "parentUrl": null,
+            "text": "Let me summarize my thoughts:\n\n1. The leaderboard != the algo, i.e. if you're at the top of the leaderboard that does not mean you're getting some massive boost from the algo.\n\n2. The algo is based on what you're most likely to engage with. If you engage with content from a specific person (and follow them), you're more likely to see content from that person.\n\n3. The leaderboard has not been impactful in attracting and retaining new users. For example, earlier this year we had an initiative to onboard a bunch of journalists. They did well on the leaderboard (since it's adjusted for follower account so the biggest accounts don't always win) and they did well. (People of course then complained.) But the money from the leaderboard did not retain them -- they ultimately wanted larger audiences.\n\n4. In general, even if we were to get specific on rewarding crypto-focused content, the issue will be how do you determine what's good? For example, if a person mentions a crypto ticker in their post is that a crypto post? Even if it's mostly about lifestyle? Do crypto giveaway posts count even though they naturally are going to have a lot of engagement?",
+            "embeds": [],
+            "mentionsPositions": [],
+            "type": "TEN_K_CAST"
+          }
+        },
+        "hash": "0x1f491fb529ec914c95b94eda8b5b460a2ae686a9",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "eqf8wt/TUmlH2EXmCs+RRvq2QAugZBHPELnCnUcRxRGQgQ5oA1ZmJsk37ruiBeMizb7Cp7r15bF7P/7XsqXtCQ==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+      }
+    },
+    {
+      "category": "LINK_MENTIONS",
+      "note": "vitalik link + mention - fileverse",
+      "fid": 5650,
+      "hash": "0x3af68bf5865f0d2f25464cb3686b133845af3d87",
+      "textBytes": 268,
+      "textPreview": "I've been impressed by  (decentralized open-source encrypted docs https://docs.fileverse.io/ ). Ever",
+      "embedUrls": 1,
+      "embedCastIds": 0,
+      "mentions": [
+        243117
+      ],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 5650,
+          "timestamp": 155931652,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [
+              243117
+            ],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "I've been impressed by  (decentralized open-source encrypted docs https://docs.fileverse.io/ ). Every month more bugs get fixed, and recently it's finally at the point where I can comfortably send docs off for comment or collaboration, and things reliably don't break.",
+            "embeds": [
+              {
+                "url": "https://docs.fileverse.io/"
+              }
+            ],
+            "mentionsPositions": [
+              23
+            ],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x3af68bf5865f0d2f25464cb3686b133845af3d87",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "e4q50uJlWW5ofAUpXmBluGUFpDzaPUtIlkt9AbzTmcbwMZDEzpkhlL0Lbt0/vkr05JO2IxauJtWT52FtfwYHAQ==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x838dcce87c48bdaf70df57bf05d8228f957ad6e47a1df38bacfb52637d9c85ab"
+      }
+    },
+    {
+      "category": "IMAGE_MENTIONS",
+      "note": "vitalik image + mention - bitcoin mining",
+      "fid": 5650,
+      "hash": "0x1a6b3911dcd44dbc249dab57f93b8afad0c6b046",
+      "textBytes": 217,
+      "textPreview": "My rough math based on average difficulty stats suggests that Bitcoin mining crossed the total 2**96",
+      "embedUrls": 1,
+      "embedCastIds": 0,
+      "mentions": [
+        672507
+      ],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 5650,
+          "timestamp": 155486759,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [
+              672507
+            ],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "My rough math based on average difficulty stats suggests that Bitcoin mining crossed the total 2**96 hashes milestone very recently?\n\nSeems like a good reason to insist on (close to) 128 bit security (ie. \n was right)",
+            "embeds": [
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/1b66b552-f188-4272-30c8-4b957f05b900/original"
+              }
+            ],
+            "mentionsPositions": [
+              206
+            ],
+            "type": "CAST"
+          }
+        },
+        "hash": "0x1a6b3911dcd44dbc249dab57f93b8afad0c6b046",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "jvQwj+FjvCI49ehfqFjlPr8H0X8xAws7BFuDoABfxz0sFaqTbmW91uWy3VFqJvHCy5ZPl7SeN0UFur/9uSWeCA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x838dcce87c48bdaf70df57bf05d8228f957ad6e47a1df38bacfb52637d9c85ab"
+      }
+    },
+    {
+      "category": "MULTI_IMAGE_LINK",
+      "note": "rish multi-image + links reply - Neynar debugging",
+      "fid": 194,
+      "hash": "0x685305379c0b1b3408e49456cc9f9fe62233cbac",
+      "textBytes": 324,
+      "textPreview": "Neynar API is returning the buddha image: https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/4a97164a-",
+      "embedUrls": 4,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": true,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 194,
+          "timestamp": 148758504,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": {
+              "fid": 191042,
+              "hash": "0xc7142d414f060dd49d27ebe2fcd3ec4a308e6882"
+            },
+            "parentUrl": null,
+            "text": "Neynar API is returning the buddha image: https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/4a97164a-89ad-4929-7a34-cbf27db66100/original. See here: https://explorer.neynar.com/u/numbtoshi and the cache should bust automatically anytime the pfp is changed. \n\nYou can debug on explorer.neynar.com to double check for any user.",
+            "embeds": [
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/060c5302-96f6-40c8-74fe-637a20a8f300/original"
+              },
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/4a97164a-89ad-4929-7a34-cbf27db66100/original"
+              },
+              {
+                "url": "https://explorer.neynar.com/u/numbtoshi"
+              },
+              {
+                "url": "https://explorer.neynar.com"
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "LONG_CAST"
+          }
+        },
+        "hash": "0x685305379c0b1b3408e49456cc9f9fe62233cbac",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "Js++iuDtSXShQiSyQ/htQH1Z4Vto+Z8ScjgSEMQtouBKO8EL9/ZqjPkWeDVVSrI80pEohjtYz+tVqH0dAU4sAA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+      }
+    },
+    {
+      "category": "IMAGE_LINK_MIX",
+      "note": "chaps image + link - runner",
+      "fid": 20701,
+      "hash": "0xf9f01f72de7d668dde8f1b3f06a1fa2436e162f8",
+      "textBytes": 27,
+      "textPreview": "another day, another run...",
+      "embedUrls": 2,
+      "embedCastIds": 0,
+      "mentions": [],
+      "isReply": false,
+      "raw": {
+        "data": {
+          "type": "MESSAGE_TYPE_CAST_ADD",
+          "fid": 20701,
+          "timestamp": 156879486,
+          "network": "FARCASTER_NETWORK_MAINNET",
+          "castAddBody": {
+            "embedsDeprecated": [],
+            "mentions": [],
+            "parentCastId": null,
+            "parentUrl": null,
+            "text": "another day, another run...",
+            "embeds": [
+              {
+                "url": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/2728dc69-92c8-402d-a52c-0cf55a900700/original"
+              },
+              {
+                "url": "https://runnercoin.lat"
+              }
+            ],
+            "mentionsPositions": [],
+            "type": "CAST"
+          }
+        },
+        "hash": "0xf9f01f72de7d668dde8f1b3f06a1fa2436e162f8",
+        "hashScheme": "HASH_SCHEME_BLAKE3",
+        "signature": "YkE9CLW8TXCu/OoNHUsPVWh2KY11VwDFZ3egQ4n+dS+hhAqU3vARWhg2Obdf7InhRpYAw+y9I+yYZtHOUlc9BA==",
+        "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+        "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+      }
+    }
+  ],
+  "userDataFixtures": {
+    "withBanner": {
+      "dwr_fid3": {
+        "messages": [
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 3,
+              "timestamp": 84041570,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_USERNAME",
+                "value": "dwr.eth"
+              }
+            },
+            "hash": "0x690c3a3c3b835e6dbe5cd72e05aab66243da0d27",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "kUNSpEUsZX0pKjaRTQvy7DWYataRSFfVHElFWRrvb7bn+uMRBx8oEn5/dEqEfHnjdVPFLyFevwpMZq1Qg7iQAg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 3,
+              "timestamp": 84041570,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_DISPLAY",
+                "value": "Dan Romero"
+              }
+            },
+            "hash": "0x963bf7ef95eb926a7c53bd835e1c76e57f7423f5",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "H/lxKaCVsOiH8nAFC6wluihekmV1iib9HR4jKsVRmv9G8pR5w6P4mLT11j7Hnm8owLRCSPKlgcWTPoIQ21rFAg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 3,
+              "timestamp": 132169860,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_TWITTER",
+                "value": "dwr"
+              }
+            },
+            "hash": "0x2d29ea236a0c56f9b09a3e0b950571e4dbbc3d53",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "mNB6aSRf0QMMXELcrrdc2RkyVtlXuir0n95IzqOXO0fb31XKv2jJ2qaJllyIiQitjn2/p23AxXY9/3Og3bX+Bw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 3,
+              "timestamp": 138592020,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_BIO",
+                "value": "Working on Farcaster"
+              }
+            },
+            "hash": "0x0d29a32b6d9f0a0c7b98901bf15d001c2758c54a",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "IoUYdRVSp7tcFJM0Urx+DZ11zOnEGMFOEdU37axQ28mNnxlLkch/fu94hTIUaWhVYvAcRiMdDLe0DLd3qJAZDQ==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 3,
+              "timestamp": 140629059,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_LOCATION",
+                "value": "geo:34.05,-118.24"
+              }
+            },
+            "hash": "0x5d8af050ca7bffb4f14ca7299ee6ac5af54489d4",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "MZLaR9AxLj+2DKU2VXts6XcUAUx8oz0nVU1NXl2o5lED1avnw771Y1rQsXzPnS7H4jsmrNGDWyz4ikz6zdfnAw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 3,
+              "timestamp": 140638263,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_BANNER",
+                "value": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/dab99f37-561b-4bd2-6d73-86f828a76d00/original"
+              }
+            },
+            "hash": "0xdb76c55ae9bb21a547d4fc931c4dec1a8251c6a2",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "FMDWWcujSqgz46UV6VKG02x64KaTQrjEB5ffZ4m/Ss/uHTMBhisNagv0CbopPKdr/UcuCzTjH/8wuBfzIhg6AQ==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 3,
+              "timestamp": 141496553,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_PFP",
+                "value": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/bc698287-5adc-4cc5-a503-de16963ed900/original"
+              }
+            },
+            "hash": "0x0558b98b0555fb53b6ba212f600a046ce62a2ec5",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "Pr2iWcY4pTWnptaN1520u35aR9CIu7Jkan/B5+abe3FEuGRnpTPKwrT0f4iu9JNg/bQ3d83a2G8w5VbRr77WCw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 3,
+              "timestamp": 141496553,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_URL",
+                "value": "https://danromero.org"
+              }
+            },
+            "hash": "0x83a8f75b787bf972cc9522848a5f2e7a9c2701e8",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "tOzIYEmbUb/n35mH3Lv6s+uepKqWely7+r1b4ox6rsXIjCdyEyopOBhhmpdwlkPmgxK8MLp960wuXllRBhCCBw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 3,
+              "timestamp": 147398505,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_PRIMARY_ADDRESS_ETHEREUM",
+                "value": "0x187c7B0393eBE86378128f2653D0930E33218899"
+              }
+            },
+            "hash": "0x5c3bad14e337bc01db161ee5a4a71e99fc44eb07",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "kxf8iKOc7xrJpZXxI3ogd/eBgTnbhK8i7JAG0gk3j5+/JEc7J9muN3WM+kv0ctmErSuOiLEbYONk1eI7ve93CQ==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xc887f5bf385a4718eaee166481f1832198938cf33e98a82dc81a0b4b81ffe33d"
+          }
+        ],
+        "nextPageToken": ""
+      },
+      "rish_fid194": {
+        "messages": [
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 194,
+              "timestamp": 69403259,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_USERNAME",
+                "value": "rish"
+              }
+            },
+            "hash": "0x459acfc2e692701e5a42f909cb5dd2575c1d8bc3",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "ZBl42HfPPjHQZbLMbMBjuax7bgYdz2RgaO1x90+kLpUwy1kdxzUXlIiuF/jwzP5BPpRmrKtU6z17vYdGAfiWAA==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 194,
+              "timestamp": 121475810,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_DISPLAY",
+                "value": "rish"
+              }
+            },
+            "hash": "0xbdd856400568398cba3ef4ff7c4012804397adc9",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "p4XVG3jsoYmP7CpMRPFLNEv+ab/KOQhufIOF40OeUR4nBdCMpBI/F4hDHnNwU0Zq/KAPdk4i/p8D5s0UWayqBg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 194,
+              "timestamp": 128140645,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_TWITTER",
+                "value": "rish_neynar"
+              }
+            },
+            "hash": "0xafe1fe8114c3339ff2189e1b0f2ba5f413b8177d",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "kjb5NqizuQBMRQSfyEJSc84Q1XpL1Gtu7azSzxU5Zmk69ZQlntqmJ3BbRQLynEBij1GhTO+HRCa+ZQubgXUtDA==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 194,
+              "timestamp": 134067121,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_BIO",
+                "value": "building farcaster infra @ /neynar \ud83e\ude90 | casting @ /rish"
+              }
+            },
+            "hash": "0x858c0b8b786a8377741d86069bdd16409928a5e6",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "1/RXyaR6wEDqHg58MoOFMz+0bQHmC3YNyuuAtQrRrvGu9vlh8SlQ95IuuKh3iHd64zOLIOnokR4UUnt4fv1oCA==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 194,
+              "timestamp": 137800302,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_LOCATION",
+                "value": ""
+              }
+            },
+            "hash": "0x4a4784b5d9276641613136cb2ca969746a116aca",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "uVlqkBAGU0xA1YpGK36RjS9G1T4Bbtm1EI9MkHtLQuIZu+Xl9HCr5t12cHZ2pDftQNEuvB7actuc5D/8pqcbBg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 194,
+              "timestamp": 140644376,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_BANNER",
+                "value": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/5627b94e-bcaf-4e74-1a3a-e991f073d800/original"
+              }
+            },
+            "hash": "0x7189ea3e45aeb6ae97963881343e2e2753cb1fbf",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "BPJcJOgdCOrGCrHjDPD/wW2x2ngzlYw63bVbYLPiZBBlAeLxFTlSY1Q7P1xKTeSK8h9TDeQ2oxNhFiU3kv/MDQ==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 194,
+              "timestamp": 147401995,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_PFP",
+                "value": "https://i.imgur.com/naZWL9n.gif"
+              }
+            },
+            "hash": "0x3059f262b4de9b909e5cf261f8d3f2d827acba9e",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "+eS8zPXoSHmKY9VBHVQdkXsVvPsrEqMJY6KfdsqoNc31KUbri4T47jJMMYm5Bw/7/Bny2A6oP7sXrsBluxjPBw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 194,
+              "timestamp": 148348989,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_PRIMARY_ADDRESS_ETHEREUM",
+                "value": "0x11d5d3F2fecCb882947BF8Ff6599BEB823986E75"
+              }
+            },
+            "hash": "0x403ab3e8427ac3b5881d0d958e8b8d5333f51bb8",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "d/hgG1Iw3fr4YHX7R8rWjDRjTN9hqj2XXElJWlb2Ot0yTco8xR7JpN6mbEPKYdulKbjO91CYVZqrdk5jGWgBAw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x458bebdce6eca56a5a7b2eef7b5e54e314737fb2c9d79113a6a9387f36ef2819"
+          }
+        ],
+        "nextPageToken": ""
+      },
+      "dylsteck_fid616": {
+        "messages": [
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 80891528,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_USERNAME",
+                "value": "dylsteck.eth"
+              }
+            },
+            "hash": "0xf3278edce440b5ef7588bb4971a4019c153f4311",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "D4yDGXs7YLzMIl2xWeSxr9/5icE70Qenwlcdq40eRnCxkz3EzRSQS8SCUZ3+T+kv/urgF8CimOPnE4jqpvW4AQ==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x8dba2bca47cbdeff310276d3cfbd0c1cfb9c289956d6966ea132294b9bd18c55"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 128140441,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_TWITTER",
+                "value": "dylan_steck"
+              }
+            },
+            "hash": "0x53bdda32ca3bf65be2892836632790a42aa15307",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "80Exo8c7e/qXnKhqkBVU477oNPy+7m2VpAECRaOi8zlFU4qG7BqnjK8N+GlB+9mRAD6nYFw+KZal4ljy+L7GDg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x8dba2bca47cbdeff310276d3cfbd0c1cfb9c289956d6966ea132294b9bd18c55"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 140639089,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_BANNER",
+                "value": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/8b12bc67-bffb-4b15-e7e2-23809cb4d200/original"
+              }
+            },
+            "hash": "0x4088c80e3f1cd69d5efa05cf078aaf3ae2e674c8",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "1xiRWtjJgUl2x3y6yWMI6QrsqQgu72vAiAsHp7SmU4GJCiTH/6EAhLQ41V5zCo7X6BCZ3do0KIMcQ2AXHIh8Bw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x8dba2bca47cbdeff310276d3cfbd0c1cfb9c289956d6966ea132294b9bd18c55"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 140639089,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_URL",
+                "value": "https://dylansteck.com"
+              }
+            },
+            "hash": "0xbbf188b24a36dbdcd2817f98575ad2f31c865d76",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "H5S5FbGfqMPRfmhcwzlnm+fikzCm64ZPBRifvmGvW6Dj+nMZmLtelpxm7yC/aP2mfyR++iMEoV0njOofR1bIDQ==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x8dba2bca47cbdeff310276d3cfbd0c1cfb9c289956d6966ea132294b9bd18c55"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 140895025,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_PRIMARY_ADDRESS_SOLANA",
+                "value": "ACAa65La9wxijpAnRN4ztQKzUw1kpSNnQdvqvXb5bVfe"
+              }
+            },
+            "hash": "0xd39ff12a9ed79d1bcbacd0033e011fdb733fd536",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "LD86eyGxV0WpgGf4TCbrKcc5k6c99UjaZdoTB8Mbq4oKVOi0gwxh1uR/ZmeFG0Awa+wGlFDKojCBAvXF1lmDCQ==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x8dba2bca47cbdeff310276d3cfbd0c1cfb9c289956d6966ea132294b9bd18c55"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 145140713,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_DISPLAY",
+                "value": "dylan"
+              }
+            },
+            "hash": "0xae380f58d2433a097511c599585c4450104abf06",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "7wuvInx00BLpBkc+iZDlqzdzqN4oVz4OHzoAENGtCXcEL1k7z305SbiuclxDU7eJFg55+dpYOnzonRE7DeG0AA==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x0bb410dca0bcbae4e3786d9c03bee61aaab318bf6864ef319cd54f1c3aa082d6"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 145140713,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_BIO",
+                "value": "bringing mini apps to 1B users @base"
+              }
+            },
+            "hash": "0xe9380818524a24d2eb7feac1e1c8e96e2a28bbde",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "15qwmxfER4Xdb1FvkjKUyOrFMrpsgXbGsoww8V4YEeu9r+9j8zBfLkkifAB4FKXQdt6Z0Nd4NupFsxieuepxDw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x0bb410dca0bcbae4e3786d9c03bee61aaab318bf6864ef319cd54f1c3aa082d6"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 146677995,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_LOCATION",
+                "value": "geo:40.71,-74.01"
+              }
+            },
+            "hash": "0xb495be539d2c3cdfe3e1a85048ed81d9b9abf360",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "fV+S13yAkm9fHbyvNgqu+EkfEw3x/4A0t4e7c1/sCFfqJEF1m1JsQtQg4xI6fVYeNVglqZAvvnK66lZuUJllCg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x8dba2bca47cbdeff310276d3cfbd0c1cfb9c289956d6966ea132294b9bd18c55"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 147400308,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_PFP",
+                "value": "https://zku9gdedgba48lmr.public.blob.vercel-storage.com/basenames/avatar/dylsteck.base.eth/1724182478110/ds-logo-white-bg-LjfhiIB4NhZTVF0hTjv3E87lih5Qbu.png"
+              }
+            },
+            "hash": "0xb36641f8af39fe0a5c7b21f751937d3754449e56",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "wgLMMiZeKHFUBXq42KfHekiJxru82zaPQE6qghUnHSu3jh4h7eig6HU9HuC+9OeY1illcoQ2wcJ7SvIsd+l1Bw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x8dba2bca47cbdeff310276d3cfbd0c1cfb9c289956d6966ea132294b9bd18c55"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 616,
+              "timestamp": 148799813,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_PRIMARY_ADDRESS_ETHEREUM",
+                "value": "0x8342A48694A74044116F330db5050a267b28dD85"
+              }
+            },
+            "hash": "0xee1e3316ee634256459e76c597b92125c3d13726",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "MOkJjPsVne7+PuUF6FLgfZ8RZMKkuL1I7SJr7DyBSSwX7Fv3u5+9G0wcUnoF8ml2OI0TPH0YGRYnT4KZfwg/CQ==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0x8dba2bca47cbdeff310276d3cfbd0c1cfb9c289956d6966ea132294b9bd18c55"
+          }
+        ],
+        "nextPageToken": ""
+      },
+      "chaps_fid20701": {
+        "messages": [
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 87070387,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_USERNAME",
+                "value": "chaps"
+              }
+            },
+            "hash": "0x4c964d04510042437378324ac7055b358e6653db",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "8b8ZAuFz9ACiZha82BjdHjOT0xrD8ijK8cTLRxMDXolnxmtCEgHLJIPxFVXNy4Lq0xHOvnhyJHhTTEde8CT4CA==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 133068517,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_TWITTER",
+                "value": "chapsmx"
+              }
+            },
+            "hash": "0x92aeee19e8b694372c4c95337cc548f3bf451cdf",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "TORrH3H+QT7fbuxrDsjZu21qBPumdiSkYg4cggBQsr7j43Qda2A7C31DXevTjIgVGmesDvzDL2R9l2fJn2FtAg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 140895177,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_PRIMARY_ADDRESS_ETHEREUM",
+                "value": "0x7eE0B6Ee0EAc35170F38161b13cdf1669ea4e53e"
+              }
+            },
+            "hash": "0x599922302095dacff434d66a6d8d2ff3dbad7825",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "/DkM0ucQxYXoqjqRqMA9oOT+FzcMl+6O9jSMxueImmCjTHAWUGnF7wHRR2dHKy0yTYlPkOtlXeLqPYdVvUhJBQ==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 140895177,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_PRIMARY_ADDRESS_SOLANA",
+                "value": "8rBswdpKzYyvyYmb2vhud2kN5nCcEzsivL6cPeK1g2pe"
+              }
+            },
+            "hash": "0xf5b02245871098e5e62a9783bf1f6bc709d2bfe7",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "iPOXVC8N8XDAp7X0zs9ID3awtifApyn6jYaoQJj5xJenivBwX7tHYO+TJ7F9FMaMuCdM6YX3ZUqkEHVgw8pODg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 144096037,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_LOCATION",
+                "value": ""
+              }
+            },
+            "hash": "0x674a44da874ec58a25f10a6a59e0abd9261e0c4e",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "5B5Amoo6O2IxPdEhRbUbUGN952/MILXe3gjiCB5FVEg/u3r2zvHB7gcWqsnOQbPOQBswt7PliH4JmW9NYI79Bg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 150346627,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_URL",
+                "value": ""
+              }
+            },
+            "hash": "0x82a68ef43310159d221374bbf1a8ef50987524aa",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "H7PbkRnXRo2I1WZwnvrRjTKfiucHabp9kwLaEKqUH4icnIDtPVQdexsbxbAybLLJ6CfOIEGm7kOmS8ajkejpDw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 150346627,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_BIO",
+                "value": "\ud83c\uddf2\ud83c\uddfd | genart collector | generative design | architect | @w3runn3rs | /adivinadrone | \ud83c\uddf2\ud83c\uddfd"
+              }
+            },
+            "hash": "0xc7e71a9bb506c5e2c9f5e2398a202dfe34a9e725",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "lSYS1wHS3UmD7U2NQXKfQUXinTrr/rIzAlv4lsGWhQLtgXYq7WUGp8U3Y0bkU4xlwiUEAd+U2bEJQ6cbcu6JDg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 150346627,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_PFP",
+                "value": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/ea8b65e4-d37a-420f-c526-f46b699b9a00/original"
+              }
+            },
+            "hash": "0xe588ac121a951466504815a378862cf465705ef9",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "yOWX0jVbw+I+jmbLgdEEy5qVD50rp6I8tFfDzVPXe6ZaJZdBZM6yTD2GQ3QzVMUwMXHnF3tIHl8o/SlGEWl/Cg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 152074455,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_DISPLAY",
+                "value": "carlos \ud83e\uddec"
+              }
+            },
+            "hash": "0x5677174d25339f69b5f68ef13e53eca36592d9b7",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "xfetxX41BSCtN+N+2w5R6HiwNvrMQ+b56W/7gdlRx6cWQiH+qpz43v+bf/pAGSj220d8D35CCP+gqIuC8QFMDw==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          },
+          {
+            "data": {
+              "type": "MESSAGE_TYPE_USER_DATA_ADD",
+              "fid": 20701,
+              "timestamp": 154547219,
+              "network": "FARCASTER_NETWORK_MAINNET",
+              "userDataBody": {
+                "type": "USER_DATA_TYPE_BANNER",
+                "value": "https://imagedelivery.net/BXluQx4ige9GuW0Ia56BHw/fdd59cc1-1f25-45b7-8f58-036c1528dc00/original"
+              }
+            },
+            "hash": "0xe4831925aacd309642e8aa93deeecb0c2bc6d43a",
+            "hashScheme": "HASH_SCHEME_BLAKE3",
+            "signature": "ICSQ4mirgbdJ7mtPkmXKl24RNTh7iZsWDLysYEl5LkjHa/cTZg1wpBgHYydXMEzw5FqR11JlXkbu/2lWExQDAg==",
+            "signatureScheme": "SIGNATURE_SCHEME_ED25519",
+            "signer": "0xf9d02b49afadd115ae79f43cbed9e753e5afda215066890dea760b7c98b71ad9"
+          }
+        ],
+        "nextPageToken": ""
+      }
+    }
+  }
+}

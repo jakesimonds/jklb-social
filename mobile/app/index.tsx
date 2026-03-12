@@ -21,8 +21,9 @@ import type { SwipeDirection } from '../components/SwipeCard';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
 // Module-level flag: skip AppState reset when camera/end screen is active.
-// Set to true before navigating to /end, cleared when AppState fires.
+// Set to true before navigating to /end, cleared when end screen navigates back.
 let _cameraActive = false;
+export function clearCameraActive() { _cameraActive = false; }
 
 export default function SwipeScreen() {
   const { isAuthenticated, isInitializing, agent } = useAuth();
@@ -65,7 +66,6 @@ export default function SwipeScreen() {
         // Don't reset if user is on the end/camera screen — the camera
         // activity causes a background→active transition we need to ignore
         if (_cameraActive) {
-          _cameraActive = false;
           appState.current = nextAppState;
           return;
         }

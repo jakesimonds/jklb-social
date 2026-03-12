@@ -72,8 +72,8 @@ interface UseKeybindingsOptions {
   onQuote?: () => void;
   /** ? — save post to clipboard */
   onSavePost?: () => void;
-  /** c — toggle cover photo z-index */
-  onToggleCoverPhoto?: () => void;
+  /** c — compose new post */
+  onCompose?: () => void;
   /** e — jump to ending */
   onEnd?: () => void;
 }
@@ -123,7 +123,7 @@ export function useKeybindings(options: UseKeybindingsOptions): void {
     onSettings,
     onQuote,
     onSavePost,
-    onToggleCoverPhoto,
+    onCompose,
     onEnd,
   } = options;
 
@@ -307,10 +307,10 @@ export function useKeybindings(options: UseKeybindingsOptions): void {
           break;
 
         case 'c':
-          // Toggle cover photo (middle + beginning phases)
-          if ((phase === 'middle' || phase === 'beginning') && onToggleCoverPhoto) {
+          // Compose new post (all phases)
+          if (onCompose) {
             event.preventDefault();
-            onToggleCoverPhoto();
+            onCompose();
           }
           break;
 
@@ -359,7 +359,7 @@ export function useKeybindings(options: UseKeybindingsOptions): void {
      onExitFullscreen, onEscape, onClosePanel,
      onLike, onReply, onBoost, onQuote, onOpen, onCycleLink, onFocusQuote, onUnfocusQuote, onUnfollow, onFollow,
      onViewOnBluesky, onShowHotkeys, onSettings, onSavePost,
-     onToggleCoverPhoto, onEnd]
+     onCompose, onEnd]
   );
 
   // Always active — no enabled gate

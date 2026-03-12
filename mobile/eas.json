@@ -4,7 +4,8 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "android": { "buildType": "apk" }
+      "android": { "buildType": "apk" },
+      "env": { "APP_VARIANT": "development" }
     },
     "preview": {
       "android": { "buildType": "apk" },

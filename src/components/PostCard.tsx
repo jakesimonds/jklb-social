@@ -36,6 +36,7 @@ const SIZE_CONFIG = {
     padding: 'p-1.5 sm:p-2',
     avatarSize: 60,
     avatarPadding: 'p-1.5',
+    sidebarPadding: 'p-1.5',
     avatarBorder: 'border-2',
     gap: 'gap-1',
     maxHeight: 'max-h-[180px]',
@@ -48,6 +49,7 @@ const SIZE_CONFIG = {
     padding: 'p-2 sm:p-2.5',
     avatarSize: 100,
     avatarPadding: 'p-2',
+    sidebarPadding: 'p-2',
     avatarBorder: 'border-3',
     gap: 'gap-2',
     maxHeight: 'max-h-[280px]',
@@ -57,11 +59,12 @@ const SIZE_CONFIG = {
   lg: {
     text: 'text-xs sm:text-sm',
     headerText: 'text-xs',
-    padding: 'p-2 sm:p-3',
+    padding: 'p-3 sm:p-4',
     avatarSize: null as number | null, // uses PROFILE_PIC_SIZE
-    avatarPadding: 'p-3',
+    avatarPadding: 'p-4',
+    sidebarPadding: 'p-4',
     avatarBorder: 'border-4',
-    gap: 'gap-2',
+    gap: 'gap-3',
     maxHeight: 'max-h-full',
     mediaMaxHeight: '',
     borderWidth: 'border-2',
@@ -154,8 +157,8 @@ export function PostCard({
   return (
     <article
       className={`
-        rounded-lg ${sizeConfig.borderWidth} transition-all duration-200
-        flex ${sizeConfig.maxHeight} overflow-hidden ${textSizeClass}
+        ${sizeConfig.borderWidth} transition-all duration-200
+        flex ${sizeConfig.maxHeight} overflow-hidden isolate ${textSizeClass}
         ${isInThread
           ? 'border-[var(--memphis-cyan)]/50 bg-[var(--memphis-navy)] shadow-lg'
           : isFocused
@@ -163,6 +166,7 @@ export function PostCard({
             : 'border-white/20 bg-[var(--memphis-bg)] hover:border-white/30'
         }
       `}
+      style={{ borderRadius: 'var(--card-radius)' }}
       data-post-uri={post.uri}
     >
       {/* Avatar sidebar - only on wide screens, with thread-aware sizing */}
@@ -172,7 +176,7 @@ export function PostCard({
           target="_blank"
           rel="noopener noreferrer"
           className={`flex-shrink-0 border-r border-white/10 flex items-start cursor-pointer hover:opacity-80 transition-opacity ${
-            isInThread && !isFirstInThread ? 'p-2' : sizeConfig.avatarPadding
+            isInThread && !isFirstInThread ? 'pr-2' : sizeConfig.sidebarPadding
           }`}
           onClick={(e) => e.stopPropagation()}
         >
@@ -180,7 +184,7 @@ export function PostCard({
             <img
               src={post.author.avatar}
               alt={post.author.displayName || post.author.handle}
-              className={`rounded-none border-[var(--memphis-cyan)]/50 ${
+              className={`rounded-xl border-[var(--memphis-cyan)]/50 ${
                 isInThread && !isFirstInThread ? 'border-2' : sizeConfig.avatarBorder
               }`}
               style={{
@@ -191,7 +195,7 @@ export function PostCard({
             />
           ) : (
             <div
-              className={`rounded-none border-[var(--memphis-cyan)]/50 bg-white/10 flex items-center justify-center ${
+              className={`rounded-xl border-[var(--memphis-cyan)]/50 bg-white/10 flex items-center justify-center ${
                 isInThread && !isFirstInThread ? 'border-2' : sizeConfig.avatarBorder
               }`}
               style={{
@@ -210,7 +214,7 @@ export function PostCard({
       {/* Main content column */}
       <div className="flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
         {post.repostReason && (
-          <div className="px-2 sm:px-3 py-1 text-xs flex items-center gap-1.5 bg-white/5 text-white/50 border-b border-white/10 flex-shrink-0">
+          <div className="px-3 sm:px-4 py-2 text-xs flex items-center gap-1.5 bg-white/5 text-white/50 border-b border-white/10 flex-shrink-0">
             <span className="text-[var(--memphis-yellow)]">↻</span>
             <span>Boosted by</span>
             <span className="text-[var(--memphis-yellow)] font-medium truncate">
@@ -236,7 +240,7 @@ export function PostCard({
         />
 
       {post.replyParent && (
-        <div className="px-2 sm:px-3 py-1 text-xs flex items-center gap-1 bg-white/5 text-white/50 flex-shrink-0">
+        <div className="px-3 sm:px-4 py-2 text-xs flex items-center gap-1 bg-white/5 text-white/50 flex-shrink-0">
           <span className="text-[var(--memphis-cyan)]">↩</span>
           <span>Replying to</span>
           <span className="text-[var(--memphis-cyan)] truncate">
@@ -329,7 +333,7 @@ export function PostCard({
               <img
                 src={post.author.avatar}
                 alt={post.author.displayName || post.author.handle}
-                className={`rounded-none border-[var(--memphis-cyan)]/50 max-h-full object-contain ${
+                className={`rounded-xl border-[var(--memphis-cyan)]/50 max-h-full object-contain ${
                   isInThread && !isFirstInThread ? 'border-2' : sizeConfig.avatarBorder
                 }`}
                 style={{
@@ -340,7 +344,7 @@ export function PostCard({
               />
             ) : (
               <div
-                className={`rounded-none border-[var(--memphis-cyan)]/50 bg-white/10 flex items-center justify-center ${
+                className={`rounded-xl border-[var(--memphis-cyan)]/50 bg-white/10 flex items-center justify-center ${
                   isInThread && !isFirstInThread ? 'border-2' : sizeConfig.avatarBorder
                 }`}
                 style={{

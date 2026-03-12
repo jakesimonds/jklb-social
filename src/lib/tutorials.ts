@@ -93,6 +93,7 @@ export function getPhase(stage: StageView): 'beginning' | 'middle' | 'end' {
     case 'share':
     case 'end-stats':
     case 'participation-claim':
+    case 'participation-share':
     case 'award-nominate':
     case 'trophy-case':
       return 'end';

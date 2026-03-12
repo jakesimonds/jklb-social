@@ -23,6 +23,7 @@ export type StageView =
   | { type: 'share' }
   | { type: 'end-stats' }
   | { type: 'participation-claim' }
+  | { type: 'participation-share' }
   | { type: 'award-nominate' }
   | { type: 'trophy-case' }
 

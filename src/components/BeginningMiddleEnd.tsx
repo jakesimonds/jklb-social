@@ -34,8 +34,8 @@ export function BeginningMiddleEnd({ phase }: BeginningMiddleEndProps) {
 
   return (
     <div
-      className="bme-indicator flex items-center justify-center flex-shrink-0 rounded-lg border border-[var(--memphis-border)] bg-[var(--memphis-bg)] px-3"
-      style={{ width: `${4 * 72 + 3 * 4}px`, height: '72px' }}
+      className="bme-indicator flex items-center justify-center flex-shrink-0 border-2 bg-[var(--memphis-bg)] px-3"
+      style={{ width: `${4 * 72 + 3 * 4}px`, height: '72px', borderColor: display.accent, borderRadius: 'var(--card-radius)' }}
     >
       <div className="text-center">
         {display.title && (
